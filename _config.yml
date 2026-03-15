@@ -5,7 +5,7 @@ header-img: img/home-bg.jpg
 email: qiaoyt@mails.neu.edu.cn
 description: "这里是 @Lappio 的个人博客，与你一起发现更大的世界 | 要做一个有 swag 的程序员"
 keyword: "@Lappio Lappio Blog, Personal Website, Internet, LLM, Deep Learning, NEU"
-url: "https://lappio.me" # your host, for absolute URL
+url: "https://lappio.top" # your host, for absolute URL
 baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
