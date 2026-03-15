@@ -39,6 +39,26 @@
 <script src="{{ "/js/sw-registration.js " | prepend: site.baseurl }}"></script>
 {% endif %}
 
+<!-- Clean up legacy service worker caches to avoid stale pages after disabling PWA -->
+<script>
+    (function () {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                registrations.forEach(function (registration) {
+                    registration.unregister();
+                });
+            });
+        }
+        if ('caches' in window) {
+            caches.keys().then(function (keys) {
+                keys.forEach(function (key) {
+                    caches.delete(key);
+                });
+            });
+        }
+    })();
+</script>
+
 <!-- async load function -->
 <script>
     function async(u, c) {
