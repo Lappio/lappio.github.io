@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f6f2" />
+    <meta name="description" content="Lappio Blog — writing, notes, and projects." />
+    <title>Lappio Blog</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./script.js" defer></script>
+  </head>
+  <body data-page="home">
+    <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="Lappio Blog home"><span class="brand-mark">L<span class="brand-dot">.</span></span><span>Lappio Blog</span></a>
+        <nav class="desktop-nav" aria-label="Main navigation">
+          <a href="./blog/" data-i18n="navBlog">Blog</a>
+          <a href="./notes/" data-i18n="navNotes">Notes</a>
+          <a href="./projects/" data-i18n="navProjects">Projects</a>
+          <a href="./links/" data-i18n="navLinks">Links</a>
+          <a href="./about/" data-i18n="navAbout">About</a>
+          <a href="./contact/" data-i18n="navContact">Contact</a>
+        </nav>
+        <div class="header-actions">
+          <button class="icon-button" id="search-open" type="button" aria-label="Search" title="Search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+          </button>
+          <button class="language-button" id="language-toggle" type="button" aria-label="Switch to Chinese">EN <span aria-hidden="true">/</span> 中</button>
+        </div>
+      </header>
+
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <a href="./blog/" data-i18n="navBlog">Blog</a><a href="./notes/" data-i18n="navNotes">Notes</a><a href="./projects/" data-i18n="navProjects">Projects</a><a href="./links/" data-i18n="navLinks">Links</a><a href="./about/" data-i18n="navAbout">About</a><a href="./contact/" data-i18n="navContact">Contact</a>
+      </nav>
+
+      <main id="main">
+        <section class="hero" id="top" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="status-dot" aria-hidden="true"></span><span data-i18n="eyebrow">A little corner of the internet</span><span class="eyebrow-line" aria-hidden="true"></span><span>EST. 2026</span></div>
+            <h1 id="hero-title"><span data-i18n="heroLine1">Ideas worth</span><br /><em data-i18n="heroLine2">keeping.</em></h1>
+            <p class="hero-intro" data-i18n="heroIntro">Hello, I’m Lappio. This is a place for the things I’m learning, making, and thinking about. Expect thoughtful writing, quick notes, and work in progress.</p>
+            <div class="hero-links"><a class="primary-link" href="./blog/"><span data-i18n="exploreWriting">Explore my writing</span><span aria-hidden="true">↗</span></a><a class="quiet-link" href="./about/"><span data-i18n="moreAbout">More about me</span><span aria-hidden="true">↗</span></a></div>
+          </div>
+          <div class="hero-aside" aria-hidden="true"><div class="orbital orbital-one"></div><div class="orbital orbital-two"></div><div class="hero-symbol">L<span>.</span></div><div class="aside-caption" data-i18n="asideCaption">OBSERVATIONS / EXPERIMENTS / NOTES</div></div>
+        </section>
+
+        <div class="content-grid">
+          <div class="main-column">
+            <section class="content-section" id="blog" aria-labelledby="blog-title">
+              <div class="section-heading"><div><p class="section-kicker">01 / <span data-i18n="writing">WRITING</span></p><h2 id="blog-title" data-i18n="blogTitle">Latest blog posts</h2></div><span class="section-symbol" aria-hidden="true">↘</span></div>
+              <div class="entry-list" id="blog-list"></div>
+            </section>
+            <section class="content-section notes-section" id="notes" aria-labelledby="notes-title">
+              <div class="section-heading"><div><p class="section-kicker">02 / <span data-i18n="fieldNotes">FIELD NOTES</span></p><h2 id="notes-title" data-i18n="notesTitle">Notes & fragments</h2></div><span class="section-symbol" aria-hidden="true">✳</span></div>
+              <p class="section-description" data-i18n="notesDesc">Shorter observations, useful links, and ideas still taking shape.</p>
+              <div class="note-grid" id="notes-list"></div>
+            </section>
+            <section class="content-section projects-section" id="projects" aria-labelledby="projects-title">
+              <div class="section-heading"><div><p class="section-kicker">03 / <span data-i18n="selectedWork">SELECTED WORK</span></p><h2 id="projects-title" data-i18n="projectsTitle">Projects</h2></div><span class="section-symbol" aria-hidden="true">↗</span></div>
+              <div class="projects-list" id="projects-list"></div>
+            </section>
+          </div>
+          <aside class="sidebar">
+            <section class="sidebar-card about-card" id="about" aria-labelledby="about-title"><p class="sidebar-kicker" data-i18n="aboutKicker">A NOTE FROM ME</p><h2 id="about-title" data-i18n="aboutTitle">Hi, I’m Lappio<span class="accent">.</span></h2><p data-i18n="aboutBody">I like turning curiosity into small experiments and clear stories. This blog is my open notebook: part archive, part playground, always evolving.</p><div class="signature">— Lappio</div></section>
+            <section class="sidebar-card links-card" id="links" aria-labelledby="links-title"><p class="sidebar-kicker" data-i18n="linksKicker">FRIEND LINKS</p><h2 id="links-title" data-i18n="linksTitle">Links</h2><p data-i18n="homeFriendsBody">A small constellation of friends and the corners of the web they call home.</p><a class="sidebar-page-link" href="./links/"><span data-i18n="exploreFriends">Explore friend links</span><span aria-hidden="true">↗</span></a></section>
+            <section class="sidebar-card contact-card" id="contact" aria-labelledby="contact-title"><p class="sidebar-kicker" data-i18n="contactKicker">SAY HELLO</p><h2 id="contact-title" data-i18n="contactTitle">Let’s talk.</h2><p data-i18n="contactBody">Have a thought, question, or interesting thing to share? I’d love to hear from you.</p><a href="mailto:hello@example.com" class="contact-link">hello@example.com <span aria-hidden="true">↗</span></a><div class="contact-socials"><a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a><a href="https://www.are.na/" target="_blank" rel="noopener noreferrer">Are.na <span aria-hidden="true">↗</span></a></div><p class="link-hint" data-i18n="contactHint">Update this sample email before publishing.</p></section>
+          </aside>
+        </div>
+      </main>
+      <footer class="site-footer"><span>© <span id="year">2026</span> Lappio Blog</span><span data-i18n="footerNote">Made with curiosity, one page at a time.</span><a href="#top" data-i18n="backTop">Back to top ↑</a></footer>
+    </div>
+
+    <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-box"><div class="search-topline"><div><p class="section-kicker" data-i18n="searchKicker">FIND SOMETHING</p><h2 id="search-title" data-i18n="searchTitle">Search the site</h2></div><button type="button" id="search-close" class="close-button" aria-label="Close search">×</button></div><label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search-input" type="search" autocomplete="off" data-placeholder-en="Search posts, notes, projects..." data-placeholder-zh="搜索文章、笔记、项目……" /></label><div id="search-results" class="search-results" aria-live="polite"></div><p class="search-help" data-i18n="searchHelp">Press Esc to close</p></div></dialog>
+  </body>
+</html>
