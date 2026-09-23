@@ -1,0 +1,80 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = dirname(dirname(fileURLToPath(import.meta.url)));
+const postsDirectory = join(root, "content/posts");
+
+function post({ title, slug, draft = false }) {
+  return `---
+title: "${title}"
+date: "2026-09-24"
+summary: "A short summary"
+language: en
+slug: ${slug}
+${draft ? "draft: true\n" : ""}---
+
+Hello **world**.
+`;
+}
+
+function buildTo(output) {
+  execFileSync("npm", ["run", "build", "--", `--output=${output}`], {
+    cwd: root,
+    encoding: "utf8",
+    stdio: "pipe"
+  });
+}
+
+test("Eleventy publishes ordered articles and excludes drafts and project files", () => {
+  const output = mkdtempSync(join(tmpdir(), "lappio-build-"));
+  const files = [
+    ["tdd-first.md", post({ title: "First post", slug: "first-post" })],
+    ["tdd-a.md", post({ title: "A post", slug: "a-post" })],
+    ["tdd-hidden.md", post({ title: "Hidden post", slug: "hidden", draft: true })],
+  ];
+  try {
+    for (const [name, contents] of files) writeFileSync(join(postsDirectory, name), contents);
+    buildTo(output);
+
+    const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
+    assert.deepEqual(index.map(item => item.slug), ["a-post", "first-post"]);
+    assert.deepEqual(index[1], {
+      title: "First post", date: "2026-09-24", summary: "A short summary",
+      language: "en", slug: "first-post", url: "blog/first-post/"
+    });
+    const html = readFileSync(join(output, "blog/first-post/index.html"), "utf8");
+    assert.match(html, /Hello <strong>world<\/strong>/);
+    assert.match(html, /<article[^>]+lang="en"/);
+    assert.match(html, /href="\.\.\/\.\.\/styles\.css"/);
+    assert.equal(existsSync(join(output, "blog/hidden/index.html")), false);
+    for (const file of ["index.html", "blog/index.html", "notes/index.html", "styles.css", "script.js", "assets/lappio-avatar.png"]) {
+      assert.equal(existsSync(join(output, file)), true, `${file} was not built`);
+    }
+    assert.equal(existsSync(join(output, "README/index.html")), false);
+    assert.equal(existsSync(join(output, "docs")), false);
+    for (const base of ["https://example.test/", "https://example.test/repository-name/"]) {
+      const article = new URL("blog/first-post/", base);
+      for (const relative of ["../../", "../../script.js", "../../styles.css"]) {
+        assert.ok(new URL(relative, article).href.startsWith(base));
+      }
+    }
+  } finally {
+    for (const [name] of files) rmSync(join(postsDirectory, name), { force: true });
+    rmSync(output, { recursive: true, force: true });
+  }
+});
+
+test("an empty blog still produces a valid article index", () => {
+  const output = mkdtempSync(join(tmpdir(), "lappio-empty-build-"));
+  try {
+    buildTo(output);
+    assert.deepEqual(JSON.parse(readFileSync(join(output, "articles.json"), "utf8")), []);
+  } finally {
+    rmSync(output, { recursive: true, force: true });
+  }
+});
