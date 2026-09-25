@@ -1,7 +1,11 @@
 import { readPosts } from "./lib/posts.mjs";
+import yaml from "js-yaml";
 
 export default function (eleventyConfig) {
-  for (const ignored of ["README.md", "docs/**", "tests/**", "lib/**", ".superpowers/**"]) {
+  eleventyConfig.setFrontMatterParsingOptions({ engines: {
+    yaml: input => yaml.load(input, { schema: yaml.JSON_SCHEMA })
+  } });
+  for (const ignored of ["README.md", "docs/**", "tests/**", "lib/**", "writer/**", ".superpowers/**"]) {
     eleventyConfig.ignores.add(ignored);
   }
   for (const copied of ["assets", "styles.css", "script.js", "favicon.svg", ".nojekyll"]) {

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f6f2" />
+    <title>文章工作台 · Lappio Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/writer.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body data-active-panel="articles">
+    <a class="skip-link" href="#article-form">跳转到编辑器</a>
+    <div class="workspace">
+      <header class="topbar">
+        <div class="brand-group">
+          <span class="brand-mark" aria-hidden="true">L<span>.</span></span>
+          <div><p class="brand-name">Lappio Blog <span>/ STUDIO</span></p><p class="brand-caption">本地文章工作台</p></div>
+        </div>
+        <div class="topbar-actions">
+          <span class="local-pill"><span aria-hidden="true"></span> 仅在本机运行</span>
+          <button type="button" class="text-button" id="import-button">导入 Markdown</button>
+          <input id="import-file" type="file" accept=".md,text/markdown" hidden />
+          <button type="button" class="text-button" id="download-article">下载 .md</button>
+          <button type="button" class="solid-button" id="save-article">保存到仓库 <span aria-hidden="true">↗</span></button>
+        </div>
+      </header>
+
+      <div class="intro-row">
+        <div><p class="eyebrow">WRITE / REVIEW / KEEP</p><h1>把想法写下来<span>.</span></h1></div>
+        <p>在这里整理文章，再保存到本地仓库。提交并推送 GitHub 后，网站才会更新。</p>
+      </div>
+
+      <nav class="writer-tabs" aria-label="编辑器面板">
+        <button type="button" data-panel="articles" aria-selected="true">文章</button>
+        <button type="button" data-panel="edit" aria-selected="false">编辑</button>
+        <button type="button" data-panel="preview" aria-selected="false">预览</button>
+      </nav>
+
+      <main class="writer-layout">
+        <aside class="panel library-panel" aria-label="本地文章">
+          <div class="panel-top"><div><p class="eyebrow">01 / LIBRARY</p><h2>文章库 <span id="article-count">0</span></h2></div><button type="button" class="new-button" id="new-article" aria-label="新建文章">＋</button></div>
+          <label class="visually-hidden" for="article-search">搜索文章</label>
+          <input id="article-search" type="search" placeholder="搜索标题或 slug" autocomplete="off" />
+          <label class="visually-hidden" for="article-filter">筛选文章</label>
+          <select id="article-filter"><option value="all">全部文章</option><option value="ready">可发布</option><option value="draft">草稿</option></select>
+          <div id="article-list" class="article-list" aria-live="polite"></div>
+          <p class="panel-footnote">这里显示本地仓库中的文章。页面上线状态以 GitHub Pages 为准。</p>
+        </aside>
+
+        <section class="panel editor-panel" aria-label="编辑文章">
+          <div class="panel-top editor-top"><div><p class="eyebrow">02 / EDITOR</p><h2>文章内容</h2></div><span class="file-chip" id="current-file">未命名文章</span></div>
+          <p class="editor-status" id="editor-status" role="status" aria-live="polite">新文章尚未保存到仓库。</p>
+          <button type="button" id="clear-recovery" class="recovery-button" hidden>清除浏览器恢复副本</button>
+          <p id="metadata-notice" class="editor-notice" hidden>其他 YAML 元数据会保留；重新保存可能改变原有排版或注释。</p>
+          <form id="article-form" novalidate>
+            <div id="editor-structured">
+              <div class="field"><label for="title">标题 <span>*</span></label><input id="title" name="title" type="text" placeholder="给这篇文章起个名字" autocomplete="off" /><small class="field-error" data-error-for="title"></small></div>
+              <div class="field-grid">
+                <div class="field"><label for="date">日期 <span>*</span></label><input id="date" name="date" type="date" /><small class="field-error" data-error-for="date"></small></div>
+                <div class="field"><label for="language">文章语言 <span>*</span></label><select id="language" name="language"><option value="zh">中文</option><option value="en">English</option></select><small class="field-error" data-error-for="language"></small></div>
+              </div>
+              <div class="field"><label for="slug">URL 名称 <span>*</span></label><div class="slug-field"><span>/blog/</span><input id="slug" name="slug" type="text" placeholder="my-first-post" autocomplete="off" /><span>/</span></div><small class="field-hint">小写英文字母、数字和连字符；发布后改动会改变文章地址。</small><small id="slug-warning" class="field-warning" aria-live="polite"></small><small class="field-error" data-error-for="slug"></small></div>
+              <div class="field"><label for="summary">摘要 <span>*</span></label><textarea id="summary" name="summary" rows="3" placeholder="用一两句话介绍这篇文章"></textarea><small class="field-error" data-error-for="summary"></small></div>
+              <label class="draft-control" for="draft"><input id="draft" name="draft" type="checkbox" /><span class="switch-track" aria-hidden="true"></span><span><strong>保留为草稿</strong><small>保存 draft: true；推送后不会显示在网站上</small></span></label>
+              <div class="field body-field"><div class="body-heading"><label for="article-body">正文 Markdown <span>*</span></label><span id="word-count">0 字</span></div><textarea id="article-body" name="body" spellcheck="true" placeholder="从这里开始写作……"></textarea><small class="field-error" data-error-for="body"></small></div>
+            </div>
+            <section id="raw-repair" class="raw-repair" hidden><p class="repair-alert">这篇文章的 YAML 无法解析。请修正原始内容后重新解析。</p><label for="raw-source">原始 Markdown</label><textarea id="raw-source" spellcheck="false"></textarea><button type="button" id="parse-source" class="outline-button">重新解析源码</button></section>
+          </form>
+        </section>
+
+        <section class="panel preview-panel" aria-label="文章预览">
+          <div class="panel-top"><div><p class="eyebrow">03 / PREVIEW</p><h2>阅读预览</h2></div><span class="preview-icon" aria-hidden="true">↗</span></div>
+          <div id="preview" class="article-preview" aria-live="polite"><div class="preview-empty"><span aria-hidden="true">✳</span><h3>文章会在这里成形。</h3><p>填写标题和正文，即可预览阅读效果。</p></div></div>
+          <p class="panel-footnote">预览不会执行文章中的 HTML。最终效果以站点构建结果为准。</p>
+        </section>
+      </main>
+      <footer class="studio-footer"><span>LOCAL STUDIO / LAPPIO BLOG</span><span>保存文件后，记得检查、提交并推送。</span></footer>
+    </div>
+  </body>
+</html>

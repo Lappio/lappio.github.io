@@ -13,7 +13,7 @@ function makeProject() {
   for (const path of [
     "package.json", "eleventy.config.js", "articles.11ty.js", "index.html",
     "styles.css", "script.js", "favicon.svg", ".nojekyll", "README.md",
-    "assets", "_includes", "lib", "scripts", "about", "blog", "notes", "links", "projects", "contact"
+    "assets", "_includes", "lib", "scripts", "writer", "about", "blog", "notes", "links", "projects", "contact"
   ]) {
     cpSync(join(root, path), join(project, path), { recursive: true });
   }
@@ -25,10 +25,10 @@ function makeProject() {
   return project;
 }
 
-function post({ title, slug, draft = false }) {
+function post({ title, slug, draft = false, date = '"2026-09-24"' }) {
   return `---
 title: "${title}"
-date: "2026-09-24"
+date: ${date}
 summary: "A short summary"
 language: en
 slug: ${slug}
@@ -80,12 +80,32 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     }
     assert.equal(existsSync(join(output, "README/index.html")), false);
     assert.equal(existsSync(join(output, "docs")), false);
+    for (const file of ["writer/index.html", "writer/app.js", "writer/writer.css"]) {
+      assert.equal(existsSync(join(output, file)), false, `${file} leaked into the public site`);
+    }
+    assert.equal(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).scripts.write,
+      "node scripts/writer-server.mjs");
     for (const base of ["https://example.test/", "https://example.test/repository-name/"]) {
       const article = new URL("blog/first-post/", base);
       for (const relative of ["../../", "../../script.js", "../../styles.css"]) {
         assert.ok(new URL(relative, article).href.startsWith(base));
       }
     }
+  } finally {
+    rmSync(project, { recursive: true, force: true });
+    rmSync(output, { recursive: true, force: true });
+  }
+});
+
+test("unquoted calendar dates remain YYYY-MM-DD in the public article index", () => {
+  const project = makeProject();
+  const output = mkdtempSync(join(tmpdir(), "lappio-date-build-"));
+  try {
+    writeFileSync(join(project, "content/posts/plain-date.md"),
+      post({ title: "Plain date", slug: "plain-date", date: "2026-09-25" }));
+    buildTo(project, output);
+    const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
+    assert.equal(index[0].date, "2026-09-25");
   } finally {
     rmSync(project, { recursive: true, force: true });
     rmSync(output, { recursive: true, force: true });
