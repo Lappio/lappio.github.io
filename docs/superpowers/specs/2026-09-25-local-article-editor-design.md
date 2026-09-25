@@ -14,7 +14,7 @@ Editor source lives under a dedicated `writer/` directory, with a small server e
 
 ## Authoring interface
 
-The interface uses the blog's paper background, serif headings, restrained green accents, and typography. A compact header identifies it as a local writing tool and offers **New article**, **Import Markdown**, **Save to repository**, and **Download Markdown** actions. The main desktop layout has an article list, a structured editor, and an article preview. At narrow widths, **Articles**, **Edit**, and **Preview** tabs replace the columns without losing entered text.
+The interface uses the blog's paper background, serif headings, restrained green accents, and typography. Owner-facing controls and feedback use Chinese; the `en`/`zh` field describes the article language, not the editor UI. A compact header identifies it as a local writing tool and offers **新建文章**, **导入 Markdown**, **保存到仓库**, and **下载 Markdown** actions. The main desktop layout has an article list, a structured editor, and an article preview. At narrow widths, **文章**, **编辑**, and **预览** tabs replace the columns without losing entered text.
 
 The list scans `content/posts/*.md`, including drafts. It has search and **All / Ready to publish / Drafts** filters and shows title, date, language, slug, and draft state. An invalid article remains listed with a repair warning and can still be opened for correction. The status text explains that `draft: false` means eligible for the next build, not verified live on GitHub Pages. An empty repository shows a new-article invitation.
 
