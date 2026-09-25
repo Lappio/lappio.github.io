@@ -13,7 +13,10 @@
     originalSlug: "",
     previewTimer: null,
     recoveryTimer: null,
-    previewRevision: 0
+    previewRevision: 0,
+    documentEpoch: 0,
+    revision: 0,
+    saving: false
   };
   const $ = selector => document.querySelector(selector);
 
@@ -120,14 +123,20 @@
 
   function clearRecovery(key = recoveryKey()) {
     clearTimeout(state.recoveryTimer);
-    try { localStorage.removeItem(key); } catch { /* Storage can be disabled. */ }
+    removeRecoveryKey(key);
     $("#clear-recovery").hidden = true;
+  }
+
+  function removeRecoveryKey(key) {
+    try { localStorage.removeItem(key); } catch { /* Storage can be disabled. */ }
   }
 
   function saveRecovery() {
     const copy = state.raw === null
       ? { ...currentDocument(), raw: null, downloadName: state.downloadName }
       : { raw: $("#raw-source").value, downloadName: state.downloadName };
+    copy.sourceName = state.sourceName;
+    copy.fingerprint = state.fingerprint;
     try {
       localStorage.setItem(recoveryKey(), JSON.stringify(copy));
       $("#clear-recovery").hidden = false;
@@ -152,6 +161,7 @@
       clearRecovery(recoveryKey(name));
       return false;
     }
+    const diskFingerprint = state.fingerprint;
     if (typeof copy.raw === "string") {
       state.raw = copy.raw;
       $("#raw-source").value = copy.raw;
@@ -164,9 +174,15 @@
       return false;
     }
     state.downloadName = copy.downloadName || state.downloadName;
+    if (name) {
+      state.fingerprint = copy.sourceName === name && typeof copy.fingerprint === "string"
+        ? copy.fingerprint : null;
+    }
     state.dirty = true;
     $("#clear-recovery").hidden = false;
-    status("已恢复浏览器中的未保存修改。请检查并保存到仓库。");
+    status(name && state.fingerprint !== diskFingerprint
+      ? "已恢复浏览器修改，但磁盘文章已变化或恢复副本缺少原始版本信息。请先下载修改，再重新打开；直接保存会因冲突而停止。"
+      : "已恢复浏览器中的未保存修改。请检查并保存到仓库。", name && state.fingerprint !== diskFingerprint);
     return true;
   }
 
@@ -279,6 +295,7 @@
   }
 
   async function openArticle(name) {
+    if (state.saving) { status("正在保存，请等待结果后再切换文章。"); return; }
     if (state.dirty && !window.confirm("当前修改尚未保存。要切换文章吗？")) return;
     try {
       if (state.dirty) saveRecovery();
@@ -293,6 +310,8 @@
         state.raw = opened.markdown;
         state.dirty = false;
         state.downloadName = name;
+        state.originalSlug = "";
+        state.documentEpoch++;
         $("#raw-source").value = opened.markdown;
         $("#raw-repair").hidden = false;
         $("#editor-structured").hidden = true;
@@ -307,6 +326,7 @@
       state.sourceName = name;
       state.fingerprint = opened.fingerprint;
       state.downloadName = name;
+      state.documentEpoch++;
       setDocument(parsed.document);
       const originalSlug = state.originalSlug;
       if (!restoreRecovery(name)) status(`已打开 ${name}，尚无未保存的修改。`);
@@ -320,12 +340,14 @@
   }
 
   function newArticle() {
+    if (state.saving) { status("正在保存，请等待结果后再新建文章。"); return; }
     if (state.dirty && !window.confirm("当前修改尚未保存。要新建文章吗？")) return;
     if (state.dirty) saveRecovery();
     clearTimeout(state.recoveryTimer);
     state.sourceName = null;
     state.fingerprint = null;
     state.downloadName = null;
+    state.documentEpoch++;
     setDocument({ fields: emptyFields(), extraFields: {} });
     if (!restoreRecovery(null)) status("新文章尚未保存到仓库。");
     renderList();
@@ -342,6 +364,7 @@
       if (state.sourceName) state.originalSlug = originalSlug;
       updateSlugWarning();
       state.dirty = true;
+      state.revision++;
       scheduleRecovery();
       status("源码已解析。保存前请检查字段。");
     } catch (error) {
@@ -369,35 +392,56 @@
     if (fieldError) fieldError.textContent = "";
     element.removeAttribute("aria-invalid");
     state.dirty = true;
+    state.revision++;
     status("有未保存的修改。" + (state.fields.draft === true ? " 当前为草稿。" : ""));
     scheduleRecovery();
     schedulePreview();
   }
 
   async function saveCurrent() {
+    if (state.saving) return;
     if (state.raw !== null) { status("请先修正并重新解析 YAML，再保存文章。", true); return; }
     const previousKey = recoveryKey();
     const path = state.sourceName ? `/api/articles/${encodeURIComponent(state.sourceName)}` : "/api/articles";
     const method = state.sourceName ? "PUT" : "POST";
+    const document = currentDocument();
+    const epoch = state.documentEpoch;
+    const revision = state.revision;
+    state.saving = true;
+    $("#save-article").disabled = true;
     try {
       clearFieldErrors();
       const saved = await api(path, { method, body: {
-        fingerprint: state.fingerprint, document: currentDocument()
+        fingerprint: state.fingerprint, document
       } });
+      if (state.documentEpoch !== epoch) return;
+      const newerEdits = state.revision !== revision;
       state.sourceName = saved.name;
       state.downloadName = saved.name;
       state.fingerprint = saved.fingerprint;
-      state.originalSlug = $("#slug").value;
-      state.dirty = false;
-      clearRecovery(previousKey);
+      state.originalSlug = document.fields.slug;
+      state.dirty = newerEdits;
+      if (newerEdits) {
+        clearTimeout(state.recoveryTimer);
+        saveRecovery();
+        if (previousKey !== recoveryKey()) removeRecoveryKey(previousKey);
+      } else {
+        clearRecovery(previousKey);
+      }
       $("#current-file").textContent = saved.name;
       updateSlugWarning();
       try { await refreshArticles(); } catch {
-        status(`已保存到 content/posts/${saved.name}，但文章列表暂时无法刷新。请检查、提交并推送 GitHub。`);
+        status(`已保存到 content/posts/${saved.name}，但文章列表暂时无法刷新。${newerEdits ? "保存期间的新修改仍未保存。" : "请检查、提交并推送 GitHub。"}`);
         return;
       }
-      status(`已保存到 content/posts/${saved.name}。请检查、提交并推送 GitHub，网站才会更新。`);
+      status(newerEdits
+        ? `已保存先前版本到 content/posts/${saved.name}；保存期间的新修改仍未保存。`
+        : `已保存到 content/posts/${saved.name}。请检查、提交并推送 GitHub，网站才会更新。`);
     } catch (error) { showError(error); }
+    finally {
+      state.saving = false;
+      $("#save-article").disabled = false;
+    }
   }
 
   async function downloadCurrent() {
@@ -430,6 +474,7 @@
 
   async function importFile(file) {
     if (!file) return;
+    if (state.saving) { status("正在保存，请等待结果后再导入文章。"); return; }
     if (!/\.md$/i.test(file.name)) { status("请选择 .md 格式的 Markdown 文件。", true); return; }
     if (file.size > 1024 * 1024) { status("文件超过 1 MiB，请缩小后重试。", true); return; }
     if (state.dirty && !window.confirm("当前修改尚未保存。要导入并替换编辑区内容吗？")) return;
@@ -441,6 +486,7 @@
       state.sourceName = null;
       state.fingerprint = null;
       state.downloadName = file.name;
+      state.documentEpoch++;
       setDocument(parsed.document);
       state.dirty = true;
       scheduleRecovery();
@@ -460,6 +506,7 @@
   $("#raw-source").addEventListener("input", () => {
     state.raw = $("#raw-source").value;
     state.dirty = true;
+    state.revision++;
     status("源码有未保存的修改，请重新解析。", true);
     scheduleRecovery();
   });

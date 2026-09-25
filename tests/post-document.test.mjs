@@ -40,6 +40,21 @@ test("common unquoted YAML dates open as calendar dates and remain valid", () =>
   assert.equal(parsePost("plain.md", unquoted).date, "2026-09-25");
 });
 
+test("an impossible unquoted calendar date is rejected without rollover", () => {
+  const invalid = source.replace('date: "2026-09-25"', "date: 2026-02-30");
+  assert.throws(() => parsePost("impossible.md", invalid), /date.*YYYY-MM-DD|real YYYY-MM-DD/i);
+});
+
+test("executable front matter language is rejected without evaluating it", () => {
+  const executable = "---javascript\n({ title: (globalThis.__writerProbe = true) })\n---\nBody";
+  try {
+    assert.throws(() => decodeArticle(executable, "unsafe.md"), /YAML|front matter|unsupported/i);
+    assert.equal(globalThis.__writerProbe, undefined);
+  } finally {
+    delete globalThis.__writerProbe;
+  }
+});
+
 test("invalid metadata survives round trip so validation rejects it", () => {
   const invalidDraft = source.replace("series: Notebook", "draft: yes");
   const document = decodeArticle(invalidDraft, "draft.md");

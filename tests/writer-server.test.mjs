@@ -108,3 +108,16 @@ test("invalid input returns structured errors and large requests are rejected", 
     assert.equal((await fetch(`${writer.url}/api/articles/first.md`, { method: "DELETE" })).status, 404);
   });
 });
+
+test("parse route rejects executable front matter without running it", async () => {
+  await withServer(async writer => {
+    const markdown = "---javascript\n({ title: (globalThis.__writerServerProbe = true) })\n---\nBody";
+    try {
+      const response = await postJson(writer, "/api/parse", { markdown });
+      assert.equal(response.status, 422);
+      assert.equal(globalThis.__writerServerProbe, undefined);
+    } finally {
+      delete globalThis.__writerServerProbe;
+    }
+  });
+});

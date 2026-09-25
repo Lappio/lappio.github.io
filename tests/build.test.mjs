@@ -25,10 +25,10 @@ function makeProject() {
   return project;
 }
 
-function post({ title, slug, draft = false }) {
+function post({ title, slug, draft = false, date = '"2026-09-24"' }) {
   return `---
 title: "${title}"
-date: "2026-09-24"
+date: ${date}
 summary: "A short summary"
 language: en
 slug: ${slug}
@@ -91,6 +91,21 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
         assert.ok(new URL(relative, article).href.startsWith(base));
       }
     }
+  } finally {
+    rmSync(project, { recursive: true, force: true });
+    rmSync(output, { recursive: true, force: true });
+  }
+});
+
+test("unquoted calendar dates remain YYYY-MM-DD in the public article index", () => {
+  const project = makeProject();
+  const output = mkdtempSync(join(tmpdir(), "lappio-date-build-"));
+  try {
+    writeFileSync(join(project, "content/posts/plain-date.md"),
+      post({ title: "Plain date", slug: "plain-date", date: "2026-09-25" }));
+    buildTo(project, output);
+    const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
+    assert.equal(index[0].date, "2026-09-25");
   } finally {
     rmSync(project, { recursive: true, force: true });
     rmSync(output, { recursive: true, force: true });

@@ -1,6 +1,10 @@
 import { readPosts } from "./lib/posts.mjs";
+import yaml from "js-yaml";
 
 export default function (eleventyConfig) {
+  eleventyConfig.setFrontMatterParsingOptions({ engines: {
+    yaml: input => yaml.load(input, { schema: yaml.JSON_SCHEMA })
+  } });
   for (const ignored of ["README.md", "docs/**", "tests/**", "lib/**", "writer/**", ".superpowers/**"]) {
     eleventyConfig.ignores.add(ignored);
   }

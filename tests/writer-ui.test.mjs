@@ -49,7 +49,8 @@ async function loadEditor(articles = list, config = {}) {
     let status = 200;
     if (path === "/api/session") body = { token: "test-token" };
     else if (path === "/api/articles" && requestOptions.method === "POST") {
-      if (config.saveConflict) {
+      if (config.saveConflict || (config.saveConflictOnFingerprint &&
+        JSON.parse(requestOptions.body).fingerprint !== (config.openFingerprint || "abc"))) {
         status = 409;
         body = { error: { code: "STALE_FILE", message: "Article changed on disk" } };
       } else {
@@ -64,13 +65,14 @@ async function loadEditor(articles = list, config = {}) {
         }
       }
     } else if (path === "/api/articles/first.md" && requestOptions.method === "PUT") {
-      if (config.saveConflict) {
+      if (config.saveConflict || (config.saveConflictOnFingerprint &&
+        JSON.parse(requestOptions.body).fingerprint !== (config.openFingerprint || "abc"))) {
         status = 409;
         body = { error: { code: "STALE_FILE", message: "Article changed on disk" } };
       } else body = { name: "first.md", fingerprint: "saved-hash" };
     }
     else if (path === "/api/articles") body = { articles };
-    else if (path === "/api/articles/first.md") body = { name: "first.md", markdown: encodeArticle(article), fingerprint: "abc" };
+    else if (path === "/api/articles/first.md") body = { name: "first.md", markdown: encodeArticle(article), fingerprint: config.openFingerprint || "abc" };
     else if (path === "/api/articles/broken.md") body = { name: "broken.md", markdown: broken, fingerprint: "def" };
     else if (path === "/api/parse") {
       const markdown = JSON.parse(requestOptions.body).markdown;
@@ -84,6 +86,9 @@ async function loadEditor(articles = list, config = {}) {
       const request = JSON.parse(requestOptions.body);
       body = { markdown: encodeArticle(request.document), filename: request.downloadName || `${request.document.fields.slug}.md` };
     } else throw new Error(`Unexpected fetch ${path}`);
+    if (config.deferSaves && ["POST", "PUT"].includes(requestOptions.method) && path.startsWith("/api/articles")) {
+      await new Promise(resolve => { config.releaseSave = resolve; });
+    }
     return { ok: status < 400, status, json: async () => body };
   };
   dom.window.confirm = message => config.confirm ? config.confirm(message) : true;
@@ -305,6 +310,85 @@ test("browser recovery restores or discards an unsaved article", async () => {
     await tick(30);
     assert.equal(discarded.window.document.querySelector("#title").value, "First post");
   } finally { discarded.window.close(); }
+});
+
+test("recovered edits retain their original fingerprint and cannot overwrite disk changes", async () => {
+  const requests = [];
+  const copy = JSON.stringify({ sourceName: "first.md", fingerprint: "old-version",
+    fields: { ...article.fields, body: "Recovered older edit" }, extraFields: {}, raw: null });
+  const dom = await loadEditor(list, { requests, saveConflictOnFingerprint: true,
+    storageEntries: { "writer:recovery:first.md": copy } });
+  try {
+    const d = dom.window.document;
+    d.querySelector('[data-article-name="first.md"]').click();
+    await tick(30);
+    d.querySelector("#save-article").click();
+    await tick(30);
+    const request = requests.find(item => item.path === "/api/articles/first.md" && item.method === "PUT");
+    assert.equal(request.body.fingerprint, "old-version");
+    assert.equal(d.querySelector("#article-body").value, "Recovered older edit");
+    assert.match(d.querySelector("#editor-status").textContent, /变化|冲突|磁盘/);
+  } finally { dom.window.close(); }
+});
+
+test("legacy recovery without a fingerprint cannot silently replace the disk file", async () => {
+  const requests = [];
+  const oldCopy = JSON.stringify({ fields: { ...article.fields, title: "Legacy recovery" }, extraFields: {}, raw: null });
+  const dom = await loadEditor(list, { requests, saveConflictOnFingerprint: true,
+    storageEntries: { "writer:recovery:first.md": oldCopy } });
+  try {
+    const d = dom.window.document;
+    d.querySelector('[data-article-name="first.md"]').click();
+    await tick(30);
+    d.querySelector("#save-article").click();
+    await tick(30);
+    const request = requests.find(item => item.path === "/api/articles/first.md" && item.method === "PUT");
+    assert.equal(request.body.fingerprint, null);
+    assert.match(d.querySelector("#editor-status").textContent, /变化|冲突|磁盘/);
+  } finally { dom.window.close(); }
+});
+
+test("save response does not mark edits typed during the request as saved", async () => {
+  const config = { deferSaves: true };
+  const dom = await loadEditor(list, config);
+  try {
+    const d = dom.window.document;
+    d.querySelector('[data-article-name="first.md"]').click();
+    await tick(30);
+    edit(dom, "#article-body", "Body sent to disk");
+    d.querySelector("#save-article").click();
+    await tick(20);
+    edit(dom, "#article-body", "Newer unsaved body");
+    d.querySelector("#new-article").click();
+    assert.equal(d.querySelector("#current-file").textContent, "first.md");
+    config.releaseSave();
+    await tick(300);
+    assert.equal(d.querySelector("#article-body").value, "Newer unsaved body");
+    assert.match(d.querySelector("#editor-status").textContent, /未保存/);
+    const savedCopy = JSON.parse(dom.window.localStorage.getItem("writer:recovery:first.md"));
+    assert.equal(savedCopy.fields.body, "Newer unsaved body");
+    assert.equal(savedCopy.fingerprint, "saved-hash");
+  } finally { dom.window.close(); }
+});
+
+test("new article save moves newer recovery edits to the created filename", async () => {
+  const config = { deferSaves: true };
+  const dom = await loadEditor([], config);
+  try {
+    edit(dom, "#title", "Draft while saving");
+    edit(dom, "#slug", "draft-while-saving");
+    edit(dom, "#summary", "Summary");
+    edit(dom, "#article-body", "First version");
+    dom.window.document.querySelector("#save-article").click();
+    await tick(20);
+    edit(dom, "#article-body", "Second version");
+    config.releaseSave();
+    await tick(300);
+    const copy = JSON.parse(dom.window.localStorage.getItem("writer:recovery:draft-while-saving.md"));
+    assert.equal(copy.fields.body, "Second version");
+    assert.equal(copy.fingerprint, "saved-hash");
+    assert.equal(dom.window.localStorage.getItem("writer:recovery:new"), null);
+  } finally { dom.window.close(); }
 });
 
 test("unavailable browser storage does not block editing", async () => {
