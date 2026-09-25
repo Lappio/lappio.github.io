@@ -1,7 +1,7 @@
 import { readPosts } from "./lib/posts.mjs";
 
 export default function (eleventyConfig) {
-  for (const ignored of ["README.md", "docs/**", "tests/**", "lib/**", ".superpowers/**"]) {
+  for (const ignored of ["README.md", "docs/**", "tests/**", "lib/**", "writer/**", ".superpowers/**"]) {
     eleventyConfig.ignores.add(ignored);
   }
   for (const copied of ["assets", "styles.css", "script.js", "favicon.svg", ".nojekyll"]) {

@@ -13,7 +13,7 @@ function makeProject() {
   for (const path of [
     "package.json", "eleventy.config.js", "articles.11ty.js", "index.html",
     "styles.css", "script.js", "favicon.svg", ".nojekyll", "README.md",
-    "assets", "_includes", "lib", "scripts", "about", "blog", "notes", "links", "projects", "contact"
+    "assets", "_includes", "lib", "scripts", "writer", "about", "blog", "notes", "links", "projects", "contact"
   ]) {
     cpSync(join(root, path), join(project, path), { recursive: true });
   }
@@ -80,6 +80,11 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     }
     assert.equal(existsSync(join(output, "README/index.html")), false);
     assert.equal(existsSync(join(output, "docs")), false);
+    for (const file of ["writer/index.html", "writer/app.js", "writer/writer.css"]) {
+      assert.equal(existsSync(join(output, file)), false, `${file} leaked into the public site`);
+    }
+    assert.equal(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).scripts.write,
+      "node scripts/writer-server.mjs");
     for (const base of ["https://example.test/", "https://example.test/repository-name/"]) {
       const article = new URL("blog/first-post/", base);
       for (const relative of ["../../", "../../script.js", "../../styles.css"]) {
