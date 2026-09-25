@@ -73,6 +73,10 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 .file-chip { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 5px 8px; background: #f0f2ed; color: #536259; font: 10px var(--mono); }
 .editor-status { min-height: 18px; margin: 0 0 23px; color: var(--muted); font-size: 12px; }
 .editor-status.is-error { color: #a34636; }
+.recovery-button { display: block; margin: -12px 0 18px; padding: 0; border: 0; background: none; color: #955a3a; font-size: 11px; text-decoration: underline; }
+.editor-notice { margin: -9px 0 18px; padding: 9px 11px; background: #f3f1e9; color: var(--muted); font-size: 11px; }
+.field-warning { display: block; color: #9a6537; font-size: 11px; }
+.field-warning:not(:empty) { margin-top: 5px; }
 .field { margin-bottom: 20px; }
 .field > label, .body-heading label, .raw-repair label { display: block; margin-bottom: 7px; font-weight: 700; font-size: 12px; }
 .field label span, .body-heading label span { color: var(--accent); }

@@ -33,6 +33,13 @@ test("malformed YAML names its source", () => {
   assert.throws(() => decodeArticle("---\ntitle: [broken\n---\nBody", "broken.md"), /broken\.md.*front matter/i);
 });
 
+test("common unquoted YAML dates open as calendar dates and remain valid", () => {
+  const unquoted = source.replace('date: "2026-09-25"', "date: 2026-09-25");
+  const document = decodeArticle(unquoted, "plain.md");
+  assert.equal(document.fields.date, "2026-09-25");
+  assert.equal(parsePost("plain.md", unquoted).date, "2026-09-25");
+});
+
 test("invalid metadata survives round trip so validation rejects it", () => {
   const invalidDraft = source.replace("series: Notebook", "draft: yes");
   const document = decodeArticle(invalidDraft, "draft.md");
