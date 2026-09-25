@@ -69,3 +69,16 @@ test("a draft and a published article may not share a slug", () => {
     assert.throws(() => readPosts(directory), /duplicate.*slug.*first-post/i);
   });
 });
+
+test("metadata with surrounding whitespace is rejected before publishing", () => {
+  for (const [field, line] of [
+    ["slug", 'slug: " first-post "'],
+    ["language", 'language: " en "'],
+    ["title", 'title: " First post "']
+  ]) {
+    const original = field === "title" ? "title: First post" : `${field}: ${field === "slug" ? "first-post" : "en"}`;
+    withPosts({ "bad.md": firstPost.replace(original, line) }, directory => {
+      assert.throws(() => readPosts(directory), new RegExp(`bad\\.md.*${field}.*whitespace`, "i"));
+    });
+  }
+});
