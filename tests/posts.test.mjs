@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { readPosts } from "../lib/posts.mjs";
+import { parsePost, readPosts } from "../lib/posts.mjs";
 
 const firstPost = `---
 title: First post
@@ -81,4 +81,12 @@ test("metadata with surrounding whitespace is rejected before publishing", () =>
       assert.throws(() => readPosts(directory), new RegExp(`bad\\.md.*${field}.*whitespace`, "i"));
     });
   }
+});
+
+test("single article parser matches directory validation", () => {
+  withPosts({ "first.md": firstPost }, directory => {
+    const parsed = parsePost("first.md", firstPost);
+    const fromDirectory = readPosts(directory)[0];
+    assert.deepEqual({ ...fromDirectory, source: "first.md" }, parsed);
+  });
 });
