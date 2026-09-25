@@ -8,6 +8,9 @@ const copy = {
 };
 
 Object.assign(copy.en, {
+  loadingArticles: "Loading articles…",
+  emptyArticles: "No articles yet. Check back soon.",
+  unavailableArticles: "Articles are unavailable right now. Please try again later.",
   linksKicker: "FRIEND LINKS",
   linksPageLead: "A small constellation of people and places I like to keep close.",
   friendTitle: "Friend links",
@@ -27,6 +30,9 @@ Object.assign(copy.en, {
   contactProfilesHint: "Replace these sample profile links with your own."
 });
 Object.assign(copy.zh, {
+  loadingArticles: "正在加载文章……",
+  emptyArticles: "暂无文章，欢迎稍后再来。",
+  unavailableArticles: "文章暂时无法加载，请稍后再试。",
   linksKicker: "友情链接",
   linksPageLead: "一片由朋友和喜欢的角落组成的小小星图。",
   friendTitle: "友情链接",
@@ -59,11 +65,7 @@ const friendLinks = [
 
 // Replace these sample entries with your own writing and projects.
 const entries = {
-  blog: [
-    {date:"SEP 18, 2026",zhDate:"2026年9月18日",title:{en:"On making space for new ideas",zh:"给新想法留一点空间"},description:{en:"A few thoughts on curiosity, creative routines, and beginning before you feel ready.",zh:"关于好奇心、创作习惯，以及在准备好之前先开始。"}},
-    {date:"AUG 29, 2026",zhDate:"2026年8月29日",title:{en:"What I learned from building in public",zh:"公开创作教会我的事"},description:{en:"Sharing unfinished work can make the process more honest, useful, and fun.",zh:"分享尚未完成的作品，让过程更诚实、更有用，也更有趣。"}},
-    {date:"AUG 12, 2026",zhDate:"2026年8月12日",title:{en:"A small guide to noticing more",zh:"一份关于多观察一点的小指南"},description:{en:"Notes on collecting details from everyday life and turning them into something new.",zh:"从日常生活中收集细节，再把它们变成新东西。"}}
-  ],
+  blog: [],
   notes: [
     {tag:{en:"PROCESS",zh:"方法"},date:"09.21.26",title:{en:"The value of a messy first draft",zh:"凌乱初稿的价值"}},
     {tag:{en:"READING",zh:"阅读"},date:"09.10.26",title:{en:"A book worth revisiting slowly",zh:"值得慢慢重读的一本书"}},
@@ -78,14 +80,66 @@ const entries = {
 
 let language = localStorage.getItem("lappio-language") === "zh" ? "zh" : "en";
 const page = document.body.dataset.page || "home";
-const rootPrefix = page === "home" ? "./" : "../";
+const rootPrefix = document.body.dataset.rootPrefix || (page === "home" ? "./" : "../");
 const searchDialog = document.querySelector("#search-dialog");
 const searchInput = document.querySelector("#search-input");
 const searchResults = document.querySelector("#search-results");
 const friendNetwork = document.querySelector("#friend-network");
 let selectedFriend = null;
+let blogLoading = true;
+let blogLoadFailed = false;
 
 function textFor(value) { return typeof value === "string" ? value : value[language]; }
+
+function formatPostDate(date) {
+  return new Intl.DateTimeFormat(language === "zh" ? "zh-CN" : "en-US", {
+    year: "numeric", month: "short", day: "numeric", timeZone: "UTC"
+  }).format(new Date(`${date}T00:00:00Z`));
+}
+
+function renderBlogList(blogList) {
+  blogList.replaceChildren();
+  const posts = page === "home" ? entries.blog.slice(0, 3) : entries.blog;
+  if (blogLoading || blogLoadFailed || posts.length === 0) {
+    const message = document.createElement("p");
+    message.className = "entry-state";
+    message.textContent = copy[language][blogLoading ? "loadingArticles" : blogLoadFailed ? "unavailableArticles" : "emptyArticles"];
+    blogList.append(message);
+    return;
+  }
+  posts.forEach(post => {
+    const article = document.createElement("article");
+    article.className = "entry";
+    article.id = `blog-${post.slug}`;
+    const date = document.createElement("div");
+    date.className = "entry-meta";
+    date.textContent = formatPostDate(post.date);
+    const link = document.createElement("a");
+    link.className = "entry-link";
+    link.href = `${rootPrefix}${post.url}`;
+    link.lang = post.language;
+    const title = document.createElement("h3");
+    title.textContent = post.title;
+    const summary = document.createElement("p");
+    summary.textContent = post.summary;
+    link.append(title, summary);
+    const arrow = document.createElement("span");
+    arrow.className = "entry-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "↗";
+    article.append(date, link, arrow);
+    blogList.append(article);
+  });
+}
+
+function validPostIndex(posts) {
+  return Array.isArray(posts) && posts.every(post => post && typeof post === "object"
+    && ["title", "date", "summary", "language", "slug", "url"].every(key => typeof post[key] === "string")
+    && (post.language === "en" || post.language === "zh")
+    && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(post.slug)
+    && post.url === `blog/${post.slug}/`
+    && /^\d{4}-\d{2}-\d{2}$/.test(post.date));
+}
 
 function renderContent() {
   document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
@@ -95,9 +149,11 @@ function renderContent() {
     if (node.dataset.i18n === "aboutTitle") node.innerHTML = value;
     else node.textContent = value;
   });
-  if (page !== "home") document.title = `${copy[language][`nav${page[0].toUpperCase()}${page.slice(1)}`]} · Lappio Blog`;
+  if (page === "post") document.title = `${document.body.dataset.postTitle} · Lappio Blog`;
+  else if (page !== "home") document.title = `${copy[language][`nav${page[0].toUpperCase()}${page.slice(1)}`]} · Lappio Blog`;
   document.querySelectorAll(".desktop-nav a, .mobile-nav a").forEach(link => {
-    if (page !== "home" && link.getAttribute("href") === `${rootPrefix}${page}/`) link.setAttribute("aria-current", "page");
+    const section = page === "post" ? "blog" : page;
+    if (section !== "home" && link.getAttribute("href") === `${rootPrefix}${section}/`) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
   document.querySelector("#language-toggle").innerHTML = language === "en" ? "<strong>EN</strong> <span aria-hidden='true'>/</span> 中" : "EN <span aria-hidden='true'>/</span> <strong>中</strong>";
@@ -109,7 +165,7 @@ function renderContent() {
   document.querySelector("#search-close").setAttribute("aria-label",language === "en" ? "Close search" : "关闭搜索");
   searchInput.placeholder = searchInput.dataset[`placeholder${language === "en" ? "En" : "Zh"}`];
   const blogList = document.querySelector("#blog-list");
-  if (blogList) blogList.innerHTML = entries.blog.map((item,index) => `<article class="entry" id="blog-${index+1}"><div class="entry-meta">${language === "en" ? item.date : item.zhDate}</div><div><h3>${textFor(item.title)}</h3><p>${textFor(item.description)}</p></div></article>`).join("");
+  if (blogList) renderBlogList(blogList);
   const notesList = document.querySelector("#notes-list");
   if (notesList) notesList.innerHTML = entries.notes.map((item,index) => `<article class="note-card" id="note-${index+1}"><span class="tag">${textFor(item.tag)}</span><h3>${textFor(item.title)}</h3><div class="note-bottom"><span>${item.date}</span></div></article>`).join("");
   const projectsList = document.querySelector("#projects-list");
@@ -221,7 +277,7 @@ function renderSearch() {
   const query = searchInput.value.trim().toLocaleLowerCase();
   if (!query) { searchResults.innerHTML = `<div class="search-empty">${copy[language].searchStart}</div>`; return; }
   const records = [
-    ...entries.blog.map((item,index)=>({type:copy[language].blogLabel,title:textFor(item.title),description:textFor(item.description),target:`${rootPrefix}blog/#blog-${index+1}`})),
+    ...entries.blog.map(item=>({type:copy[language].blogLabel,title:item.title,description:item.summary,target:`${rootPrefix}${item.url}`})),
     ...entries.notes.map((item,index)=>({type:copy[language].noteLabel,title:textFor(item.title),description:"",target:`${rootPrefix}notes/#note-${index+1}`})),
     ...entries.projects.map((item,index)=>({type:copy[language].projectLabel,title:textFor(item.title),description:textFor(item.description),target:`${rootPrefix}projects/#project-${index+1}`}))
   ];
@@ -239,6 +295,19 @@ searchInput.addEventListener("input",renderSearch);
 document.addEventListener("keydown",event=>{ if((event.metaKey||event.ctrlKey)&&event.key.toLowerCase()==="k"){event.preventDefault();searchDialog.open ? searchDialog.close() : (searchDialog.showModal(),searchInput.focus());} });
 document.querySelector("#year").textContent=new Date().getFullYear();
 renderContent();
+fetch(`${rootPrefix}articles.json`)
+  .then(response => { if (!response.ok) throw new Error("Article index unavailable"); return response.json(); })
+  .then(posts => {
+    if (!validPostIndex(posts)) throw new Error("Invalid article index");
+    entries.blog = posts;
+    blogLoading = false;
+    renderContent();
+  })
+  .catch(() => {
+    blogLoading = false;
+    blogLoadFailed = true;
+    renderContent();
+  });
 if (page === "links" && !window.location.hash) {
   const centerProfile = () => requestAnimationFrame(() => requestAnimationFrame(() => {
     if (window.scrollY > 40) return;

@@ -78,3 +78,18 @@ test("an empty blog still produces a valid article index", () => {
     rmSync(output, { recursive: true, force: true });
   }
 });
+
+test("a removed article disappears from the next local build", () => {
+  const source = join(postsDirectory, "tdd-removed.md");
+  const output = join(root, "_site/blog/removed-post/index.html");
+  try {
+    writeFileSync(source, post({ title: "Removed post", slug: "removed-post" }));
+    execFileSync("npm", ["run", "build"], { cwd: root, encoding: "utf8" });
+    assert.equal(existsSync(output), true);
+    rmSync(source);
+    execFileSync("npm", ["run", "build"], { cwd: root, encoding: "utf8" });
+    assert.equal(existsSync(output), false);
+  } finally {
+    rmSync(source, { force: true });
+  }
+});

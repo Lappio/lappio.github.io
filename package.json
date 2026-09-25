@@ -3,12 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "eleventy",
-    "dev": "eleventy --serve",
+    "build": "node scripts/clean-site.mjs && eleventy",
+    "dev": "node scripts/clean-site.mjs && eleventy --serve",
     "test": "node --test tests/*.test.mjs"
   },
   "devDependencies": {
     "@11ty/eleventy": "3.1.6",
-    "gray-matter": "4.0.3"
+    "gray-matter": "4.0.3",
+    "jsdom": "26.1.0"
   }
 }

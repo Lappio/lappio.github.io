@@ -118,3 +118,8 @@ a.friend-detail-action{color:var(--accent);border-bottom:1px solid var(--accent)
 .post-body code{font-family:var(--mono);font-size:.88em}
 .post-body :not(pre)>code{background:#e9ece6;padding:2px 4px}
 @media(max-width:650px){.post-article{padding:40px 0 60px}.post-summary{font-size:16px}.post-body{font-size:16px}.post-body h2{font-size:29px}}
+
+/* Published article lists */
+.entry-link{display:block;min-width:0}
+.entry-link:hover h3,.entry-link:focus-visible h3{color:var(--accent)}
+.entry-state{padding:28px 0;color:var(--muted);font-size:14px;border-bottom:1px solid var(--line)}
