@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0b0c0b" />
+    <title>版式预览 · Lappio</title>
+    <link rel="icon" href="../../../favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../b.css" />
+    <script src="../../preview.js" defer></script>
+  </head>
+  <body data-variant="b" data-root="../../../" data-specimen="../" data-title-zh="版式预览 · Lappio" data-title-en="Layout specimen · Lappio">
+    <a class="skip" href="#main" data-i18n="skipLink">跳转到正文</a>
+    <div class="shell" id="top">
+      <aside class="rail">
+        <div class="rail-brand">
+          <a href="../">lappio</a>
+          <button id="lang-toggle" type="button">EN</button>
+        </div>
+        <nav class="rail-nav" data-nav>
+          <a href="../#about" data-i18n="navAbout">关于</a>
+          <a href="../#writing" data-i18n="navBlog">博客</a>
+          <a href="../#notes" data-i18n="navNotes">笔记</a>
+          <a href="../#projects" data-i18n="navProjects">项目</a>
+          <a href="../#links" data-i18n="navLinks">链接</a>
+          <a href="../#contact" data-i18n="navContact">联系</a>
+        </nav>
+        <p class="rail-foot">preview/b</p>
+      </aside>
+      <div class="main">
+        <div class="status">
+          <span>preview/fixtures/local-preview.md</span>
+          <form class="search" role="search">
+            <span class="prompt" aria-hidden="true">$</span>
+            <input id="search-input" type="search" autocomplete="off" placeholder="搜索" aria-label="搜索" data-placeholder-zh="搜索" data-placeholder-en="Search" />
+            <div id="search-results" class="results" hidden></div>
+          </form>
+        </div>
+        <main id="main">
+          <article class="file" lang="zh">
+            <p class="file-note">// status: excluded from site build</p>
+            <p class="banner flag" data-i18n="specimenBanner">试样 · 不进入正式构建</p>
+            <h1>版式预览：一段只在本地出现的文字</h1>
+            <p class="dek">这篇稿只用来检查标题、段落、引用和代码的排版。</p>
+            <time datetime="2026-10-26">2026-10-26</time>
+            <div class="file-body">
+              <p>这篇稿只用来检查版式，不会进入正式站点。</p>
+              <p>下面这些段落、列表、引用和代码都是排版试样，不记录真实经历，也不代表已经发布的文章。</p>
+              <h2>行宽</h2>
+              <p>正文待在一条固定的行宽里。句子有长有短，用来看字号、行距和段间距是否站得住。</p>
+              <blockquote><p>引用用来看强调的方式。它仍然是预览文字，不是摘录。</p></blockquote>
+              <ul>
+                <li>第一项看列表的缩进</li>
+                <li>第二项看行距</li>
+                <li>第三项看标记</li>
+              </ul>
+              <p>行内代码 <code>prefers-reduced-motion</code> 应该和句子坐在一起。代码块单独成段：</p>
+              <pre><code>.essay {
+  max-width: 66ch;
+}</code></pre>
+              <p>预览到这里就可以。</p>
+            </div>
+            <div class="back-row">
+              <a href="../" data-i18n="backPreview">返回这一方案</a>
+              <a href="../../../blog/" data-i18n="allWriting">所有文章</a>
+            </div>
+          </article>
+        </main>
+        <footer class="colophon">
+          <span>© <span id="year">2026</span> Lappio Blog</span>
+          <span class="switch">
+            <a href="../../a/">A</a>
+            <a href="../" aria-current="page">B</a>
+            <a href="../../c/">C</a>
+            <a href="../../../" data-i18n="backLive">正在使用的站点</a>
+          </span>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

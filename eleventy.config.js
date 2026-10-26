@@ -5,10 +5,13 @@ export default function (eleventyConfig) {
   eleventyConfig.setFrontMatterParsingOptions({ engines: {
     yaml: input => yaml.load(input, { schema: yaml.JSON_SCHEMA })
   } });
-  for (const ignored of ["README.md", "docs/**", "tests/**", "lib/**", "writer/**", ".superpowers/**"]) {
+  for (const ignored of ["README.md", "VARIANTS.md", "docs/**", "tests/**", "lib/**", "writer/**", "preview/fixtures/**", ".superpowers/**"]) {
     eleventyConfig.ignores.add(ignored);
   }
   for (const copied of ["assets", "styles.css", "script.js", "favicon.svg", ".nojekyll"]) {
+    eleventyConfig.addPassthroughCopy(copied);
+  }
+  for (const copied of ["preview/preview.css", "preview/preview.js", "preview/a/a.css", "preview/b/b.css", "preview/c/c.css"]) {
     eleventyConfig.addPassthroughCopy(copied);
   }
   eleventyConfig.on("eleventy.before", () => readPosts("content/posts"));

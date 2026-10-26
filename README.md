@@ -54,7 +54,7 @@ npm ci
 npm run dev
 ```
 
-Open the local address printed by Eleventy. `npm run dev` watches files and refreshes the generated site. Before publishing, run:
+Open the local address printed by Eleventy. `npm run dev` watches files and refreshes the generated site. Three visual previews live at `/preview/a/`, `/preview/b/`, and `/preview/c/`. They do not replace the pages above. See `VARIANTS.md` to compare them. Before publishing, run:
 
 ```sh
 npm test

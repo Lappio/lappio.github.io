@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#e5e6e4" />
+    <title>刊 · Lappio</title>
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@400;600&family=Outfit:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./a.css" />
+    <script src="../preview.js" defer></script>
+  </head>
+  <body data-variant="a" data-root="../../" data-specimen="article/" data-title-zh="刊 · Lappio" data-title-en="Issue · Lappio">
+    <a class="skip" href="#main" data-i18n="skipLink">跳转到正文</a>
+    <div class="page" id="top">
+      <header class="mast">
+        <div class="tools">
+          <span data-i18n="previewTag">预览</span>
+          <div class="tool-group">
+            <form class="search" role="search">
+              <input id="search-input" type="search" autocomplete="off" placeholder="搜索" aria-label="搜索" data-placeholder-zh="搜索" data-placeholder-en="Search" />
+              <div id="search-results" class="results" hidden></div>
+            </form>
+            <button id="lang-toggle" type="button">EN</button>
+          </div>
+        </div>
+        <a class="mast-name" href="#top">Lappio</a>
+        <p class="dateline">
+          <span>lappio.top</span>
+          <span data-i18n="dateline">公开笔记本</span>
+          <span><span class="mark" aria-hidden="true"></span>2026</span>
+        </p>
+        <nav class="mast-nav" data-nav>
+          <a href="#writing" data-i18n="navBlog">博客</a>
+          <a href="#notes" data-i18n="navNotes">笔记</a>
+          <a href="#projects" data-i18n="navProjects">项目</a>
+          <a href="#links" data-i18n="navLinks">链接</a>
+          <a href="#about" data-i18n="navAbout">关于</a>
+          <a href="#contact" data-i18n="navContact">联系</a>
+        </nav>
+      </header>
+
+      <main id="main">
+        <section class="cover" aria-labelledby="hero-title">
+          <h1 id="hero-title">
+            <span data-i18n="heroLine1">值得留下的</span>
+            <span class="accent" data-i18n="heroLine2">想法。</span>
+          </h1>
+          <div>
+            <p class="lede" data-i18n="heroIntro">你好，我是 Lappio。这里记录我学到的知识、正在做的事情，以及偶尔冒出的想法。你会读到文章、随笔和持续更新的项目。</p>
+            <div class="actions">
+              <a href="#writing" data-i18n="exploreWriting">阅读文章</a>
+              <a href="#about" data-i18n="moreAbout">了解我</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="spread" id="writing">
+          <div class="feature">
+            <div class="col-head">
+              <h2 data-i18n="writing">文章</h2>
+            </div>
+            <div id="post-feature">
+              <p class="story-status" data-i18n="loadingArticles">正在加载文章……</p>
+            </div>
+            <div id="post-list"></div>
+            <a class="specimen" href="article/">
+              <span data-i18n="specimenKicker">试样 · 不发布</span>
+              <strong data-i18n="specimenTitle">版式预览：一段只在本地出现的文字</strong>
+            </a>
+            <a class="archive-link" href="../../blog/" data-i18n="allWriting">所有文章</a>
+          </div>
+          <div class="notes-col" id="notes">
+            <div class="col-head">
+              <h2 data-i18n="navNotes">笔记</h2>
+              <span class="flag" data-i18n="sampleFlag">示例</span>
+            </div>
+            <div id="note-list"></div>
+          </div>
+        </section>
+
+        <section class="band" id="projects">
+          <div class="band-head">
+            <h2 data-i18n="navProjects">项目</h2>
+            <span class="flag" data-i18n="sampleFlag">示例</span>
+          </div>
+          <div id="project-list"></div>
+        </section>
+
+        <section class="closing">
+          <div id="about">
+            <p class="kicker" data-i18n="aboutKicker">关于我</p>
+            <p class="about-lead" data-i18n="aboutBody">我喜欢把好奇心变成小实验，也喜欢把复杂的事情讲清楚。这里是我的公开笔记本：既是档案，也是游乐场。</p>
+            <p class="hint" data-i18n="aboutSampleHint">这段介绍是示例文案，随时可以换成你自己的故事。</p>
+          </div>
+          <div class="fine-print">
+            <div id="contact">
+              <h2 data-i18n="navContact">联系</h2>
+              <p data-i18n="contactBody">有想法、问题，或者想分享有趣的东西？欢迎来信。</p>
+              <ul class="todo-list">
+                <li><span class="flag">TODO</span> <span data-i18n="todoEmail">邮箱还没填</span></li>
+                <li><span class="flag">TODO</span> <span data-i18n="todoGithub">GitHub 主页还没填</span></li>
+                <li><span class="flag">TODO</span> <span data-i18n="todoArena">Are.na 主页还没填</span></li>
+              </ul>
+            </div>
+            <div id="links">
+              <h2 data-i18n="navLinks">链接</h2>
+              <p data-i18n="friendSampleHint">当前友链仍是示例。你可以随时换成朋友的名字和网址。</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="colophon">
+        <span>© <span id="year">2026</span> Lappio Blog</span>
+        <span data-i18n="footerNote">带着好奇心，一页一页写下去。</span>
+        <span class="switch">
+          <a href="./" aria-current="page">A</a>
+          <a href="../b/">B</a>
+          <a href="../c/">C</a>
+          <a href="../../" data-i18n="backLive">正在使用的站点</a>
+        </span>
+      </footer>
+    </div>
+  </body>
+</html>

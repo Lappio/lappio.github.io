@@ -13,7 +13,8 @@ function makeProject() {
   for (const path of [
     "package.json", "eleventy.config.js", "articles.11ty.js", "index.html",
     "styles.css", "script.js", "favicon.svg", ".nojekyll", "README.md",
-    "assets", "_includes", "lib", "scripts", "writer", "about", "blog", "notes", "links", "projects", "contact"
+    "assets", "_includes", "lib", "scripts", "writer", "about", "blog", "notes", "links", "projects", "contact",
+    "preview", "VARIANTS.md"
   ]) {
     cpSync(join(root, path), join(project, path), { recursive: true });
   }
@@ -91,6 +92,26 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
         assert.ok(new URL(relative, article).href.startsWith(base));
       }
     }
+    const liveHome = readFileSync(join(output, "index.html"), "utf8");
+    assert.match(liveHome, /Ideas worth/);
+    assert.match(liveHome, /class="hero"/);
+    for (const variant of ["a", "b", "c"]) {
+      assert.equal(existsSync(join(output, `preview/${variant}/index.html`)), true, `preview ${variant} missing`);
+      assert.equal(existsSync(join(output, `preview/${variant}/article/index.html`)), true);
+      assert.equal(existsSync(join(output, `preview/${variant}/${variant}.css`)), true);
+      for (const page of [`preview/${variant}/index.html`, `preview/${variant}/article/index.html`]) {
+        const html = readFileSync(join(output, page), "utf8");
+        assert.doesNotMatch(html, /hello@example\.com/);
+        assert.doesNotMatch(html, /github\.com/);
+        assert.doesNotMatch(html, /https?:\/\/(www\.)?are\.na/);
+      }
+    }
+    assert.equal(existsSync(join(output, "preview/preview.js")), true);
+    assert.equal(existsSync(join(output, "preview/fixtures/local-preview.md")), false);
+    assert.equal(existsSync(join(output, "preview/fixtures/local-preview/index.html")), false);
+    assert.equal(existsSync(join(output, "variants/index.html")), false);
+    assert.match(readFileSync(join(output, "preview/a/article/index.html"), "utf8"), /不会进入正式站点/);
+    assert.equal(JSON.parse(readFileSync(join(output, "articles.json"), "utf8")).some(item => item.slug === "local-preview"), false);
   } finally {
     rmSync(project, { recursive: true, force: true });
     rmSync(output, { recursive: true, force: true });

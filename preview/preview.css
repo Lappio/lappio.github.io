@@ -1,0 +1,67 @@
+/* Chooser for the three previews. Deliberately plain. */
+
+body {
+  margin: 0;
+  background: #f4f5f6;
+  color: #1b1d1c;
+  font-family: "Iowan Old Style", Palatino, "Palatino Linotype", "Songti SC", serif;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 48px 22px 72px;
+}
+
+h1 {
+  font-size: 2.4rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  margin: 0 0 12px;
+}
+
+p {
+  margin: 0 0 14px;
+}
+
+.lead {
+  color: #3e4542;
+}
+
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 28px 0;
+}
+
+li + li {
+  margin-top: 14px;
+}
+
+a.card {
+  display: block;
+  padding: 16px 18px;
+  background: white;
+  border: 1px solid #d5d8d6;
+  color: inherit;
+  text-decoration: none;
+}
+
+a.card strong {
+  display: block;
+  font-size: 1.35rem;
+}
+
+a.card span {
+  color: #3e4542;
+}
+
+.live {
+  font-family: ui-sans-serif, sans-serif;
+  font-size: 0.95rem;
+}
+
+.live a {
+  color: inherit;
+}
