@@ -14,10 +14,12 @@ const posts = [
   { title: "Fourth post", date: "2026-09-21", summary: "Fourth summary", language: "en", slug: "fourth-post", url: "blog/fourth-post/" }
 ];
 
-async function loadPage(path, response = posts) {
+async function loadPage(path, response = posts, preference) {
   const html = readFileSync(join(root, path), "utf8");
   const url = `https://example.test/repository-name/${path === "index.html" ? "" : path.replace(/index\.html$/, "")}`;
-  const dom = new JSDOM(html, { url, runScripts: "outside-only" });
+  const dom = new JSDOM(html, { url, runScripts: "outside-only", pretendToBeVisual: true });
+  dom.window.ResizeObserver = class { observe() {} disconnect() {} };
+  if (preference) dom.window.localStorage.setItem("lappio-language", preference);
   dom.window.fetch = async () => {
     if (response instanceof Error) throw response;
     return { ok: true, json: async () => response };
@@ -62,9 +64,9 @@ test("empty blog shows a translated empty state", async () => {
   const dom = await loadPage("blog/index.html", []);
   try {
     const document = dom.window.document;
-    assert.match(document.querySelector("#blog-list").textContent, /No articles yet/i);
-    document.querySelector("#language-toggle").click();
     assert.match(document.querySelector("#blog-list").textContent, /暂无文章/);
+    document.querySelector("#language-toggle").click();
+    assert.match(document.querySelector("#blog-list").textContent, /No articles yet/i);
   } finally {
     dom.window.close();
   }
@@ -75,11 +77,11 @@ test("unavailable or malformed index leaves other sections usable", async () => 
     const dom = await loadPage("index.html", response);
     try {
       const document = dom.window.document;
-      assert.match(document.querySelector("#blog-list").textContent, /Articles are unavailable/i);
+      assert.match(document.querySelector("#blog-list").textContent, /文章暂时无法加载/);
       assert.ok(document.querySelector("#notes-list").textContent.length > 0);
       assert.ok(document.querySelector("#projects-list").textContent.length > 0);
       document.querySelector("#language-toggle").click();
-      assert.match(document.querySelector("#blog-list").textContent, /文章暂时无法加载/);
+      assert.match(document.querySelector("#blog-list").textContent, /Articles are unavailable/i);
     } finally {
       dom.window.close();
     }
@@ -108,5 +110,26 @@ test("article page retains its source language and uses project-relative links",
     assert.match(document.title, /An English article/);
   } finally {
     dom.window.close();
+  }
+});
+
+
+test("Chinese is the static and runtime default; saved English and both toggle directions work", async () => {
+  for (const page of ["index.html", ...["blog", "notes", "projects", "links", "about", "contact"].map(name => `${name}/index.html`)]) {
+    assert.match(readFileSync(join(root, page), "utf8"), /<html lang="zh-CN">/);
+    for (const preference of [undefined, "en", "zh"]) {
+      const dom = await loadPage(page, posts, preference);
+      try {
+        const { document, localStorage } = dom.window;
+        const initial = preference === "en" ? "en" : "zh-CN";
+        assert.equal(document.documentElement.lang, initial);
+        const toggle = document.querySelector("#language-toggle");
+        toggle.click();
+        assert.equal(document.documentElement.lang, initial === "en" ? "zh-CN" : "en");
+        assert.equal(localStorage.getItem("lappio-language"), initial === "en" ? "zh" : "en");
+        toggle.click();
+        assert.equal(document.documentElement.lang, initial);
+      } finally { dom.window.close(); }
+    }
   }
 });

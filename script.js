@@ -78,7 +78,7 @@ const entries = {
   ]
 };
 
-let language = localStorage.getItem("lappio-language") === "zh" ? "zh" : "en";
+let language = localStorage.getItem("lappio-language") === "en" ? "en" : "zh";
 const page = document.body.dataset.page || "home";
 const rootPrefix = document.body.dataset.rootPrefix || (page === "home" ? "./" : "../");
 const searchDialog = document.querySelector("#search-dialog");
