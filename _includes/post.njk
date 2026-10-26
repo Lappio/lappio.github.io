@@ -43,7 +43,7 @@
             <h1>{{ title }}</h1>
             <p class="post-summary">{{ summary }}</p>
             <span class="tag {% if language == 'en' %}tag-b{% else %}tag-a{% endif %}">{% if category %}{{ category }}{% elif language == "en" %}EN{% else %}中文{% endif %}</span>
-            <time datetime="{{ date }}">{{ date }}</time>
+            <time datetime="{{ date }}">{{ date | postDate(language) }}</time>
           </header>
           <div class="post-body">{{ content | safe }}</div>
         </article>

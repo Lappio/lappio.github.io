@@ -92,6 +92,7 @@ test("article page retains its source language and uses project-relative links",
   const template = readFileSync(join(root, "_includes/post.njk"), "utf8")
     .replaceAll("{{ title }}", "An English article")
     .replaceAll("{{ language }}", "en")
+    .replaceAll("{{ date }}", "2026-10-27")
     .replace("{{ content | safe }}", "<p>The article body stays in English.</p>");
   const dom = new JSDOM(template, {
     url: "https://example.test/repository-name/blog/first-post/",
@@ -102,9 +103,12 @@ test("article page retains its source language and uses project-relative links",
     dom.window.eval(script);
     await new Promise(resolve => setTimeout(resolve, 0));
     const document = dom.window.document;
+    assert.equal(document.querySelector(".post-header time").textContent, "2026年10月27日");
+    assert.equal(document.querySelector(".post-header time").dateTime, "2026-10-27");
     assert.equal(document.querySelector(".desktop-nav a").getAttribute("aria-current"), "page");
     assert.equal(new URL(document.querySelector(".brand").href).pathname, "/repository-name/");
     document.querySelector("#language-toggle").click();
+    assert.equal(document.querySelector(".post-header time").textContent, "Oct 27, 2026");
     assert.equal(document.querySelector("article").lang, "en");
     assert.match(document.querySelector("article").textContent, /The article body stays in English/);
     assert.match(document.title, /An English article/);

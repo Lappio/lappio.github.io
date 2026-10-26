@@ -74,6 +74,9 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     });
     const html = readFileSync(join(output, "blog/first-post/index.html"), "utf8");
     assert.match(html, /Hello <strong>world<\/strong>/);
+    const time = new JSDOM(html).window.document.querySelector(".post-header time");
+    assert.equal(time.dateTime, "2026-09-24");
+    assert.equal(time.textContent, "Sep 24, 2026");
     const code = new JSDOM(html).window.document.querySelector("pre code");
     assert.equal(code.textContent.trim(), 'const example = "{{ example }}";');
     assert.equal(code.querySelector(".token.keyword").textContent, "const");
@@ -108,10 +111,14 @@ test("unquoted calendar dates remain YYYY-MM-DD in the public article index", ()
   const output = mkdtempSync(join(tmpdir(), "lappio-date-build-"));
   try {
     writeFileSync(join(project, "content/posts/plain-date.md"),
-      post({ title: "Plain date", slug: "plain-date", date: "2026-09-25" }));
+      post({ title: "Plain date", slug: "plain-date", date: "2026-09-25" }).replace("language: en", "language: zh"));
     buildTo(project, output);
     const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
     assert.equal(index[0].date, "2026-09-25");
+    const html = readFileSync(join(output, "blog/plain-date/index.html"), "utf8");
+    const time = new JSDOM(html).window.document.querySelector(".post-header time");
+    assert.equal(time.dateTime, "2026-09-25");
+    assert.equal(time.textContent, "2026年9月25日");
   } finally {
     rmSync(project, { recursive: true, force: true });
     rmSync(output, { recursive: true, force: true });

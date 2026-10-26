@@ -41,8 +41,8 @@
   --space-10: 40px;
   --space-12: 48px;
   --shadow: 0 8px 24px -16px var(--shadow-color);
-  --font-sans: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
-  --font-serif: "LXGW WenKai", "LXGW WenKai SC", "Source Han Serif SC", "Noto Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Georgia, "Noto Serif", "Liberation Serif", "DejaVu Serif", "LXGW WenKai", "LXGW WenKai SC", "Source Han Serif SC", "Noto Serif SC", "Noto Serif CJK SC", "Songti SC", serif;
   --font-mono: ui-monospace, "SFMono-Regular", Consolas, "Noto Sans Mono CJK SC", monospace;
 }
 @font-face {
@@ -621,7 +621,16 @@ small {
 .post-main {
   margin: 0;
 }
-.post-main .next-page-link, .post-article { max-width: 760px; }
+body[data-page="post"] .page-shell {
+  max-width: 824px; /* 760px shared column plus the desktop gutters. */
+}
+body[data-page="post"] .site-header {
+  gap: 12px;
+  padding-inline: 29px; /* Align with the article text inside its border and padding. */
+}
+body[data-page="post"] .breadcrumbs { margin-inline: 29px; }
+body[data-page="post"] .desktop-nav { flex-wrap: nowrap; }
+body[data-page="post"] .desktop-nav a { padding-inline: 4px; }
 .post-article {
   padding: 28px;
 }
@@ -757,45 +766,47 @@ small {
     display: flex;
     margin-bottom: 20px;
   }
-  .mobile-nav { gap: 3px; }
+  .mobile-nav { gap: 3px; justify-content: flex-start; }
   .mobile-nav a {
     padding: 4px 8px;
     min-height: 32px;
     font-size: 13px;
     text-align: center;
   }
-  html:lang(en) .mobile-nav {
-    display: grid;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-  }
-  html:lang(en) .mobile-nav a { grid-column: span 2; padding-inline: 2px; }
-  html:lang(en) .mobile-nav a:nth-child(4) { grid-column: 2 / span 2; }
   .hero {
-    grid-template-columns: 80px minmax(0, 1fr);
-    gap: 16px;
+    grid-template-columns: 72px minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+    column-gap: 16px;
+    row-gap: 0;
     padding: 20px;
     margin-top: 0;
   }
   .hero-avatar {
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
+    grid-row: 1 / 3;
   }
   .hero-copy {
     display: contents;
   }
   .hero .hand {
+    grid-column: 2;
+    grid-row: 1;
     align-self: end;
     font-size: 25px;
   }
-  .hero h1, .hero-intro, .now {
+  .hero-intro, .now {
     grid-column: 1 / -1;
   }
   .hero h1 {
-    font-size: 25px;
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+    font-size: 22px;
     margin: 0;
   }
   .hero-intro {
-    margin: 0;
+    margin: 16px 0 12px;
     font-size: 15px;
   }
   .now {
@@ -821,6 +832,8 @@ small {
   .interior-hero h1 {
     font-size: 32px;
   }
+  body[data-page="post"] .site-header { padding-inline: 21px; }
+  body[data-page="post"] .breadcrumbs { margin-inline: 21px; }
   .post-article {
     padding: 20px;
   }

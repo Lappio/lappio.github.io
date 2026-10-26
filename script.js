@@ -162,6 +162,8 @@ function renderContent() {
     if (node.dataset.i18n === "aboutTitle") node.innerHTML = value;
     else node.textContent = value;
   });
+  const postDate = document.querySelector(".post-header time[datetime]");
+  if (postDate) postDate.textContent = formatPostDate(postDate.dateTime);
   if (page === "post") document.title = `${document.body.dataset.postTitle} · Lappio Blog`;
   else if (page !== "home") document.title = `${copy[language][`nav${page[0].toUpperCase()}${page.slice(1)}`]} · Lappio Blog`;
   document.querySelectorAll(".desktop-nav a, .mobile-nav a").forEach(link => {
