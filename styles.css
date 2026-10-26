@@ -20,7 +20,10 @@
   --token-comment: #716153;
   --token-keyword: #82432e;
   --token-string: #415c38;
-  --token-number: #485f7a;
+  --token-number: #805515;
+  --token-function: #643f2e;
+  --token-punctuation: #716153;
+  --shadow-hover: 0 10px 28px -12px var(--shadow-color);
   --clear: transparent;
   --shadow-color: rgb(90 60 30 / 12%);
   --backdrop: rgb(59 47 42 / 35%);
@@ -279,7 +282,7 @@ small {
   padding: var(--space-5) var(--space-6);
   margin-bottom: 12px;
 }
-.entry {
+.entry, .note-card, .project {
   position: relative;
 }
 .entry-meta {
@@ -318,6 +321,7 @@ small {
   border-radius: var(--radius-lg);
 }
 .entry-arrow {
+  pointer-events: none;
   position: absolute;
   right: 16px;
   top: 16px;
@@ -615,9 +619,9 @@ small {
   display: none !important;
 }
 .post-main {
-  max-width: 760px;
-  margin: auto;
+  margin: 0;
 }
+.post-main .next-page-link, .post-article { max-width: 760px; }
 .post-article {
   padding: 28px;
 }
@@ -753,9 +757,19 @@ small {
     display: flex;
     margin-bottom: 20px;
   }
+  .mobile-nav { gap: 3px; }
   .mobile-nav a {
-    padding: 4px 12px;
+    padding: 4px 8px;
+    min-height: 32px;
+    font-size: 13px;
+    text-align: center;
   }
+  html:lang(en) .mobile-nav {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+  html:lang(en) .mobile-nav a { grid-column: span 2; padding-inline: 2px; }
+  html:lang(en) .mobile-nav a:nth-child(4) { grid-column: 2 / span 2; }
   .hero {
     grid-template-columns: 80px minmax(0, 1fr);
     gap: 16px;
@@ -822,4 +836,31 @@ small {
   .friend-detail {
     flex-direction: column;
   }
+}
+
+/* Dates include list metadata and the footer year. */
+time, .entry-meta, .note-bottom, #year { font-variant-numeric: tabular-nums; }
+.entry-link:focus-visible { outline: none; }
+.entry-link:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.project { flex-direction: column; gap: 8px; }
+.token.boolean { color: var(--token-number); }
+.token.function { color: var(--token-function); }
+.token.punctuation, .token.operator { color: var(--token-punctuation); }
+.token.prolog, .token.doctype, .token.cdata { color: var(--token-comment); }
+.token.selector, .token.attr-value { color: var(--token-string); }
+.token.tag, .token.atrule, .token.attr-name { color: var(--token-keyword); }
+@media (prefers-reduced-motion: no-preference) {
+  .entry, .note-card {
+    animation: card-arrive 350ms ease-out both;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+  @keyframes card-arrive {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero { transition: transform 200ms ease, box-shadow 200ms ease; }
+  .hero:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 }

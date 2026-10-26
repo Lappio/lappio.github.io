@@ -5,6 +5,7 @@ import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symli
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { JSDOM } from "jsdom";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -73,7 +74,10 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     });
     const html = readFileSync(join(output, "blog/first-post/index.html"), "utf8");
     assert.match(html, /Hello <strong>world<\/strong>/);
-    assert.match(html, /const example = &quot;\{\{ example \}\}&quot;;/);
+    const code = new JSDOM(html).window.document.querySelector("pre code");
+    assert.equal(code.textContent.trim(), 'const example = "{{ example }}";');
+    assert.equal(code.querySelector(".token.keyword").textContent, "const");
+    assert.equal(code.querySelector(".token.string").textContent, '"{{ example }}"');
     assert.match(html, /<article[^>]+lang="en"/);
     assert.match(html, /href="\.\.\/\.\.\/styles\.css"/);
     assert.equal(existsSync(join(output, "blog/hidden/index.html")), false);

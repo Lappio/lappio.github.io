@@ -1,3 +1,4 @@
+// TODO(Lapp): Supply personal copy and real contact/profile details; sample hint translations below stay unpublished.
 const copy = {
   en: {
     skipLink:"Skip to content",asideCaption:"OBSERVATIONS / EXPERIMENTS / NOTES",navBlog:"Blog",navNotes:"Notes",navProjects:"Projects",navLinks:"Links",navAbout:"About",navContact:"Contact",eyebrow:"A little corner of the internet",heroLine1:"Ideas worth",heroLine2:"keeping.",heroIntro:"Hello, I’m Lappio. This is a place for the things I’m learning, making, and thinking about. Expect thoughtful writing, quick notes, and work in progress.",exploreWriting:"Explore my writing",moreAbout:"More about me",writing:"WRITING",blogTitle:"Latest blog posts",fieldNotes:"FIELD NOTES",notesTitle:"Notes & fragments",notesDesc:"Shorter observations, useful links, and ideas still taking shape.",selectedWork:"SELECTED WORK",projectsTitle:"Projects",aboutKicker:"A NOTE FROM ME",aboutTitle:"Hi, I’m Lappio<span class='accent'>.</span>",aboutBody:"I like turning curiosity into small experiments and clear stories. This blog is my open notebook: part archive, part playground, always evolving.",linksKicker:"ELSEWHERE",linksTitle:"Links",linksHint:"Replace these sample links with your profiles.",contactKicker:"SAY HELLO",contactTitle:"Let’s talk.",contactBody:"Have a thought, question, or interesting thing to share? I’d love to hear from you.",contactHint:"Update this sample email before publishing.",footerNote:"Made with curiosity, one page at a time.",backTop:"Back to top ↑",searchKicker:"FIND SOMETHING",searchTitle:"Search the site",searchHelp:"Press Esc to close",noResults:"No matches found. Try another word.",searchStart:"Start typing to search posts, notes, and projects.",blogLabel:"Blog",noteLabel:"Note",projectLabel:"Project",homeLabel:"Home",upNext:"UP NEXT",sampleEntries:"Sample entries",sampleLinks:"Sample links",blogPageLead:"Longer pieces on ideas, the creative process, and the things I keep coming back to.",notesPageLead:"A lighter notebook for observations, questions, and ideas before they become essays.",projectsPageLead:"Things I am building, exploring, and learning from along the way.",linksPageLead:"A small directory of places to find me and things worth keeping close.",aboutPageLead:"A little more about the person behind this corner of the internet.",contactPageLead:"A place to start a conversation, share a question, or send an interesting idea.",allWriting:"All writing",allNotes:"All notes",selectedProjects:"Selected projects",elsewhereTitle:"Elsewhere",githubDesc:"Code, experiments, and open work",arenaDesc:"Collected references and inspiration",aboutStoryKicker:"THE SHORT VERSION",aboutStoryTitle:"Curiosity, documented.",aboutStoryOne:"I’m Lappio, and this is my open notebook. I write to understand what I’m learning, share useful discoveries, and keep a record of the questions that matter to me.",aboutStoryTwo:"The blog holds longer thoughts. Notes are the smaller observations along the way. Projects are where those ideas become something you can use or explore.",aboutSampleHint:"This introduction is sample copy—make it yours when you are ready.",emailKicker:"EMAIL",contactPanelTitle:"Let’s talk."
@@ -55,31 +56,36 @@ Object.assign(copy.zh, {
 Object.assign(copy.zh, { navBlog: "文章", navLinks: "友链", homeLabel: "首页", blogTitle: "最近写的", heroGreeting: "你好，我是 Lappio 👋", nowLearning: "在学 CSS 布局", nowMaking: "在做 本地写作编辑器", nowListening: "在听 Lo-fi", emptyArticles: "还没有发布文章，很快就来。" });
 Object.assign(copy.en, { heroGreeting: "Hello, I’m Lappio 👋", nowLearning: "Learning CSS layouts", nowMaking: "Making a local writing editor", nowListening: "Listening to Lo-fi" });
 
-// Replace these samples with real friend names, descriptions, and URLs.
+// TODO(Lapp): Replace these samples with real friend names, descriptions, and URLs.
 const friendAvatarSource = "../assets/lappio-avatar.png";
 const friendLinks = [
-  {name:{en:"Friend 01",zh:"朋友 01"},description:{en:"A place for thoughtful writing.",zh:"一个记录认真思考的地方。"},url:"",x:16,y:20},
-  {name:{en:"Friend 02",zh:"朋友 02"},description:{en:"Ideas, images, and experiments.",zh:"想法、图像与实验。"},url:"",x:72,y:14},
-  {name:{en:"Friend 03",zh:"朋友 03"},description:{en:"Notes from a curious mind.",zh:"一颗好奇心留下的笔记。"},url:"",x:84,y:41},
-  {name:{en:"Friend 04",zh:"朋友 04"},description:{en:"Things made with care.",zh:"用心做出来的作品。"},url:"",x:74,y:75},
-  {name:{en:"Friend 05",zh:"朋友 05"},description:{en:"A little window into new work.",zh:"一扇看见新作品的小窗。"},url:"",x:23,y:79},
-  {name:{en:"Friend 06",zh:"朋友 06"},description:{en:"A collection of useful finds.",zh:"收藏实用发现的角落。"},url:"",x:15,y:50}
+  {sample:true,name:{en:"Friend 01",zh:"朋友 01"},description:{en:"A place for thoughtful writing.",zh:"一个记录认真思考的地方。"},url:"",x:16,y:20},
+  {sample:true,name:{en:"Friend 02",zh:"朋友 02"},description:{en:"Ideas, images, and experiments.",zh:"想法、图像与实验。"},url:"",x:72,y:14},
+  {sample:true,name:{en:"Friend 03",zh:"朋友 03"},description:{en:"Notes from a curious mind.",zh:"一颗好奇心留下的笔记。"},url:"",x:84,y:41},
+  {sample:true,name:{en:"Friend 04",zh:"朋友 04"},description:{en:"Things made with care.",zh:"用心做出来的作品。"},url:"",x:74,y:75},
+  {sample:true,name:{en:"Friend 05",zh:"朋友 05"},description:{en:"A little window into new work.",zh:"一扇看见新作品的小窗。"},url:"",x:23,y:79},
+  {sample:true,name:{en:"Friend 06",zh:"朋友 06"},description:{en:"A collection of useful finds.",zh:"收藏实用发现的角落。"},url:"",x:15,y:50}
 ];
 
-// Replace these sample entries with your own writing and projects.
+// TODO(Lapp): Replace these sample entries with your own writing and projects.
 const entries = {
   blog: [],
   notes: [
-    {tag:{en:"PROCESS",zh:"方法"},date:"09.21.26",title:{en:"The value of a messy first draft",zh:"凌乱初稿的价值"}},
-    {tag:{en:"READING",zh:"阅读"},date:"09.10.26",title:{en:"A book worth revisiting slowly",zh:"值得慢慢重读的一本书"}},
-    {tag:{en:"IDEA",zh:"想法"},date:"08.25.26",title:{en:"A better way to collect good questions",zh:"更好地收集好问题"}},
-    {tag:{en:"OBSERVATION",zh:"观察"},date:"08.03.26",title:{en:"Small details make a place memorable",zh:"微小的细节让地方难忘"}}
+    {sample:true,tag:{en:"PROCESS",zh:"方法"},date:"09.21.26",title:{en:"The value of a messy first draft",zh:"凌乱初稿的价值"}},
+    {sample:true,tag:{en:"READING",zh:"阅读"},date:"09.10.26",title:{en:"A book worth revisiting slowly",zh:"值得慢慢重读的一本书"}},
+    {sample:true,tag:{en:"IDEA",zh:"想法"},date:"08.25.26",title:{en:"A better way to collect good questions",zh:"更好地收集好问题"}},
+    {sample:true,tag:{en:"OBSERVATION",zh:"观察"},date:"08.03.26",title:{en:"Small details make a place memorable",zh:"微小的细节让地方难忘"}}
   ],
   projects: [
-    {title:{en:"An open notebook",zh:"开放笔记本"},description:{en:"A growing collection of useful ideas, experiments, and resources.",zh:"持续收集有用的想法、实验与资源。"}},
-    {title:{en:"Small tools, big curiosity",zh:"小工具，大好奇心"},description:{en:"Little digital experiments that make everyday work feel lighter.",zh:"一些让日常工作更轻松的数字小实验。"}}
+    {sample:true,title:{en:"An open notebook",zh:"开放笔记本"},description:{en:"A growing collection of useful ideas, experiments, and resources.",zh:"持续收集有用的想法、实验与资源。"}},
+    {sample:true,title:{en:"Small tools, big curiosity",zh:"小工具，大好奇心"},description:{en:"Little digital experiments that make everyday work feel lighter.",zh:"一些让日常工作更轻松的数字小实验。"}}
   ]
 };
+
+Object.assign(copy.zh, { emptyNotes: "笔记整理中，稍后见。", emptyProjects: "项目整理中，稍后见。", emptyFriends: "友链整理中，稍后见。", emptyContact: "联系方式整理中，稍后见。", emptyProfiles: "个人主页整理中，稍后见。" });
+Object.assign(copy.en, { emptyNotes: "Notes are taking shape. Check back soon.", emptyProjects: "Projects are taking shape. Check back soon.", emptyFriends: "Friend links are taking shape. Check back soon.", emptyContact: "Contact details are on the way.", emptyProfiles: "Personal profiles are on the way." });
+const publishedItems = items => items.filter(item => !item.sample);
+const visibleFriends = publishedItems(friendLinks);
 
 let language = localStorage.getItem("lappio-language") === "en" ? "en" : "zh";
 const page = document.body.dataset.page || "home";
@@ -110,9 +116,10 @@ function renderBlogList(blogList) {
     blogList.append(message);
     return;
   }
-  posts.forEach(post => {
+  posts.forEach((post, index) => {
     const article = document.createElement("article");
     article.className = "entry";
+    article.style.setProperty("--i", Math.min(index, 5));
     article.id = `blog-${post.slug}`;
     const date = document.createElement("div");
     date.className = "entry-meta";
@@ -173,11 +180,54 @@ function renderContent() {
   const blogList = document.querySelector("#blog-list");
   if (blogList) renderBlogList(blogList);
   const notesList = document.querySelector("#notes-list");
-  if (notesList) notesList.innerHTML = entries.notes.map((item,index) => `<article class="note-card" id="note-${index+1}"><span class="tag">${textFor(item.tag)}</span><h3>${textFor(item.title)}</h3><div class="note-bottom"><span>${item.date}</span></div></article>`).join("");
+  if (notesList) renderCards(notesList, "notes");
   const projectsList = document.querySelector("#projects-list");
-  if (projectsList) projectsList.innerHTML = entries.projects.map((item,index) => `<article class="project" id="project-${index+1}"><span class="project-number">0${index+1}</span><div><h3>${textFor(item.title)}</h3><p>${textFor(item.description)}</p></div></article>`).join("");
+  if (projectsList) renderCards(projectsList, "projects");
   if (friendNetwork) renderFriendNetwork();
   renderSearch();
+}
+
+// Real notes/projects need their own project-relative detail URL before publication.
+function renderCards(container, type) {
+  container.replaceChildren();
+  const items = publishedItems(entries[type]);
+  if (!items.length) {
+    const empty = document.createElement("p");
+    empty.className = "entry-state";
+    empty.textContent = copy[language][type === "notes" ? "emptyNotes" : "emptyProjects"];
+    container.append(empty);
+    return;
+  }
+  items.forEach((item, index) => {
+    const card = document.createElement("article");
+    card.className = type === "notes" ? "note-card" : "project";
+    card.id = `${type === "notes" ? "note" : "project"}-${index + 1}`;
+    card.style.setProperty("--i", Math.min(index, 5));
+    const heading = document.createElement("h3");
+    const link = document.createElement("a");
+    link.className = "entry-link";
+    link.href = `${rootPrefix}${item.url}`;
+    link.textContent = textFor(item.title);
+    heading.append(link);
+    if (item.tag) {
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = textFor(item.tag);
+      card.append(tag);
+    }
+    card.append(heading);
+    if (item.date) {
+      const date = document.createElement("time");
+      date.textContent = item.date;
+      card.append(date);
+    }
+    if (item.description) {
+      const description = document.createElement("p");
+      description.textContent = textFor(item.description);
+      card.append(description);
+    }
+    container.append(card);
+  });
 }
 
 function drawFriendLines() {
@@ -212,7 +262,7 @@ function selectFriend(index) {
   detail.replaceChildren();
   detail.hidden = isOwnProfile;
   if (isOwnProfile) return;
-  const friend = friendLinks[index];
+  const friend = visibleFriends[index];
   const copyBlock = document.createElement("div");
   const badge = document.createElement("small");
   badge.textContent = friend.url ? copy[language].friendTitle : copy[language].friendSampleBadge;
@@ -229,11 +279,15 @@ function selectFriend(index) {
 }
 
 function renderFriendNetwork() {
+  friendNetwork.hidden = visibleFriends.length === 0;
+  document.querySelector("#friends-empty").hidden = visibleFriends.length > 0;
+  document.querySelector(".friend-intro").hidden = visibleFriends.length === 0;
+  if (!visibleFriends.length) return;
   const nodes = document.querySelector("#friend-nodes");
   const svg = document.querySelector("#network-lines");
   if (!nodes.childElementCount) {
     document.querySelector("#profile-trigger").addEventListener("click",()=>selectFriend(null));
-    friendLinks.forEach((friend,index) => {
+    visibleFriends.forEach((friend,index) => {
       const node = document.createElement("button");
       node.type = "button";
       node.className = "friend-node";
@@ -261,7 +315,7 @@ function renderFriendNetwork() {
   }
   document.querySelector("#profile-trigger").setAttribute("aria-label",copy[language].viewMyProfile);
   nodes.querySelectorAll(".friend-node").forEach((node,index) => {
-    const friend = friendLinks[index];
+    const friend = visibleFriends[index];
     const avatar = document.createElement("span");
     avatar.className = "friend-node-avatar";
     if (friend.avatar) {
@@ -273,7 +327,7 @@ function renderFriendNetwork() {
     const name = document.createElement("strong");
     name.textContent = textFor(friend.name);
     node.replaceChildren(avatar,name);
-    node.setAttribute("aria-label",`${textFor(friendLinks[index].name)} — ${textFor(friendLinks[index].description)}`);
+    node.setAttribute("aria-label",`${textFor(visibleFriends[index].name)} — ${textFor(visibleFriends[index].description)}`);
   });
   selectFriend(selectedFriend);
   requestAnimationFrame(drawFriendLines);
@@ -284,8 +338,8 @@ function renderSearch() {
   if (!query) { searchResults.innerHTML = `<div class="search-empty">${copy[language].searchStart}</div>`; return; }
   const records = [
     ...entries.blog.map(item=>({type:copy[language].blogLabel,title:item.title,description:item.summary,target:`${rootPrefix}${item.url}`})),
-    ...entries.notes.map((item,index)=>({type:copy[language].noteLabel,title:textFor(item.title),description:"",target:`${rootPrefix}notes/#note-${index+1}`})),
-    ...entries.projects.map((item,index)=>({type:copy[language].projectLabel,title:textFor(item.title),description:textFor(item.description),target:`${rootPrefix}projects/#project-${index+1}`}))
+    ...publishedItems(entries.notes).map((item,index)=>({type:copy[language].noteLabel,title:textFor(item.title),description:"",target:`${rootPrefix}notes/#note-${index+1}`})),
+    ...publishedItems(entries.projects).map((item,index)=>({type:copy[language].projectLabel,title:textFor(item.title),description:textFor(item.description),target:`${rootPrefix}projects/#project-${index+1}`}))
   ];
   const matches = records.filter(item => `${item.title} ${item.description} ${item.type}`.toLocaleLowerCase().includes(query));
   searchResults.replaceChildren();
@@ -314,7 +368,7 @@ fetch(`${rootPrefix}articles.json`)
     blogLoadFailed = true;
     renderContent();
   });
-if (page === "links" && !window.location.hash) {
+if (page === "links" && visibleFriends.length && !window.location.hash) {
   const centerProfile = () => requestAnimationFrame(() => requestAnimationFrame(() => {
     if (window.scrollY > 40) return;
     const avatar = document.querySelector("#profile-trigger .avatar-ring").getBoundingClientRect();

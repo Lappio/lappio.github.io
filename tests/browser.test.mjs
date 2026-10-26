@@ -14,7 +14,7 @@ const posts = [
   { title: "Fourth post", date: "2026-09-21", summary: "Fourth summary", language: "en", slug: "fourth-post", url: "blog/fourth-post/" }
 ];
 
-async function loadPage(path, response = posts, preference) {
+async function loadPage(path, response = posts, preference, setup = "") {
   const html = readFileSync(join(root, path), "utf8");
   const url = `https://example.test/repository-name/${path === "index.html" ? "" : path.replace(/index\.html$/, "")}`;
   const dom = new JSDOM(html, { url, runScripts: "outside-only", pretendToBeVisual: true });
@@ -24,7 +24,7 @@ async function loadPage(path, response = posts, preference) {
     if (response instanceof Error) throw response;
     return { ok: true, json: async () => response };
   };
-  dom.window.eval(script);
+  dom.window.eval(script + "\n" + setup);
   await new Promise(resolve => setTimeout(resolve, 0));
   return dom;
 }
@@ -132,4 +132,50 @@ test("Chinese is the static and runtime default; saved English and both toggle d
       } finally { dom.window.close(); }
     }
   }
+});
+
+
+test("sample entries, profiles and publishing hints never appear in live DOM or search", async () => {
+  for (const path of ["index.html", "notes/index.html", "projects/index.html", "links/index.html", "contact/index.html", "about/index.html"]) {
+    const dom = await loadPage(path);
+    try {
+      const d = dom.window.document;
+      assert.equal(d.querySelectorAll('a[href="mailto:hello@example.com"], a[href="https://github.com/"], a[href="https://www.are.na/"]').length, 0);
+      assert.equal(d.querySelectorAll(".note-card, .project, .friend-node").length, 0);
+      assert.equal(d.querySelectorAll('[data-i18n="sampleEntries"], [data-i18n="friendSampleHint"], [data-i18n="aboutSampleHint"]').length, 0);
+      for (const query of ["凌乱初稿", "开放笔记本", "messy first draft", "Small tools"]) {
+        const input = d.querySelector("#search-input");
+        input.value = query;
+        input.dispatchEvent(new dom.window.Event("input"));
+        assert.equal(d.querySelectorAll("#search-results a").length, 0);
+      }
+      for (const [selector, zh, en] of [["#notes-list", "笔记整理中", "Notes are taking shape"], ["#projects-list", "项目整理中", "Projects are taking shape"], ["#friends-empty", "友链整理中", "Friend links are taking shape"]]) {
+        const node = d.querySelector(selector);
+        if (!node) continue;
+        assert.ok(node.textContent.includes(zh));
+        d.querySelector("#language-toggle").click();
+        assert.ok(node.textContent.includes(en));
+        d.querySelector("#language-toggle").click();
+      }
+    } finally { dom.window.close(); }
+  }
+});
+
+test("published cards have exactly one project-relative link and capped stagger", async () => {
+  const dom = await loadPage("index.html", posts, undefined, `entries.notes = [{title:{zh:"真实笔记",en:"Real note"},date:"2026-10-27",url:"notes/real/"}]; entries.projects = [{title:{zh:"真实项目",en:"Real project"},description:{zh:"说明",en:"Description"},url:"projects/real/"}]; renderContent();`);
+  try {
+    const d = dom.window.document;
+    for (const card of d.querySelectorAll(".entry, .note-card, .project")) {
+      assert.equal(card.querySelectorAll("a").length, 1);
+      assert.equal(card.querySelectorAll("a a, a button, a input, button").length, 0);
+      assert.ok(card.querySelector("a").getAttribute("href").startsWith("./"));
+    }
+    assert.equal(d.querySelector(".note-card a").getAttribute("href"), "./notes/real/");
+    assert.equal(d.querySelector(".project a").getAttribute("href"), "./projects/real/");
+  } finally { dom.window.close(); }
+  const many = Array.from({length:12}, (_, i) => ({...posts[0],slug:`post-${i}`,url:`blog/post-${i}/` }));
+  const blog = await loadPage("blog/index.html", many);
+  try {
+    assert.equal(blog.window.document.querySelector(".entry:last-child").style.getPropertyValue("--i"), "5");
+  } finally { blog.window.close(); }
 });

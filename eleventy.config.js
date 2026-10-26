@@ -1,7 +1,9 @@
+import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import { readPosts } from "./lib/posts.mjs";
 import yaml from "js-yaml";
 
 export default function (eleventyConfig) {
+  eleventyConfig.addPlugin(syntaxHighlight, { preAttributes: { tabindex: 0 } });
   eleventyConfig.setFrontMatterParsingOptions({ engines: {
     yaml: input => yaml.load(input, { schema: yaml.JSON_SCHEMA })
   } });

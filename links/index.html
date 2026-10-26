@@ -43,9 +43,10 @@
           <p class="interior-lead" data-i18n="linksPageLead">A small constellation of people and places I like to keep close.</p>
         </section>
         <section class="friend-section" aria-labelledby="friends-heading">
-          <div class="interior-section-head"><h2 id="friends-heading" data-i18n="friendTitle">Friend links</h2><span data-i18n="sampleFriends">Sample network</span></div>
-          <p class="friend-intro" data-i18n="friendIntro">Select a friend to explore their corner, or choose my portrait to return to the center.</p>
-          <div class="friend-network" id="friend-network">
+          <div class="interior-section-head"><h2 id="friends-heading" data-i18n="friendTitle">Friend links</h2><!-- TODO(Lapp): replace sample content; publishing hints removed. --></div>
+          <p class="entry-state" id="friends-empty" data-i18n="emptyFriends">友链整理中，稍后见。</p>
+          <p hidden class="friend-intro" data-i18n="friendIntro">Select a friend to explore their corner, or choose my portrait to return to the center.</p>
+          <div class="friend-network" id="friend-network" hidden>
             <svg class="network-lines" id="network-lines" aria-hidden="true"></svg>
             <div class="network-center" id="network-center">
               <button class="profile-trigger" id="profile-trigger" type="button" aria-pressed="true" aria-label="View Lappio’s profile"><span class="avatar-ring"><img class="friend-avatar" id="friend-avatar" alt="Lappio’s illustrated avatar" hidden /><span class="avatar-placeholder" aria-hidden="true">L<span>.</span></span></span></button>
@@ -55,7 +56,7 @@
             <div class="friend-nodes" id="friend-nodes"></div>
           </div>
           <div class="friend-detail" id="friend-detail" aria-live="polite" hidden></div>
-          <p class="interior-hint" data-i18n="friendSampleHint">The friend links are samples. Replace them with your friends’ names and sites when ready.</p>
+          <!-- TODO(Lapp): replace sample content; publishing hints removed. -->
         </section>
         <a class="next-page-link" href="../about/"><span><small data-i18n="upNext">UP NEXT</small><strong data-i18n="navAbout">About</strong></span><span aria-hidden="true">↗</span></a>
       </main>
