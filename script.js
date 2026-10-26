@@ -53,8 +53,8 @@ Object.assign(copy.zh, {
   contactProfilesHint: "请将这些示例主页链接替换为你自己的地址。"
 });
 
-Object.assign(copy.zh, { navBlog: "文章", navLinks: "友链", homeLabel: "首页", blogTitle: "最近写的", heroGreeting: "你好，我是 Lappio 👋", nowLearning: "在学 CSS 布局", nowMaking: "在做 本地写作编辑器", nowListening: "在听 Lo-fi", emptyArticles: "还没有发布文章，很快就来。" });
-Object.assign(copy.en, { heroGreeting: "Hello, I’m Lappio 👋", nowLearning: "Learning CSS layouts", nowMaking: "Making a local writing editor", nowListening: "Listening to Lo-fi" });
+Object.assign(copy.zh, { navBlog: "文章", navLinks: "友链", homeLabel: "首页", blogTitle: "最近写的", heroGreeting: "你好，我是 <span class='hero-name'>Lappio 👋</span>", nowLearning: "在学 CSS 布局", nowMaking: "在做 本地写作编辑器", nowListening: "在听 Lo-fi", emptyArticles: "还没有发布文章，很快就来。" });
+Object.assign(copy.en, { heroGreeting: "Hello, I’m <span class='hero-name'>Lappio 👋</span>", nowLearning: "Learning CSS layouts", nowMaking: "Making a local writing editor", nowListening: "Listening to Lo-fi" });
 
 // TODO(Lapp): Replace these samples with real friend names, descriptions, and URLs.
 const friendAvatarSource = "../assets/lappio-avatar.png";
@@ -159,7 +159,7 @@ function renderContent() {
   document.querySelectorAll("[data-i18n]").forEach(node => {
     const value = copy[language][node.dataset.i18n];
     if (value === undefined) return;
-    if (node.dataset.i18n === "aboutTitle") node.innerHTML = value;
+    if (node.dataset.i18n === "aboutTitle" || node.dataset.i18n === "heroGreeting") node.innerHTML = value;
     else node.textContent = value;
   });
   const postDate = document.querySelector(".post-header time[datetime]");
