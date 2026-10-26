@@ -64,7 +64,7 @@ test("empty blog shows a translated empty state", async () => {
   const dom = await loadPage("blog/index.html", []);
   try {
     const document = dom.window.document;
-    assert.match(document.querySelector("#blog-list").textContent, /暂无文章/);
+    assert.match(document.querySelector("#blog-list").textContent, /还没有发布文章，很快就来。/);
     document.querySelector("#language-toggle").click();
     assert.match(document.querySelector("#blog-list").textContent, /No articles yet/i);
   } finally {

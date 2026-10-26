@@ -3,13 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f6f2" />
+    <meta name="theme-color" content="#f7f1e6" />
     <meta name="description" content="Lappio Blog — writing, notes, and projects." />
     <title>Lappio Blog</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="./script.js" defer></script>
   </head>
@@ -17,7 +14,7 @@
     <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
     <div class="page-shell">
       <header class="site-header">
-        <a class="brand" href="#top" aria-label="Lappio Blog home"><span class="brand-mark">L<span class="brand-dot">.</span></span><span>Lappio Blog</span></a>
+        <a class="brand" href="#top" aria-label="Lappio Blog home"><span>Lappio Blog</span><span class="brand-dot" aria-hidden="true">~</span></a>
         <nav class="desktop-nav" aria-label="Main navigation">
           <a href="./blog/" data-i18n="navBlog">Blog</a>
           <a href="./notes/" data-i18n="navNotes">Notes</a>
@@ -25,6 +22,7 @@
           <a href="./links/" data-i18n="navLinks">Links</a>
           <a href="./about/" data-i18n="navAbout">About</a>
           <a href="./contact/" data-i18n="navContact">Contact</a>
+          <a href="./" data-i18n="homeLabel">首页</a>
         </nav>
         <div class="header-actions">
           <button class="icon-button" id="search-open" type="button" aria-label="Search" title="Search">
@@ -36,23 +34,31 @@
 
       <nav class="mobile-nav" aria-label="Mobile navigation">
         <a href="./blog/" data-i18n="navBlog">Blog</a><a href="./notes/" data-i18n="navNotes">Notes</a><a href="./projects/" data-i18n="navProjects">Projects</a><a href="./links/" data-i18n="navLinks">Links</a><a href="./about/" data-i18n="navAbout">About</a><a href="./contact/" data-i18n="navContact">Contact</a>
-      </nav>
+        <a href="./" data-i18n="homeLabel">首页</a>
+        </nav>
 
       <main id="main">
         <section class="hero" id="top" aria-labelledby="hero-title">
+          <img class="hero-avatar" src="./assets/lappio-avatar-240.webp" width="112" height="112" alt="Lappio 的头像" />
           <div class="hero-copy">
-            <div class="eyebrow"><span class="status-dot" aria-hidden="true"></span><span data-i18n="eyebrow">A little corner of the internet</span><span class="eyebrow-line" aria-hidden="true"></span><span>EST. 2026</span></div>
-            <h1 id="hero-title"><span data-i18n="heroLine1">Ideas worth</span><br /><em data-i18n="heroLine2">keeping.</em></h1>
-            <p class="hero-intro" data-i18n="heroIntro">Hello, I’m Lappio. This is a place for the things I’m learning, making, and thinking about. Expect thoughtful writing, quick notes, and work in progress.</p>
-            <div class="hero-links"><a class="primary-link" href="./blog/"><span data-i18n="exploreWriting">Explore my writing</span><span aria-hidden="true">↗</span></a><a class="quiet-link" href="./about/"><span data-i18n="moreAbout">More about me</span><span aria-hidden="true">↗</span></a></div>
+            <div class="hand">hi there!</div>
+            <h1 id="hero-title" data-i18n="heroGreeting">你好，我是 Lappio 👋</h1>
+            <p class="hero-intro" data-i18n="heroIntro">你好，我是 Lappio。这里记录我学到的知识、正在做的事情，以及一路上的思考。</p>
+            <div class="now">
+              <!-- TODO(Lapp): real link -->
+              <a href="#" data-todo="learning" data-i18n="nowLearning">在学 CSS 布局</a>
+              <!-- TODO(Lapp): real link -->
+              <a href="#" data-todo="making" data-i18n="nowMaking">在做 本地写作编辑器</a>
+              <!-- TODO(Lapp): real link -->
+              <a href="#" data-todo="listening" data-i18n="nowListening">在听 Lo-fi</a>
+            </div>
           </div>
-          <div class="hero-aside" aria-hidden="true"><div class="orbital orbital-one"></div><div class="orbital orbital-two"></div><div class="hero-symbol">L<span>.</span></div><div class="aside-caption" data-i18n="asideCaption">OBSERVATIONS / EXPERIMENTS / NOTES</div></div>
         </section>
 
         <div class="content-grid">
           <div class="main-column">
             <section class="content-section" id="blog" aria-labelledby="blog-title">
-              <div class="section-heading"><div><p class="section-kicker">01 / <span data-i18n="writing">WRITING</span></p><h2 id="blog-title" data-i18n="blogTitle">Latest blog posts</h2></div><span class="section-symbol" aria-hidden="true">↘</span></div>
+              <div class="section-heading"><div><p class="section-kicker">01 / <span data-i18n="writing">WRITING</span></p><h2 id="blog-title" data-i18n="blogTitle">最近写的</h2></div><span class="section-symbol" aria-hidden="true">↘</span></div>
               <div class="entry-list" id="blog-list"></div>
             </section>
             <section class="content-section notes-section" id="notes" aria-labelledby="notes-title">
@@ -72,7 +78,7 @@
           </aside>
         </div>
       </main>
-      <footer class="site-footer"><span>© <span id="year">2026</span> Lappio Blog</span><span data-i18n="footerNote">Made with curiosity, one page at a time.</span><a href="#top" data-i18n="backTop">Back to top ↑</a></footer>
+      <footer class="site-footer"><span>© <span id="year">2026</span> Lappio Blog</span><span class="hand">thanks for stopping by <span class="heart">♡</span></span><a href="#top" data-i18n="backTop">Back to top ↑</a></footer>
     </div>
 
     <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-box"><div class="search-topline"><div><p class="section-kicker" data-i18n="searchKicker">FIND SOMETHING</p><h2 id="search-title" data-i18n="searchTitle">Search the site</h2></div><button type="button" id="search-close" class="close-button" aria-label="Close search">×</button></div><label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search-input" type="search" autocomplete="off" data-placeholder-en="Search posts, notes, projects..." data-placeholder-zh="搜索文章、笔记、项目……" /></label><div id="search-results" class="search-results" aria-live="polite"></div><p class="search-help" data-i18n="searchHelp">Press Esc to close</p></div></dialog>

@@ -56,7 +56,7 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
   const output = mkdtempSync(join(tmpdir(), "lappio-build-"));
   const files = [
     ["tdd-first.md", post({ title: "First post", slug: "first-post" })],
-    ["tdd-a.md", post({ title: "A post", slug: "a-post" })],
+    ["tdd-a.md", post({ title: "A post", slug: "a-post" }).replace("language: en", "language: en\ncategory: Reading")],
     ["tdd-hidden.md", post({ title: "Hidden post", slug: "hidden", draft: true })],
   ];
   try {
@@ -65,6 +65,8 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
 
     const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
     assert.deepEqual(index.map(item => item.slug), ["a-post", "first-post"]);
+    assert.equal(index[0].category, "Reading");
+    assert.match(readFileSync(join(output, "blog/a-post/index.html"), "utf8"), /tag-b[^>]*>Reading<\/span>/);
     assert.deepEqual(index[1], {
       title: "First post", date: "2026-09-24", summary: "A short summary",
       language: "en", slug: "first-post", url: "blog/first-post/"

@@ -52,6 +52,9 @@ Object.assign(copy.zh, {
   contactProfilesHint: "请将这些示例主页链接替换为你自己的地址。"
 });
 
+Object.assign(copy.zh, { navBlog: "文章", navLinks: "友链", homeLabel: "首页", blogTitle: "最近写的", heroGreeting: "你好，我是 Lappio 👋", nowLearning: "在学 CSS 布局", nowMaking: "在做 本地写作编辑器", nowListening: "在听 Lo-fi", emptyArticles: "还没有发布文章，很快就来。" });
+Object.assign(copy.en, { heroGreeting: "Hello, I’m Lappio 👋", nowLearning: "Learning CSS layouts", nowMaking: "Making a local writing editor", nowListening: "Listening to Lo-fi" });
+
 // Replace these samples with real friend names, descriptions, and URLs.
 const friendAvatarSource = "../assets/lappio-avatar.png";
 const friendLinks = [
@@ -113,7 +116,10 @@ function renderBlogList(blogList) {
     article.id = `blog-${post.slug}`;
     const date = document.createElement("div");
     date.className = "entry-meta";
-    date.textContent = formatPostDate(post.date);
+    const tag = document.createElement("span");
+    tag.className = `tag ${post.language === "en" ? "tag-b" : "tag-a"}`;
+    tag.textContent = post.category || (post.language === "en" ? "EN" : "中文");
+    date.append(tag, document.createTextNode(formatPostDate(post.date)));
     const link = document.createElement("a");
     link.className = "entry-link";
     link.href = `${rootPrefix}${post.url}`;
@@ -153,7 +159,7 @@ function renderContent() {
   else if (page !== "home") document.title = `${copy[language][`nav${page[0].toUpperCase()}${page.slice(1)}`]} · Lappio Blog`;
   document.querySelectorAll(".desktop-nav a, .mobile-nav a").forEach(link => {
     const section = page === "post" ? "blog" : page;
-    if (section !== "home" && link.getAttribute("href") === `${rootPrefix}${section}/`) link.setAttribute("aria-current", "page");
+    if (link.getAttribute("href") === (section === "home" ? rootPrefix : `${rootPrefix}${section}/`)) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
   document.querySelector("#language-toggle").innerHTML = language === "en" ? "<strong>EN</strong> <span aria-hidden='true'>/</span> 中" : "EN <span aria-hidden='true'>/</span> <strong>中</strong>";
