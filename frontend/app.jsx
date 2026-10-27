@@ -1,14 +1,13 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, BookOpen, Circle, FolderOpen, Globe2, Heart, Leaf, Mail, NotebookPen, Wind } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, BookOpen, FolderOpen, Globe2, Leaf, Mail, NotebookPen, Wind } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { copy, sections } from "./copy";
 import { validPostIndex } from "./lib/posts";
-import { AirSculpture } from "./components/air-sculpture";
+import { Home } from "./home";
 import { SiteSearch } from "./components/search";
 
 const icons = { blog: BookOpen, notes: NotebookPen, projects: FolderOpen, links: Globe2, contact: Mail };
@@ -55,31 +54,6 @@ function Explore({ t, href }) {
       return <a key={section} className={`explore-card explore-${index}`} href={href(`${section}/`)}><div className="explore-icon"><Icon size={20} strokeWidth={1.5}/><ArrowUpRight size={16}/></div><h3>{t[section]}</h3><p>{t[`discover${section[0].toUpperCase()}${section.slice(1)}`]}</p></a>;
     })}</div>
   </section>;
-}
-
-function Home({ t, href, posts, language, status, reload }) {
-  const [tab, setTab] = useState("blog");
-  return <>
-    <section className="air-hero" aria-labelledby="hero-title">
-      <div className="hero-text"><Badge variant="outline" className="hero-eyebrow"><span/>{t.welcome}</Badge>
-        <h1 id="hero-title">{t.heroOne}<br/><span>{t.heroTwo}</span><i aria-hidden="true">✳</i></h1>
-        <div className="hero-description"><p>{t.intro}</p><p>{t.heroBody}</p></div>
-        <div className="hero-buttons"><Button asChild className="primary-button"><a href={href("blog/")}>{t.read}<ArrowUpRight size={16}/></a></Button><Button asChild variant="ghost" className="secondary-button"><a href={href("about/")}>{t.meet}<ArrowRight size={15}/></a></Button></div>
-      </div><AirSculpture t={t}/>
-      <a className="scroll-hint" href="#notebook"><ArrowDown size={13}/>{t.scroll}</a><span className="hero-index" aria-hidden="true">LAPPIO / PERSONAL SPACE</span>
-    </section>
-    <section id="notebook" className="air-notebook" aria-labelledby="notebook-title"><div className="notebook-heading"><div><p className="mini-label"><span/> {t.writing}</p><h2 id="notebook-title">{t.latest}</h2><p className="section-lead">{t.contentLead}</p></div><a className="text-link" href={href(`${tab}/`)}>{t.all}<ArrowRight size={15}/></a></div>
-      <div className="notebook-grid"><Card className="writing-card"><CardContent><Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="air-tabs" aria-label={t.overview}>
-          <TabsTrigger value="blog"><BookOpen size={14}/>{t.latestTab}{posts.length > 0 && <span className="tab-count">{posts.length}</span>}</TabsTrigger>
-          <TabsTrigger value="notes"><NotebookPen size={14}/>{t.notesTab}</TabsTrigger><TabsTrigger value="projects"><FolderOpen size={14}/>{t.projectsTab}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="blog"><PostList {...{ t, href, language, status, reload }} posts={posts.slice(0, 3)}/></TabsContent><TabsContent value="notes"><EmptyState type="notes" t={t}/></TabsContent><TabsContent value="projects"><EmptyState type="projects" t={t}/></TabsContent>
-      </Tabs></CardContent></Card><AboutCard t={t} href={href}/></div>
-    </section>
-    <div className="notebook-note"><Leaf size={14} strokeWidth={1.4}/><span>{t.notebook}</span><span className="note-divider"/><span>{t.notebookBody.replace("\n", " ")}</span></div>
-    <Explore t={t} href={href}/>
-  </>;
 }
 
 function Interior({ page, t, href, posts, language, article, status, reload }) {
@@ -134,7 +108,7 @@ export function App({ page, rootPrefix, article }) {
     if (current) current.parentElement.scrollLeft = current.offsetLeft - current.parentElement.offsetLeft - 16;
   }, [language, page]);
   const currentPage = page === "post" ? "blog" : page;
-  return <TooltipProvider delayDuration={250}><div className="air-app" id="top" data-language={language}>
+  return <TooltipProvider delayDuration={250}><div className="air-app" id="top" data-page={page} data-language={language}>
     <a className="air-skip" href="#main">{t.skip}</a>
     <div className="air-top-glow" aria-hidden="true"/>
     <header className="air-header"><a className="air-brand" href={href("")} aria-label="Lappio Blog"><Wind size={24} strokeWidth={1.5}/><span>Lappio<span className="brand-period">.</span></span></a>
@@ -142,7 +116,7 @@ export function App({ page, rootPrefix, article }) {
       <div className="air-header-actions"><SiteSearch {...{ t, href, posts, status, reload }}/><span className="header-divider"/><Tooltip><TooltipTrigger asChild><Button variant="ghost" className="language-toggle" onClick={() => setLanguage(value => value === "zh" ? "en" : "zh")} aria-label={t.switchLanguage}><Globe2 size={16}/><span>{language === "zh" ? "EN" : "中"}</span></Button></TooltipTrigger><TooltipContent>{t.switchLanguage}</TooltipContent></Tooltip></div>
     </header>
     <nav className="air-mobile-nav" aria-label={t.mobileNav}>{sections.map(section => <a href={href(section === "home" ? "" : `${section}/`)} aria-current={currentPage === section ? "page" : undefined} key={section}>{t[section]}</a>)}</nav>
-    <main className="air-main" id="main" tabIndex={-1}>{page === "home" ? <Home {...{ t, href, posts, language, status, reload }}/> : <Interior {...{ page, t, href, posts, language, article, status, reload }}/>}</main>
-    <footer className="air-footer"><div className="footer-top"><a className="air-brand" href={href("")}><Wind size={21} strokeWidth={1.5}/><span>Lappio<span className="brand-period">.</span></span></a><p>{t.footer}</p><a href="#top" className="back-top" aria-label={t.backTop}><ArrowUp size={16}/></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Lappio Blog</span><span>{t.thanks}<Heart size={11}/></span><span className="footer-space"><Circle size={5} fill="currentColor"/> A LITTLE SPACE, A LOT OF CURIOSITY</span></div></footer>
+    <main className="air-main" id="main" tabIndex={-1}>{page === "home" ? <Home {...{ t, href }}/> : <Interior {...{ page, t, href, posts, language, article, status, reload }}/>}</main>
+    <footer className="air-footer portal-footer"><span>© {new Date().getFullYear()} Lappio</span><a href="#top" className="back-top" aria-label={t.backTop}><ArrowUp size={16}/></a></footer>
   </div></TooltipProvider>;
 }

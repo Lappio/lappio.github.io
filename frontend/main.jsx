@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./app";
 import "./styles.css";
+import "./portal.css";
 
 const page = document.body.dataset.page || "home";
 const rootPrefix = document.body.dataset.rootPrefix || (page === "home" ? "./" : "../");
