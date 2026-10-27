@@ -1,9 +1,9 @@
 const copy = {
   en: {
-    skipLink:"Skip to content",asideCaption:"OBSERVATIONS / EXPERIMENTS / NOTES",navBlog:"Blog",navNotes:"Notes",navProjects:"Projects",navLinks:"Links",navAbout:"About",navContact:"Contact",eyebrow:"A little corner of the internet",heroLine1:"Ideas worth",heroLine2:"keeping.",heroIntro:"Hello, I’m Lappio. This is a place for the things I’m learning, making, and thinking about. Expect thoughtful writing, quick notes, and work in progress.",exploreWriting:"Explore my writing",moreAbout:"More about me",writing:"WRITING",blogTitle:"Latest blog posts",fieldNotes:"FIELD NOTES",notesTitle:"Notes & fragments",notesDesc:"Shorter observations, useful links, and ideas still taking shape.",selectedWork:"SELECTED WORK",projectsTitle:"Projects",aboutKicker:"A NOTE FROM ME",aboutTitle:"Hi, I’m Lappio<span class='accent'>.</span>",aboutBody:"I like turning curiosity into small experiments and clear stories. This blog is my open notebook: part archive, part playground, always evolving.",linksKicker:"ELSEWHERE",linksTitle:"Links",linksHint:"Replace these sample links with your profiles.",contactKicker:"SAY HELLO",contactTitle:"Let’s talk.",contactBody:"Have a thought, question, or interesting thing to share? I’d love to hear from you.",contactHint:"Update this sample email before publishing.",footerNote:"Made with curiosity, one page at a time.",backTop:"Back to top ↑",searchKicker:"FIND SOMETHING",searchTitle:"Search the site",searchHelp:"Press Esc to close",noResults:"No matches found. Try another word.",searchStart:"Start typing to search posts, notes, and projects.",blogLabel:"Blog",noteLabel:"Note",projectLabel:"Project",homeLabel:"Home",upNext:"UP NEXT",sampleEntries:"Sample entries",sampleLinks:"Sample links",blogPageLead:"Longer pieces on ideas, the creative process, and the things I keep coming back to.",notesPageLead:"A lighter notebook for observations, questions, and ideas before they become essays.",projectsPageLead:"Things I am building, exploring, and learning from along the way.",linksPageLead:"A small directory of places to find me and things worth keeping close.",aboutPageLead:"A little more about the person behind this corner of the internet.",contactPageLead:"A place to start a conversation, share a question, or send an interesting idea.",allWriting:"All writing",allNotes:"All notes",selectedProjects:"Selected projects",elsewhereTitle:"Elsewhere",githubDesc:"Code, experiments, and open work",arenaDesc:"Collected references and inspiration",aboutStoryKicker:"THE SHORT VERSION",aboutStoryTitle:"Curiosity, documented.",aboutStoryOne:"I’m Lappio, and this is my open notebook. I write to understand what I’m learning, share useful discoveries, and keep a record of the questions that matter to me.",aboutStoryTwo:"The blog holds longer thoughts. Notes are the smaller observations along the way. Projects are where those ideas become something you can use or explore.",aboutSampleHint:"This introduction is sample copy—make it yours when you are ready.",emailKicker:"EMAIL",contactPanelTitle:"Let’s talk."
+    skipLink:"Skip to content",asideCaption:"OBSERVATIONS / EXPERIMENTS / NOTES",navBlog:"Blog",navNotes:"Notes",navProjects:"Projects",navLinks:"Links",navAbout:"About",navContact:"Contact",eyebrow:"A little corner of the internet",heroLine1:"Ideas worth",heroLine2:"keeping.",heroIntro:"Hello, I’m Lappio. This is a place for the things I’m learning, making, and thinking about. Expect thoughtful writing, quick notes, and work in progress.",exploreWriting:"Explore my writing",moreAbout:"More about me",writing:"WRITING",blogTitle:"Latest blog posts",fieldNotes:"FIELD NOTES",notesTitle:"Notes & fragments",notesDesc:"Shorter observations, useful links, and ideas still taking shape.",selectedWork:"SELECTED WORK",projectsTitle:"Projects",aboutKicker:"A NOTE FROM ME",aboutTitle:"Hi, I’m Lappio<span class='accent'>.</span>",aboutBody:"I like turning curiosity into small experiments and clear stories. This blog is my open notebook: part archive, part playground, always evolving.",linksKicker:"ELSEWHERE",linksTitle:"Links",contactKicker:"SAY HELLO",contactTitle:"Let’s talk.",contactBody:"Have a thought, question, or interesting thing to share? I’d love to hear from you.",footerNote:"Made with curiosity, one page at a time.",backTop:"Back to top ↑",searchKicker:"FIND SOMETHING",searchTitle:"Search the site",searchHelp:"Press Esc to close",noResults:"No matches found. Try another word.",searchStart:"Start typing to search posts, notes, and projects.",blogLabel:"Blog",noteLabel:"Note",projectLabel:"Project",homeLabel:"Home",upNext:"UP NEXT",blogPageLead:"Longer pieces on ideas, the creative process, and the things I keep coming back to.",notesPageLead:"A lighter notebook for observations, questions, and ideas before they become essays.",projectsPageLead:"Things I am building, exploring, and learning from along the way.",linksPageLead:"A small directory of places to find me and things worth keeping close.",aboutPageLead:"A little more about the person behind this corner of the internet.",contactPageLead:"A place to start a conversation, share a question, or send an interesting idea.",allWriting:"All writing",allNotes:"All notes",selectedProjects:"Selected projects",elsewhereTitle:"Elsewhere",githubDesc:"Code, experiments, and open work",arenaDesc:"Collected references and inspiration",aboutStoryKicker:"THE SHORT VERSION",aboutStoryTitle:"Curiosity, documented.",aboutStoryOne:"I’m Lappio, and this is my open notebook. I write to understand what I’m learning, share useful discoveries, and keep a record of the questions that matter to me.",aboutStoryTwo:"The blog holds longer thoughts. Notes are the smaller observations along the way. Projects are where those ideas become something you can use or explore.",emailKicker:"EMAIL",contactPanelTitle:"Let’s talk."
   },
   zh: {
-    skipLink:"跳转到正文",asideCaption:"观察 / 实验 / 笔记",navBlog:"博客",navNotes:"笔记",navProjects:"项目",navLinks:"链接",navAbout:"关于",navContact:"联系",eyebrow:"互联网的一隅",heroLine1:"值得留下的",heroLine2:"想法。",heroIntro:"你好，我是 Lappio。这里记录我学到的知识、正在做的事情，以及偶尔冒出的想法。你会读到文章、随笔和持续更新的项目。",exploreWriting:"阅读文章",moreAbout:"了解我",writing:"文章",blogTitle:"最新文章",fieldNotes:"随手记",notesTitle:"笔记与碎片",notesDesc:"简短的观察、有用的链接，以及还在成形的想法。",selectedWork:"近期作品",projectsTitle:"项目",aboutKicker:"关于我",aboutTitle:"你好，我是 Lappio<span class='accent'>。</span>",aboutBody:"我喜欢把好奇心变成小实验，也喜欢把复杂的事情讲清楚。这里是我的公开笔记本：既是档案，也是游乐场。",linksKicker:"站外",linksTitle:"链接",linksHint:"请把这些示例链接替换为你的个人主页。",contactKicker:"打个招呼",contactTitle:"聊聊吧。",contactBody:"有想法、问题，或者想分享有趣的东西？欢迎来信。",contactHint:"发布前请更新这个示例邮箱。",footerNote:"带着好奇心，一页一页写下去。",backTop:"返回顶部 ↑",searchKicker:"查找内容",searchTitle:"站内搜索",searchHelp:"按 Esc 关闭",noResults:"没有找到结果，试试别的关键词。",searchStart:"输入关键词，搜索文章、笔记和项目。",blogLabel:"文章",noteLabel:"笔记",projectLabel:"项目",homeLabel:"首页",upNext:"接下来",sampleEntries:"示例内容",sampleLinks:"示例链接",blogPageLead:"关于想法、创作过程，以及那些让我不断回味的事物。",notesPageLead:"记录观察、问题与尚未写成长文的想法。",projectsPageLead:"正在制作、探索，并从中学习的东西。",linksPageLead:"一些能找到我的地方，以及值得收藏的资源。",aboutPageLead:"多认识一点这个角落背后的人。",contactPageLead:"从这里开始一段对话，分享问题或有趣的想法。",allWriting:"所有文章",allNotes:"所有笔记",selectedProjects:"精选项目",elsewhereTitle:"站外链接",githubDesc:"代码、实验和公开作品",arenaDesc:"收集的参考资料与灵感",aboutStoryKicker:"简短介绍",aboutStoryTitle:"记录好奇心。",aboutStoryOne:"我是 Lappio，这里是我的公开笔记本。我通过写作理解所学、分享有用的发现，并记下那些重要的问题。",aboutStoryTwo:"博客收录较长的思考，笔记记录途中的小观察，项目则让想法变成可以使用或探索的东西。",aboutSampleHint:"这段介绍是示例文案，随时可以换成你自己的故事。",emailKicker:"电子邮件",contactPanelTitle:"聊聊吧。"
+    skipLink:"跳转到正文",asideCaption:"观察 / 实验 / 笔记",navBlog:"博客",navNotes:"笔记",navProjects:"项目",navLinks:"链接",navAbout:"关于",navContact:"联系",eyebrow:"互联网的一隅",heroLine1:"值得留下的",heroLine2:"想法。",heroIntro:"你好，我是 Lappio。这里记录我学到的知识、正在做的事情，以及偶尔冒出的想法。你会读到文章、随笔和持续更新的项目。",exploreWriting:"阅读文章",moreAbout:"了解我",writing:"文章",blogTitle:"最新文章",fieldNotes:"随手记",notesTitle:"笔记与碎片",notesDesc:"简短的观察、有用的链接，以及还在成形的想法。",selectedWork:"近期作品",projectsTitle:"项目",aboutKicker:"关于我",aboutTitle:"你好，我是 Lappio<span class='accent'>。</span>",aboutBody:"我喜欢把好奇心变成小实验，也喜欢把复杂的事情讲清楚。这里是我的公开笔记本：既是档案，也是游乐场。",linksKicker:"站外",linksTitle:"链接",contactKicker:"打个招呼",contactTitle:"聊聊吧。",contactBody:"有想法、问题，或者想分享有趣的东西？欢迎来信。",footerNote:"带着好奇心，一页一页写下去。",backTop:"返回顶部 ↑",searchKicker:"查找内容",searchTitle:"站内搜索",searchHelp:"按 Esc 关闭",noResults:"没有找到结果，试试别的关键词。",searchStart:"输入关键词，搜索文章、笔记和项目。",blogLabel:"文章",noteLabel:"笔记",projectLabel:"项目",homeLabel:"首页",upNext:"接下来",blogPageLead:"关于想法、创作过程，以及那些让我不断回味的事物。",notesPageLead:"记录观察、问题与尚未写成长文的想法。",projectsPageLead:"正在制作、探索，并从中学习的东西。",linksPageLead:"一些能找到我的地方，以及值得收藏的资源。",aboutPageLead:"多认识一点这个角落背后的人。",contactPageLead:"从这里开始一段对话，分享问题或有趣的想法。",allWriting:"所有文章",allNotes:"所有笔记",selectedProjects:"精选项目",elsewhereTitle:"站外链接",githubDesc:"代码、实验和公开作品",arenaDesc:"收集的参考资料与灵感",aboutStoryKicker:"简短介绍",aboutStoryTitle:"记录好奇心。",aboutStoryOne:"我是 Lappio，这里是我的公开笔记本。我通过写作理解所学、分享有用的发现，并记下那些重要的问题。",aboutStoryTwo:"博客收录较长的思考，笔记记录途中的小观察，项目则让想法变成可以使用或探索的东西。",emailKicker:"电子邮件",contactPanelTitle:"聊聊吧。"
   }
 };
 
@@ -14,20 +14,17 @@ Object.assign(copy.en, {
   linksKicker: "FRIEND LINKS",
   linksPageLead: "A small constellation of people and places I like to keep close.",
   friendTitle: "Friend links",
-  sampleFriends: "Sample network",
   friendIntro: "Select a friend to explore their corner, or choose my portrait to return to the center.",
   networkCenterLabel: "OPEN NOTEBOOK",
   networkBio: "I turn curiosity into small experiments and share what I learn along the way.",
-  viewMyProfile: "View Lappio’s profile",
-  friendSampleHint: "The friend links are samples. Replace them with your friends’ names and sites when ready.",
-  friendSampleBadge: "SAMPLE LINK",
+  profileTriggerLabel: "View Lappio’s profile",
+  friendAvatarAlt: "Lappio’s illustrated avatar",
   friendNoUrl: "Your friend’s website can go here.",
   friendVisit: "Visit site ↗",
   homeFriendsBody: "A small network of people and places worth keeping close.",
   exploreFriends: "Explore friend links",
   contactProfilesLabel: "Profiles",
   contactOnlineTitle: "Find me online",
-  contactProfilesHint: "Replace these sample profile links with your own."
 });
 Object.assign(copy.zh, {
   loadingArticles: "正在加载文章……",
@@ -36,20 +33,17 @@ Object.assign(copy.zh, {
   linksKicker: "友情链接",
   linksPageLead: "一片由朋友和喜欢的角落组成的小小星图。",
   friendTitle: "友情链接",
-  sampleFriends: "示例星图",
   friendIntro: "点选朋友探索他们的角落，或点选我的头像回到中心。",
   networkCenterLabel: "开放笔记本",
   networkBio: "我把好奇心变成小实验，也分享一路上的所见所学。",
-  viewMyProfile: "查看 Lappio 的个人简介",
-  friendSampleHint: "当前友链仍是示例。你可以随时换成朋友的名字和网址。",
-  friendSampleBadge: "示例友链",
+  profileTriggerLabel: "查看 Lappio 的介绍",
+  friendAvatarAlt: "Lappio 的插画头像",
   friendNoUrl: "这里可以放朋友的网站。",
   friendVisit: "访问网站 ↗",
   homeFriendsBody: "一张收藏朋友与好去处的小小星图。",
   exploreFriends: "查看友情链接",
   contactProfilesLabel: "个人主页",
   contactOnlineTitle: "在线找到我",
-  contactProfilesHint: "请将这些示例主页链接替换为你自己的地址。"
 });
 
 Object.assign(copy.zh, { navBlog: "文章", navLinks: "友链", homeLabel: "首页", blogTitle: "最近写的", heroGreeting: "你好，我是 <span class='hero-name'>Lappio 👋</span>", nowLearning: "在学 CSS 布局", nowMaking: "在做 本地写作编辑器", nowListening: "在听 Lo-fi", emptyArticles: "还没有发布文章，很快就来。" });
@@ -62,7 +56,7 @@ const entries = { blog: [], notes: [], projects: [] };
 
 Object.assign(copy.zh, { emptyNotes: "笔记整理中，稍后见。", emptyProjects: "项目整理中，稍后见。", emptyFriends: "友链整理中，稍后见。", emptyContact: "联系方式整理中，稍后见。", emptyProfiles: "个人主页整理中，稍后见。" });
 Object.assign(copy.en, { emptyNotes: "Notes are taking shape. Check back soon.", emptyProjects: "Projects are taking shape. Check back soon.", emptyFriends: "Friend links are taking shape. Check back soon.", emptyContact: "Contact details are on the way.", emptyProfiles: "Personal profiles are on the way." });
-const publishedItems = items => items.filter(item => !item.sample);
+const publishedItems = items => items.filter(item => !item.unpublished);
 const visibleFriends = publishedItems(friendLinks);
 
 Object.assign(copy.en, { footerHand: "thanks for stopping by <span class='heart'>♡</span>", heroHand: "hi there!", avatarAlt: "Lappio’s avatar", languageToggleLabel: "Switch to Chinese" });
@@ -186,6 +180,10 @@ function renderContent() {
     const value = copy[language][node.dataset.i18nAlt];
     if (value !== undefined) node.setAttribute("alt", value);
   });
+  document.querySelectorAll("[data-i18n-aria-label]").forEach(node => {
+    const value = copy[language][node.dataset.i18nAriaLabel];
+    if (value !== undefined) node.setAttribute("aria-label", value);
+  });
   const postDate = document.querySelector(".post-header time[datetime]");
   if (postDate) postDate.textContent = formatPostDate(postDate.dateTime);
   if (page === "post") document.title = `${document.body.dataset.postTitle} · Lappio Blog`;
@@ -294,7 +292,7 @@ function selectFriend(index) {
   const friend = visibleFriends[index];
   const copyBlock = document.createElement("div");
   const badge = document.createElement("small");
-  badge.textContent = friend.url ? copy[language].friendTitle : copy[language].friendSampleBadge;
+  badge.textContent = copy[language].friendTitle;
   const heading = document.createElement("h3");
   heading.textContent = textFor(friend.name);
   const description = document.createElement("p");
@@ -342,7 +340,7 @@ function renderFriendNetwork() {
     new ResizeObserver(drawFriendLines).observe(friendNetwork);
     if (document.fonts) document.fonts.ready.then(drawFriendLines);
   }
-  document.querySelector("#profile-trigger").setAttribute("aria-label",copy[language].viewMyProfile);
+  document.querySelector("#profile-trigger").setAttribute("aria-label",copy[language].profileTriggerLabel);
   nodes.querySelectorAll(".friend-node").forEach((node,index) => {
     const friend = visibleFriends[index];
     const avatar = document.createElement("span");

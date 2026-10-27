@@ -1,6 +1,6 @@
 # Lapp 待补内容（Content to supply）
 
-所有示例笔记、项目和友链均保留在仅供参考、不发布的 `docs/sample-content.js` 中并标记 `sample: true`，不会进入页面或搜索。补齐真实内容后，将真实条目放入 `script.js` 对应数组并移除此标记；不要恢复发布提示或示例徽章。（Samples remain in source only; remove the flag after supplying real content.）
+所有示例笔记、项目和友链均保留在仅供参考、不发布的 `docs/sample-content.js` 中并标记 `sample: true`，不会进入页面或搜索。补齐真实内容后，将真实条目放入 `script.js` 对应数组并移除此标记；运行时如需暂不发布条目，使用 `unpublished: true`；不要恢复发布提示或示例徽章。（Samples remain in source only; remove the flag after supplying real content.）
 
 | 待补内容（What） | 文件及定位（File / selector） |
 | --- | --- |
@@ -13,6 +13,6 @@
 | 「在学」的真实内容与链接（Current learning text and URL） | `index.html`：`.now [data-todo="learning"]`；`script.js`：`copy.zh/en.nowLearning`（提供真实内容和链接前，`.now` 保持 hidden） |
 | 「在做」的真实内容与链接（Current making text and URL） | `index.html`：`.now [data-todo="making"]`；`script.js`：`copy.zh/en.nowMaking`（提供真实内容和链接前，`.now` 保持 hidden） |
 | 「在听」的真实内容与链接（Current listening text and URL） | `index.html`：`.now [data-todo="listening"]`；`script.js`：`copy.zh/en.nowListening`（提供真实内容和链接前，`.now` 保持 hidden） |
-| 确认并提供个人介绍的中英文案（Review and supply bilingual personal introduction） | `about/index.html`：`.about-story-copy`（提供真实文案前保持 hidden）；`script.js`：`copy.zh/en.aboutStoryOne`、`aboutStoryTwo` |
+| 确认并提供个人介绍的中英文案（Review and supply bilingual personal introduction） | `about/index.html`：整个 `.about-story` section（提供真实双语文案后，移除 section 上的 hidden）；`script.js`：`copy.zh/en.aboutStoryOne`、`aboutStoryTwo` |
 
 补齐邮箱与个人主页后，将对应「整理中」空状态换成真实链接；示例提示文字与 SAMPLE LINK 徽章继续保持不渲染。（Replace the relevant empty states with real links; keep sample hints and badges unpublished.）

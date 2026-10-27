@@ -190,7 +190,7 @@ test("hand copy and avatar switch language while unfinished content stays hidden
     const dom = await loadPage(path);
     try {
       const d = dom.window.document;
-      const hidden = d.querySelector(path === 'index.html' ? '.now' : '.about-story-copy');
+      const hidden = d.querySelector(path === 'index.html' ? '.now' : '.about-story');
       for (const lang of ['zh', 'en', 'zh']) {
         if (d.documentElement.lang !== (lang === 'zh' ? 'zh-CN' : 'en')) d.querySelector('#language-toggle').click();
         for (const [selector, attr, zh, en] of [
@@ -240,7 +240,7 @@ test("cards and search exclude missing URLs and use published detail URLs", asyn
       {title:"URL fixture empty",description:"Description",url:""},
       {title:"URL fixture null",description:"Description",url:null},
       {title:"URL fixture valid",description:"Description",url:"details/real/"},
-      {title:"URL fixture sample",description:"Description",url:"details/sample/",sample:true}
+      {title:"URL fixture sample",description:"Description",url:"details/sample/",unpublished:true}
     ];
     entries.notes = fixtures; entries.projects = fixtures;
     entries.blog.push({title:"URL fixture missing blog",summary:"Description",url:""});
@@ -264,7 +264,21 @@ test("friend network loads the optimized avatar", async () => {
     renderContent();
   `);
   try {
-    assert.equal(dom.window.document.querySelector("#friend-avatar").getAttribute("src"), "../assets/lappio-avatar-240.webp");
+    const d = dom.window.document;
+    assert.equal(d.querySelector("#friend-avatar").getAttribute("src"), "../assets/lappio-avatar-240.webp");
+    for (const [label, alt] of [
+      ["查看 Lappio 的介绍", "Lappio 的插画头像"],
+      ["View Lappio’s profile", "Lappio’s illustrated avatar"],
+      ["查看 Lappio 的介绍", "Lappio 的插画头像"]
+    ]) {
+      assert.equal(d.querySelector("#profile-trigger").getAttribute("aria-label"), label);
+      assert.equal(d.querySelector("#friend-avatar").alt, alt);
+      d.querySelector(".friend-node").click();
+      assert.equal(d.querySelector("#profile-trigger").getAttribute("aria-label"), label);
+      d.querySelector("#profile-trigger").click();
+      assert.equal(d.querySelector("#profile-trigger").getAttribute("aria-label"), label);
+      d.querySelector("#language-toggle").click();
+    }
   } finally { dom.window.close(); }
 });
 

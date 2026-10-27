@@ -66,7 +66,7 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
 
     const publicFiles = readdirSync(output, { recursive: true }).filter(file => /\.(html|js)$/.test(file));
     for (const file of publicFiles) assert.doesNotMatch(readFileSync(join(output, file), "utf8"), /TODO\(Lapp\)/, file);
-    assert.doesNotMatch(readFileSync(join(output, "script.js"), "utf8"), /sample:\s*true/);
+    assert.doesNotMatch(readFileSync(join(output, "script.js"), "utf8"), /sample|示例|Replace these|Update this/i);
     const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
     assert.deepEqual(index.map(item => item.slug), ["a-post", "first-post"]);
     assert.equal(index[0].category, "Reading");
@@ -87,7 +87,7 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     assert.match(html, /<article[^>]+lang="en"/);
     assert.match(html, /href="\.\.\/\.\.\/styles\.css"/);
     assert.equal(existsSync(join(output, "blog/hidden/index.html")), false);
-    for (const file of ["index.html", "blog/index.html", "notes/index.html", "styles.css", "script.js", "assets/lappio-avatar.png"]) {
+    for (const file of ["index.html", "blog/index.html", "notes/index.html", "styles.css", "script.js", "assets/lappio-avatar-240.webp"]) {
       assert.equal(existsSync(join(output, file)), true, `${file} was not built`);
     }
     assert.equal(existsSync(join(output, "README/index.html")), false);

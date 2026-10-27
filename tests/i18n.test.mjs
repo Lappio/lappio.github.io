@@ -41,7 +41,7 @@ for (const source of sources) {
       assert.ok(d.querySelector('.now').hidden);
       assert.equal(d.querySelector('.hero-avatar').getAttribute('data-i18n-alt'), 'avatarAlt');
     }
-    if (source === 'about/index.html') assert.ok(d.querySelector('.about-story-copy').hidden);
+    if (source === 'about/index.html') assert.ok(d.querySelector('.about-story').hidden);
     const page = d.body.dataset.page;
     if (page !== 'home' && page !== 'post') assert.equal(d.title, `${copy.zh[`nav${page[0].toUpperCase()}${page.slice(1)}`]} · Lappio Blog`);
   });
