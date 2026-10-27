@@ -47,7 +47,12 @@ test("mobile navigation reflows without page overflow", {
                   pageWidth: document.documentElement.scrollWidth, viewport: innerWidth,
                   client: nav.clientWidth, scroll: nav.scrollWidth, left: nav.scrollLeft,
                   end: nav.hasAttribute("data-overflow-end"), start: nav.hasAttribute("data-overflow-start"),
-                  current: (() => { const r = nav.querySelector('[aria-current]').getBoundingClientRect(); return r.left >= rect.left - 1 && r.right <= rect.right + 1; })(),
+                  current: (() => {
+                    const r = nav.querySelector('[aria-current]').getBoundingClientRect();
+                    const startFade = nav.hasAttribute("data-overflow-start") ? 18 : 0;
+                    const endFade = nav.hasAttribute("data-overflow-end") ? 18 : 0;
+                    return r.left >= rect.left + startFade - 1 && r.right <= rect.right - endFade + 1;
+                  })(),
                   links: [...nav.querySelectorAll("a")].map(a => {
                     const r = a.getBoundingClientRect();
                     return { left: r.left, right: r.right, top: r.top, height: r.height, font: parseFloat(getComputedStyle(a).fontSize) };
@@ -56,7 +61,7 @@ test("mobile navigation reflows without page overflow", {
               });
               assert.ok(geometry.pageWidth <= geometry.viewport, JSON.stringify(geometry));
               assert.equal(geometry.links.length, 7);
-              assert.ok(geometry.current, "current link is visible on load");
+              assert.ok(geometry.current, "current link is fully clear of nav fades on load");
               for (const [i, link] of geometry.links.entries()) {
                 assert.equal(link.top, geometry.links[0].top, "single line");
                 assert.ok(link.height >= 32 && link.font >= 13, "comfortable tap targets and text");

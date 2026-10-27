@@ -157,9 +157,17 @@ function revealCurrentMobileLink() {
   if (current) {
     const navRect = mobileNav.getBoundingClientRect();
     const rect = current.getBoundingClientRect();
+    const maxScroll = mobileNav.scrollWidth - mobileNav.clientWidth;
+    const clearance = 18 + 4; // Fade width plus breathing room for the current pill.
+    let target = mobileNav.scrollLeft;
     // Only move the nav, never the document. Instant also respects reduced motion.
-    if (rect.right > navRect.right) mobileNav.scrollLeft += rect.right - navRect.right;
-    else if (rect.left < navRect.left) mobileNav.scrollLeft -= navRect.left - rect.left;
+    if (current === mobileNav.querySelector("a:last-child")) target = maxScroll;
+    else if (rect.right > navRect.right - (target < maxScroll - 1 ? clearance : 0)) {
+      target += rect.right - navRect.right + clearance;
+    } else if (rect.left < navRect.left + (target > 1 ? clearance : 0)) {
+      target -= navRect.left - rect.left + clearance;
+    }
+    mobileNav.scrollLeft = Math.max(0, Math.min(maxScroll, target));
   }
   updateMobileNav();
 }
