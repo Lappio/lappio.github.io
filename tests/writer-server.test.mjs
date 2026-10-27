@@ -61,13 +61,14 @@ test("list, open, parse, and export preserve an existing article without writing
   });
 });
 
-test("preview escapes HTML and keeps template-looking code literal", async () => {
+test("preview autolinks www URLs, escapes HTML, and keeps template-looking code literal", async () => {
   await withServer(async writer => {
     const response = await postJson(writer, "/api/preview", {
-      markdown: "<script>alert(1)</script>\n\n~~~js\n{{ example }}\n~~~"
+      markdown: "www.example.com\n\n<script>alert(1)</script>\n\n~~~js\n{{ example }}\n~~~"
     });
     assert.equal(response.status, 200);
     const { html } = await response.json();
+    assert.match(html, /<a href="http:\/\/www\.example\.com">www\.example\.com<\/a>/);
     assert.match(html, /&lt;script&gt;/);
     assert.match(html, /\{\{ example \}\}/);
     assert.doesNotMatch(html, /<script>/);

@@ -71,6 +71,10 @@ The generated site is in `_site/`. That folder is rebuilt from source and is ign
 
 The workflow in `.github/workflows/pages.yml` installs dependencies, tests the site, builds it, and deploys `_site/`. A failing test or invalid article stops deployment. Check your repository's Git remote before pushing.
 
+## Maintenance
+
+The `markdown-it` override in `package.json` forces Eleventy 3.1.6's declared `^14` dependency to 15.x for the GHSA-vfgh-jcmw-g37q / GHSA-gfr2-rv44-r23c ReDoS fixes. Re-check it when upgrading Eleventy: if Eleventy natively depends on markdown-it >=15, remove the override; otherwise keep it. Run `npm ls markdown-it`, `npm audit`, `npm test`, and `npm run build`, and diff `_site/` before and after the upgrade.
+
 ## Customize the site
 
 - Edit bilingual interface copy and the sample note and project entries in `script.js`.

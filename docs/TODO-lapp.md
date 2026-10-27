@@ -4,6 +4,7 @@
 
 | 待补内容（What） | 文件及定位（File / selector） |
 | --- | --- |
+| 升级 Eleventy 时复查 markdown-it override（Maintenance） | `package.json`：若 Eleventy 原生依赖 markdown-it >=15，移除 override；否则保留；运行 `npm ls markdown-it`、`npm audit`、测试及构建，并对比升级前后的 `_site/`（见 README Maintenance） |
 | 真实联系邮箱及 mailto 链接（Real email and mailto URL） | `index.html`：`#contact`；`contact/index.html`：`.contact-panel` |
 | 个人 GitHub 主页地址（Personal GitHub profile URL） | `index.html`：`.contact-socials`；`contact/index.html`：`.link-directory`；不再显示 GitHub 首页示例 |
 | 个人 Are.na 主页地址（Personal Are.na profile URL） | `index.html`：`.contact-socials`；`contact/index.html`：`.link-directory`；不再显示 Are.na 首页示例 |

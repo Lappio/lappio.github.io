@@ -9,6 +9,7 @@ import { createWriterStore, WriterError } from "../lib/writer-store.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const renderer = new MarkdownIt({ html: false, linkify: true });
+renderer.linkify.set({ fuzzyLink: true });
 const maxBodyBytes = 1024 * 1024;
 const safeDownloadName = name => typeof name === "string" && /^[^/\\\x00-\x1f]+\.md$/.test(name);
 
