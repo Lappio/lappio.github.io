@@ -1,6 +1,8 @@
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import { readPosts } from "./lib/posts.mjs";
 import yaml from "js-yaml";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 export default function (eleventyConfig) {
   eleventyConfig.addFilter("postDate", (date, language) =>
@@ -16,8 +18,10 @@ export default function (eleventyConfig) {
     eleventyConfig.ignores.add(ignored);
   }
   eleventyConfig.addPassthroughCopy({ ".ui-build": "ui" });
-  eleventyConfig.addWatchTarget(".ui-build/");
-  eleventyConfig.setServerOptions({ watch: ["_site/ui/**/*"] });
+  eleventyConfig.addWatchTarget("frontend/");
+  eleventyConfig.addWatchTarget("vite.config.js");
+  // React owns the mounted DOM; preview updates must reload the page.
+  eleventyConfig.setServerOptions({ domDiff: false });
   eleventyConfig.addTransform("react-interface", function (content) {
     if (typeof this.page.outputPath !== "string" || !this.page.outputPath.endsWith(".html")) return content;
     const prefix = content.match(/data-root-prefix="([^"]+)"/)?.[1]
@@ -33,7 +37,15 @@ export default function (eleventyConfig) {
   for (const copied of ["assets", "styles.css", "script.js", "favicon.svg", ".nojekyll"]) {
     eleventyConfig.addPassthroughCopy(copied);
   }
-  eleventyConfig.on("eleventy.before", () => readPosts("content/posts"));
+  eleventyConfig.on("eleventy.before", () => {
+    readPosts("content/posts");
+    if (process.env.LAPPIO_DEV === "1") {
+      const vite = fileURLToPath(new URL("./node_modules/vite/bin/vite.js", import.meta.url));
+      const result = spawnSync(process.execPath, [vite, "build"], { stdio: "inherit" });
+      if (result.error) throw result.error;
+      if (result.status !== 0) throw new Error("React UI build failed");
+    }
+  });
   eleventyConfig.addCollection("publishedPosts", api =>
     api.getFilteredByGlob("./content/posts/*.md")
       .filter(item => item.data.draft !== true)
