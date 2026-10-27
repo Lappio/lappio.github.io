@@ -88,11 +88,28 @@ test("stale editor save leaves an externally changed file untouched", () => {
   });
 });
 
-test("traversal and symlink targets are rejected without changing outside files", () => {
+test("traversal targets are rejected without changing outside files", () => {
+  withDirectory(({ base, store }) => {
+    const outside = join(base, "outside.md");
+    writeFileSync(outside, "Do not change me");
+    assert.throws(() => store.saveArticle({ name: "../outside.md", fingerprint: "x", document: document() }),
+      error => error.code === "BAD_NAME");
+    assert.equal(readFileSync(outside, "utf8"), "Do not change me");
+  });
+});
+
+test("symlink targets are rejected without changing outside files", t => {
   withDirectory(({ base, posts, store }) => {
     const outside = join(base, "outside.md");
     writeFileSync(outside, "Do not change me");
-    symlinkSync(outside, join(posts, "link.md"));
+    try { symlinkSync(outside, join(posts, "link.md")); }
+    catch (error) {
+      if (process.platform === "win32" && error.code === "EPERM") {
+        t.skip("This Windows account cannot create file symlinks; traversal coverage runs separately.");
+        return;
+      }
+      throw error;
+    }
     assert.throws(() => store.openArticle("link.md"), error => error.code === "UNSAFE_TARGET");
     assert.throws(() => store.saveArticle({ name: "../outside.md", fingerprint: "x", document: document() }),
       error => error.code === "BAD_NAME");

@@ -77,6 +77,16 @@ The `markdown-it` override in `package.json` forces Eleventy 3.1.6's declared `^
 
 ## Customize the site
 
+The public interface is a React application enhanced over Eleventy's static HTML. Vite builds the UI into `.ui-build/`, which Eleventy copies to `_site/ui/`. Article HTML remains available before JavaScript loads; the React entry reads that content and mounts the shared interface. Markdown publishing and the private local editor still use the existing workflow.
+
+- Edit the React layout in `frontend/app.jsx`, shared copy in `frontend/copy.js`, and the airy design/motion in `frontend/styles.css`.
+- UI primitives in `frontend/components/ui/` are installed from the official shadcn/ui registry; `components.json` configures future additions.
+- `npm run dev` builds and watches the React UI alongside Eleventy. `npm run build` creates the complete static `_site/` output.
+- Search uses published articles from `articles.json`; empty notes, projects, friends, and contact information remain empty until real content is supplied.
+- Navigation and assets use relative URLs, including nested article pages and repository-path GitHub Pages hosting. Language preferences persist locally, and reduced-motion preferences disable the entrance and floating effects.
+
+The HTML templates, `styles.css`, and `script.js` below are retained as the static fallback and existing content compatibility layer. The generated React pages do not execute the legacy script.
+
 - Edit bilingual interface copy and the sample note and project entries in `script.js`.
 - Edit page layouts in their respective `index.html` files; article pages use `_includes/post.njk`.
 - Replace the six sample `friendLinks` in `script.js` with friends’ names, descriptions, and URLs.
