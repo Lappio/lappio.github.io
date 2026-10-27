@@ -14,7 +14,7 @@ function makeProject() {
   for (const path of [
     "package.json", "eleventy.config.js", "articles.11ty.js", "index.html",
     "styles.css", "script.js", "favicon.svg", ".nojekyll", "README.md",
-    "assets", "_includes", "lib", "scripts", "writer", "about", "blog", "notes", "links", "projects", "contact"
+    "assets", "_includes", "lib", "scripts", "writer", "about", "blog", "notes", "links", "projects", "contact", "frontend", "vite.config.js"
   ]) {
     cpSync(join(root, path), join(project, path), { recursive: true });
   }
@@ -22,7 +22,7 @@ function makeProject() {
   cpSync(join(root, "content/posts/posts.11tydata.js"), join(project, "content/posts/posts.11tydata.js"));
   mkdirSync(join(project, "docs"));
   writeFileSync(join(project, "docs/ignored.md"), "Should not be published");
-  symlinkSync(join(root, "node_modules"), join(project, "node_modules"), "dir");
+  symlinkSync(join(root, "node_modules"), join(project, "node_modules"), process.platform === "win32" ? "junction" : "dir");
   return project;
 }
 
@@ -44,7 +44,7 @@ const example = "{{ example }}";
 }
 
 function buildTo(project, output) {
-  execFileSync("npm", ["run", "build", "--", `--output=${output}`], {
+  execFileSync(process.execPath, [join(project, "scripts/build.mjs"), `--output=${output}`], {
     cwd: project,
     encoding: "utf8",
     stdio: "pipe"
@@ -87,6 +87,13 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     assert.match(html, /<article[^>]+lang="en"/);
     assert.match(html, /href="\.\.\/\.\.\/styles\.css"/);
     assert.equal(existsSync(join(output, "blog/hidden/index.html")), false);
+    const home = new JSDOM(readFileSync(join(output, "index.html"), "utf8")).window.document;
+    assert.equal(home.querySelector('script[type="module"]').getAttribute("src"), "./ui/app.js");
+    assert.ok(home.querySelector("#react-root .page-shell"), "static HTML stays readable before React mounts");
+    assert.equal(home.querySelector('script[src="./script.js"]'), null, "legacy DOM code does not race React");
+    const article = new JSDOM(html).window.document;
+    assert.equal(article.querySelector('script[type="module"]').getAttribute("src"), "../../ui/app.js");
+    for (const asset of ["ui/app.js", "ui/app.css"]) assert.equal(existsSync(join(output, asset)), true);
     for (const file of ["index.html", "blog/index.html", "notes/index.html", "styles.css", "script.js", "assets/lappio-avatar-240.webp"]) {
       assert.equal(existsSync(join(output, file)), true, `${file} was not built`);
     }
@@ -147,10 +154,10 @@ test("a removed article disappears from the next local build", () => {
   const output = join(project, "_site/blog/removed-post/index.html");
   try {
     writeFileSync(source, post({ title: "Removed post", slug: "removed-post" }));
-    execFileSync("npm", ["run", "build"], { cwd: project, encoding: "utf8" });
+    execFileSync(process.execPath, [join(project, "scripts/build.mjs")], { cwd: project, encoding: "utf8" });
     assert.equal(existsSync(output), true);
     rmSync(source);
-    execFileSync("npm", ["run", "build"], { cwd: project, encoding: "utf8" });
+    execFileSync(process.execPath, [join(project, "scripts/build.mjs")], { cwd: project, encoding: "utf8" });
     assert.equal(existsSync(output), false);
   } finally {
     rmSync(project, { recursive: true, force: true });
