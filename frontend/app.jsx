@@ -116,7 +116,7 @@ export function App({ page, rootPrefix, article }) {
       <div className="air-header-actions"><SiteSearch {...{ t, href, posts, status, reload }}/><span className="header-divider"/><Tooltip><TooltipTrigger asChild><Button variant="ghost" className="language-toggle" onClick={() => setLanguage(value => value === "zh" ? "en" : "zh")} aria-label={t.switchLanguage}><Globe2 size={16}/><span>{language === "zh" ? "EN" : "中"}</span></Button></TooltipTrigger><TooltipContent>{t.switchLanguage}</TooltipContent></Tooltip></div>
     </header>
     <nav className="air-mobile-nav" aria-label={t.mobileNav}>{sections.map(section => <a href={href(section === "home" ? "" : `${section}/`)} aria-current={currentPage === section ? "page" : undefined} key={section}>{t[section]}</a>)}</nav>
-    <main className="air-main" id="main" tabIndex={-1}>{page === "home" ? <Home {...{ t, href }}/> : <Interior {...{ page, t, href, posts, language, article, status, reload }}/>}</main>
+    <main className="air-main" id="main" tabIndex={-1}>{page === "home" ? <Home {...{ t, href, posts, language, status, reload }}/> : <Interior {...{ page, t, href, posts, language, article, status, reload }}/>}</main>
     <footer className="air-footer portal-footer"><span>© {new Date().getFullYear()} Lappio</span><a href="#top" className="back-top" aria-label={t.backTop}><ArrowUp size={16}/></a></footer>
   </div></TooltipProvider>;
 }

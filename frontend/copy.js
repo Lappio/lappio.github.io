@@ -2,6 +2,12 @@ export const sections = ["about", "blog", "notes", "projects", "links", "contact
 
 export const copy = {
   zh: {
+    homeAbout: "这里是 Lappio 的公开笔记本。",
+    homeBlog: "还没有发布文章。",
+    homeNotes: "笔记整理中。",
+    homeProjects: "项目整理中。",
+    homeLinks: "友链整理中。",
+    homeContact: "联系方式整理中。",
     openSection: "查看",
     home: "首页", blog: "文章", notes: "笔记", projects: "项目", links: "友链", about: "关于", contact: "联系",
     skip: "跳转到正文", nav: "主导航", mobileNav: "移动端导航", search: "搜索", close: "关闭搜索", switchLanguage: "Switch to English",
@@ -23,6 +29,12 @@ export const copy = {
     footer: "带着好奇心，一页一页写下去。", thanks: "感谢来访", backTop: "回到顶部", overview: "开放笔记本", articleBack: "返回所有文章", noArticles: "篇文章", avatar: "Lappio 的头像",
   },
   en: {
+    homeAbout: "Lappio’s open notebook.",
+    homeBlog: "No articles published yet.",
+    homeNotes: "Notes are taking shape.",
+    homeProjects: "Projects are taking shape.",
+    homeLinks: "Friend links are on the way.",
+    homeContact: "Contact details are on the way.",
     openSection: "Open ",
     home: "Home", blog: "Writing", notes: "Notes", projects: "Projects", links: "Friends", about: "About", contact: "Contact",
     skip: "Skip to content", nav: "Main navigation", mobileNav: "Mobile navigation", search: "Search", close: "Close search", switchLanguage: "切换到中文",
