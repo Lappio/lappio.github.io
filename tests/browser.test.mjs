@@ -105,7 +105,7 @@ test("article page retains its source language and uses project-relative links",
     const document = dom.window.document;
     assert.equal(document.querySelector(".post-header time").textContent, "2026年10月27日");
     assert.equal(document.querySelector(".post-header time").dateTime, "2026-10-27");
-    assert.equal(document.querySelector(".desktop-nav a").getAttribute("aria-current"), "page");
+    assert.equal(document.querySelector('.desktop-nav a[data-i18n="navBlog"]').getAttribute("aria-current"), "page");
     assert.equal(new URL(document.querySelector(".brand").href).pathname, "/repository-name/");
     document.querySelector("#language-toggle").click();
     assert.equal(document.querySelector(".post-header time").textContent, "Oct 27, 2026");
@@ -182,4 +182,26 @@ test("published cards have exactly one project-relative link and capped stagger"
   try {
     assert.equal(blog.window.document.querySelector(".entry:last-child").style.getPropertyValue("--i"), "5");
   } finally { blog.window.close(); }
+});
+
+test("hand copy and avatar switch language while unfinished content stays hidden", async () => {
+  for (const path of ['index.html', 'about/index.html']) {
+    const dom = await loadPage(path);
+    try {
+      const d = dom.window.document;
+      const hidden = d.querySelector(path === 'index.html' ? '.now' : '.about-story-copy');
+      for (const lang of ['zh', 'en', 'zh']) {
+        if (d.documentElement.lang !== (lang === 'zh' ? 'zh-CN' : 'en')) d.querySelector('#language-toggle').click();
+        assert.equal(hidden.hidden, true);
+        assert.equal(dom.window.getComputedStyle(hidden).display, 'none');
+        assert.equal(d.querySelector('#language-toggle').getAttribute('aria-label'), lang === 'zh' ? '切换到英文' : 'Switch to Chinese');
+        assert.equal(d.querySelector('.site-footer .hand').textContent, lang === 'zh' ? '感谢来访 ♡' : 'thanks for stopping by ♡');
+        assert.ok(d.querySelector('.site-footer .hand .heart'));
+        if (path === 'index.html') {
+          assert.equal(d.querySelector('.hero-avatar').alt, lang === 'zh' ? 'Lappio 的头像' : 'Lappio’s avatar');
+          assert.equal(d.querySelector('[data-i18n="heroHand"]').textContent, lang === 'zh' ? '嗨！' : 'hi there!');
+        }
+      }
+    } finally { dom.window.close(); }
+  }
 });

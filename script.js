@@ -1,4 +1,3 @@
-// TODO(Lapp): Supply personal copy and real contact/profile details; sample hint translations below stay unpublished.
 const copy = {
   en: {
     skipLink:"Skip to content",asideCaption:"OBSERVATIONS / EXPERIMENTS / NOTES",navBlog:"Blog",navNotes:"Notes",navProjects:"Projects",navLinks:"Links",navAbout:"About",navContact:"Contact",eyebrow:"A little corner of the internet",heroLine1:"Ideas worth",heroLine2:"keeping.",heroIntro:"Hello, I’m Lappio. This is a place for the things I’m learning, making, and thinking about. Expect thoughtful writing, quick notes, and work in progress.",exploreWriting:"Explore my writing",moreAbout:"More about me",writing:"WRITING",blogTitle:"Latest blog posts",fieldNotes:"FIELD NOTES",notesTitle:"Notes & fragments",notesDesc:"Shorter observations, useful links, and ideas still taking shape.",selectedWork:"SELECTED WORK",projectsTitle:"Projects",aboutKicker:"A NOTE FROM ME",aboutTitle:"Hi, I’m Lappio<span class='accent'>.</span>",aboutBody:"I like turning curiosity into small experiments and clear stories. This blog is my open notebook: part archive, part playground, always evolving.",linksKicker:"ELSEWHERE",linksTitle:"Links",linksHint:"Replace these sample links with your profiles.",contactKicker:"SAY HELLO",contactTitle:"Let’s talk.",contactBody:"Have a thought, question, or interesting thing to share? I’d love to hear from you.",contactHint:"Update this sample email before publishing.",footerNote:"Made with curiosity, one page at a time.",backTop:"Back to top ↑",searchKicker:"FIND SOMETHING",searchTitle:"Search the site",searchHelp:"Press Esc to close",noResults:"No matches found. Try another word.",searchStart:"Start typing to search posts, notes, and projects.",blogLabel:"Blog",noteLabel:"Note",projectLabel:"Project",homeLabel:"Home",upNext:"UP NEXT",sampleEntries:"Sample entries",sampleLinks:"Sample links",blogPageLead:"Longer pieces on ideas, the creative process, and the things I keep coming back to.",notesPageLead:"A lighter notebook for observations, questions, and ideas before they become essays.",projectsPageLead:"Things I am building, exploring, and learning from along the way.",linksPageLead:"A small directory of places to find me and things worth keeping close.",aboutPageLead:"A little more about the person behind this corner of the internet.",contactPageLead:"A place to start a conversation, share a question, or send an interesting idea.",allWriting:"All writing",allNotes:"All notes",selectedProjects:"Selected projects",elsewhereTitle:"Elsewhere",githubDesc:"Code, experiments, and open work",arenaDesc:"Collected references and inspiration",aboutStoryKicker:"THE SHORT VERSION",aboutStoryTitle:"Curiosity, documented.",aboutStoryOne:"I’m Lappio, and this is my open notebook. I write to understand what I’m learning, share useful discoveries, and keep a record of the questions that matter to me.",aboutStoryTwo:"The blog holds longer thoughts. Notes are the smaller observations along the way. Projects are where those ideas become something you can use or explore.",aboutSampleHint:"This introduction is sample copy—make it yours when you are ready.",emailKicker:"EMAIL",contactPanelTitle:"Let’s talk."
@@ -56,36 +55,18 @@ Object.assign(copy.zh, {
 Object.assign(copy.zh, { navBlog: "文章", navLinks: "友链", homeLabel: "首页", blogTitle: "最近写的", heroGreeting: "你好，我是 <span class='hero-name'>Lappio 👋</span>", nowLearning: "在学 CSS 布局", nowMaking: "在做 本地写作编辑器", nowListening: "在听 Lo-fi", emptyArticles: "还没有发布文章，很快就来。" });
 Object.assign(copy.en, { heroGreeting: "Hello, I’m <span class='hero-name'>Lappio 👋</span>", nowLearning: "Learning CSS layouts", nowMaking: "Making a local writing editor", nowListening: "Listening to Lo-fi" });
 
-// TODO(Lapp): Replace these samples with real friend names, descriptions, and URLs.
 const friendAvatarSource = "../assets/lappio-avatar.png";
-const friendLinks = [
-  {sample:true,name:{en:"Friend 01",zh:"朋友 01"},description:{en:"A place for thoughtful writing.",zh:"一个记录认真思考的地方。"},url:"",x:16,y:20},
-  {sample:true,name:{en:"Friend 02",zh:"朋友 02"},description:{en:"Ideas, images, and experiments.",zh:"想法、图像与实验。"},url:"",x:72,y:14},
-  {sample:true,name:{en:"Friend 03",zh:"朋友 03"},description:{en:"Notes from a curious mind.",zh:"一颗好奇心留下的笔记。"},url:"",x:84,y:41},
-  {sample:true,name:{en:"Friend 04",zh:"朋友 04"},description:{en:"Things made with care.",zh:"用心做出来的作品。"},url:"",x:74,y:75},
-  {sample:true,name:{en:"Friend 05",zh:"朋友 05"},description:{en:"A little window into new work.",zh:"一扇看见新作品的小窗。"},url:"",x:23,y:79},
-  {sample:true,name:{en:"Friend 06",zh:"朋友 06"},description:{en:"A collection of useful finds.",zh:"收藏实用发现的角落。"},url:"",x:15,y:50}
-];
+const friendLinks = [];
 
-// TODO(Lapp): Replace these sample entries with your own writing and projects.
-const entries = {
-  blog: [],
-  notes: [
-    {sample:true,tag:{en:"PROCESS",zh:"方法"},date:"09.21.26",title:{en:"The value of a messy first draft",zh:"凌乱初稿的价值"}},
-    {sample:true,tag:{en:"READING",zh:"阅读"},date:"09.10.26",title:{en:"A book worth revisiting slowly",zh:"值得慢慢重读的一本书"}},
-    {sample:true,tag:{en:"IDEA",zh:"想法"},date:"08.25.26",title:{en:"A better way to collect good questions",zh:"更好地收集好问题"}},
-    {sample:true,tag:{en:"OBSERVATION",zh:"观察"},date:"08.03.26",title:{en:"Small details make a place memorable",zh:"微小的细节让地方难忘"}}
-  ],
-  projects: [
-    {sample:true,title:{en:"An open notebook",zh:"开放笔记本"},description:{en:"A growing collection of useful ideas, experiments, and resources.",zh:"持续收集有用的想法、实验与资源。"}},
-    {sample:true,title:{en:"Small tools, big curiosity",zh:"小工具，大好奇心"},description:{en:"Little digital experiments that make everyday work feel lighter.",zh:"一些让日常工作更轻松的数字小实验。"}}
-  ]
-};
+const entries = { blog: [], notes: [], projects: [] };
 
 Object.assign(copy.zh, { emptyNotes: "笔记整理中，稍后见。", emptyProjects: "项目整理中，稍后见。", emptyFriends: "友链整理中，稍后见。", emptyContact: "联系方式整理中，稍后见。", emptyProfiles: "个人主页整理中，稍后见。" });
 Object.assign(copy.en, { emptyNotes: "Notes are taking shape. Check back soon.", emptyProjects: "Projects are taking shape. Check back soon.", emptyFriends: "Friend links are taking shape. Check back soon.", emptyContact: "Contact details are on the way.", emptyProfiles: "Personal profiles are on the way." });
 const publishedItems = items => items.filter(item => !item.sample);
 const visibleFriends = publishedItems(friendLinks);
+
+Object.assign(copy.en, { footerHand: "thanks for stopping by <span class='heart'>♡</span>", heroHand: "hi there!", avatarAlt: "Lappio’s avatar", languageToggleLabel: "Switch to Chinese" });
+Object.assign(copy.zh, { footerHand: "感谢来访 <span class='heart'>♡</span>", heroHand: "嗨！", avatarAlt: "Lappio 的头像", languageToggleLabel: "切换到英文" });
 
 let language = localStorage.getItem("lappio-language") === "en" ? "en" : "zh";
 const page = document.body.dataset.page || "home";
@@ -159,8 +140,12 @@ function renderContent() {
   document.querySelectorAll("[data-i18n]").forEach(node => {
     const value = copy[language][node.dataset.i18n];
     if (value === undefined) return;
-    if (node.dataset.i18n === "aboutTitle" || node.dataset.i18n === "heroGreeting") node.innerHTML = value;
+    if (node.dataset.i18n === "aboutTitle" || node.dataset.i18n === "heroGreeting" || node.dataset.i18n === "footerHand") node.innerHTML = value;
     else node.textContent = value;
+  });
+  document.querySelectorAll("[data-i18n-alt]").forEach(node => {
+    const value = copy[language][node.dataset.i18nAlt];
+    if (value !== undefined) node.setAttribute("alt", value);
   });
   const postDate = document.querySelector(".post-header time[datetime]");
   if (postDate) postDate.textContent = formatPostDate(postDate.dateTime);
@@ -172,7 +157,7 @@ function renderContent() {
     else link.removeAttribute("aria-current");
   });
   document.querySelector("#language-toggle").innerHTML = language === "en" ? "<strong>EN</strong> <span aria-hidden='true'>/</span> 中" : "EN <span aria-hidden='true'>/</span> <strong>中</strong>";
-  document.querySelector("#language-toggle").setAttribute("aria-label",language === "en" ? "Switch to Chinese" : "切换到英文");
+  document.querySelector("#language-toggle").setAttribute("aria-label",copy[language].languageToggleLabel);
   document.querySelector("#search-open").setAttribute("aria-label",language === "en" ? "Search" : "搜索");
   document.querySelector("#search-open").title = language === "en" ? "Search" : "搜索";
   document.querySelector(".desktop-nav").setAttribute("aria-label",language === "en" ? "Main navigation" : "主导航");

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -64,6 +64,9 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     for (const [name, contents] of files) writeFileSync(join(postsDirectory, name), contents);
     buildTo(project, output);
 
+    const publicFiles = readdirSync(output, { recursive: true }).filter(file => /\.(html|js)$/.test(file));
+    for (const file of publicFiles) assert.doesNotMatch(readFileSync(join(output, file), "utf8"), /TODO\(Lapp\)/, file);
+    assert.doesNotMatch(readFileSync(join(output, "script.js"), "utf8"), /sample:\s*true/);
     const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
     assert.deepEqual(index.map(item => item.slug), ["a-post", "first-post"]);
     assert.equal(index[0].category, "Reading");

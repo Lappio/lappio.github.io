@@ -159,9 +159,6 @@ small {
   border-radius: var(--radius-pill);
   white-space: nowrap;
 }
-.desktop-nav a[data-i18n="homeLabel"], .mobile-nav a[data-i18n="homeLabel"] {
-  order: -1;
-}
 .desktop-nav a:hover, .mobile-nav a:hover {
   background: var(--accent-soft);
 }
@@ -881,3 +878,5 @@ time, .entry-meta, .note-bottom, #year { font-variant-numeric: tabular-nums; }
   .hero { transition: transform 200ms ease, box-shadow 200ms ease; }
   .hero:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 }
+
+[hidden] { display: none !important; }

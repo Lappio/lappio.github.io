@@ -11,45 +11,47 @@
     <script src="./script.js" defer></script>
   </head>
   <body data-page="home">
-    <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+    <a class="skip-link" href="#main" data-i18n="skipLink">跳转到正文</a>
     <div class="page-shell">
       <header class="site-header">
         <a class="brand" href="#top" aria-label="Lappio Blog home"><span>Lappio Blog</span><span class="brand-dot" aria-hidden="true">~</span></a>
         <nav class="desktop-nav" aria-label="Main navigation">
-          <a href="./blog/" data-i18n="navBlog">Blog</a>
-          <a href="./notes/" data-i18n="navNotes">Notes</a>
-          <a href="./projects/" data-i18n="navProjects">Projects</a>
-          <a href="./links/" data-i18n="navLinks">Links</a>
-          <a href="./about/" data-i18n="navAbout">About</a>
-          <a href="./contact/" data-i18n="navContact">Contact</a>
           <a href="./" data-i18n="homeLabel">首页</a>
+          <a href="./blog/" data-i18n="navBlog">文章</a>
+          <a href="./notes/" data-i18n="navNotes">笔记</a>
+          <a href="./projects/" data-i18n="navProjects">项目</a>
+          <a href="./links/" data-i18n="navLinks">友链</a>
+          <a href="./about/" data-i18n="navAbout">关于</a>
+          <a href="./contact/" data-i18n="navContact">联系</a>
+
         </nav>
         <div class="header-actions">
           <button class="icon-button" id="search-open" type="button" aria-label="Search" title="Search">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
           </button>
-          <button class="language-button" id="language-toggle" type="button" aria-label="Switch to Chinese">EN <span aria-hidden="true">/</span> 中</button>
+          <button class="language-button" id="language-toggle" type="button" aria-label="切换到英文">EN <span aria-hidden="true">/</span> 中</button>
         </div>
       </header>
 
       <nav class="mobile-nav" aria-label="Mobile navigation">
-        <a href="./blog/" data-i18n="navBlog">Blog</a><a href="./notes/" data-i18n="navNotes">Notes</a><a href="./projects/" data-i18n="navProjects">Projects</a><a href="./links/" data-i18n="navLinks">Links</a><a href="./about/" data-i18n="navAbout">About</a><a href="./contact/" data-i18n="navContact">Contact</a>
-        <a href="./" data-i18n="homeLabel">首页</a>
+          <a href="./" data-i18n="homeLabel">首页</a>
+        <a href="./blog/" data-i18n="navBlog">文章</a><a href="./notes/" data-i18n="navNotes">笔记</a><a href="./projects/" data-i18n="navProjects">项目</a><a href="./links/" data-i18n="navLinks">友链</a><a href="./about/" data-i18n="navAbout">关于</a><a href="./contact/" data-i18n="navContact">联系</a>
+
         </nav>
 
       <main id="main">
         <section class="hero" id="top" aria-labelledby="hero-title">
-          <img class="hero-avatar" src="./assets/lappio-avatar-240.webp" width="112" height="112" alt="Lappio 的头像" />
+          <img class="hero-avatar" src="./assets/lappio-avatar-240.webp" width="112" height="112" data-i18n-alt="avatarAlt" alt="Lappio 的头像" />
           <div class="hero-copy">
-            <div class="hand">hi there!</div>
-            <h1 id="hero-title" data-i18n="heroGreeting">你好，我是 <span class="hero-name">Lappio 👋</span></h1>
-            <p class="hero-intro" data-i18n="heroIntro">你好，我是 Lappio。这里记录我学到的知识、正在做的事情，以及一路上的思考。</p>
-            <div class="now">
-              <!-- TODO(Lapp): real link -->
+            <div class="hand" data-i18n="heroHand">嗨！</div>
+            <h1 id="hero-title" data-i18n="heroGreeting">你好，我是 <span class='hero-name'>Lappio 👋</span></h1>
+            <p class="hero-intro" data-i18n="heroIntro">你好，我是 Lappio。这里记录我学到的知识、正在做的事情，以及偶尔冒出的想法。你会读到文章、随笔和持续更新的项目。</p>
+            <div class="now" hidden>
+
               <a href="#" data-todo="learning" data-i18n="nowLearning">在学 CSS 布局</a>
-              <!-- TODO(Lapp): real link -->
+
               <a href="#" data-todo="making" data-i18n="nowMaking">在做 本地写作编辑器</a>
-              <!-- TODO(Lapp): real link -->
+
               <a href="#" data-todo="listening" data-i18n="nowListening">在听 Lo-fi</a>
             </div>
           </div>
@@ -58,29 +60,29 @@
         <div class="content-grid">
           <div class="main-column">
             <section class="content-section" id="blog" aria-labelledby="blog-title">
-              <div class="section-heading"><div><p class="section-kicker">01 / <span data-i18n="writing">WRITING</span></p><h2 id="blog-title" data-i18n="blogTitle">最近写的</h2></div><span class="section-symbol" aria-hidden="true">↘</span></div>
+              <div class="section-heading"><div><p class="section-kicker">01 / <span data-i18n="writing">文章</span></p><h2 id="blog-title" data-i18n="blogTitle">最近写的</h2></div><span class="section-symbol" aria-hidden="true">↘</span></div>
               <div class="entry-list" id="blog-list"></div>
             </section>
             <section class="content-section notes-section" id="notes" aria-labelledby="notes-title">
-              <div class="section-heading"><div><p class="section-kicker">02 / <span data-i18n="fieldNotes">FIELD NOTES</span></p><h2 id="notes-title" data-i18n="notesTitle">Notes & fragments</h2></div><span class="section-symbol" aria-hidden="true">✳</span></div>
-              <p class="section-description" data-i18n="notesDesc">Shorter observations, useful links, and ideas still taking shape.</p>
+              <div class="section-heading"><div><p class="section-kicker">02 / <span data-i18n="fieldNotes">随手记</span></p><h2 id="notes-title" data-i18n="notesTitle">笔记与碎片</h2></div><span class="section-symbol" aria-hidden="true">✳</span></div>
+              <p class="section-description" data-i18n="notesDesc">简短的观察、有用的链接，以及还在成形的想法。</p>
               <div class="note-grid" id="notes-list"></div>
             </section>
             <section class="content-section projects-section" id="projects" aria-labelledby="projects-title">
-              <div class="section-heading"><div><p class="section-kicker">03 / <span data-i18n="selectedWork">SELECTED WORK</span></p><h2 id="projects-title" data-i18n="projectsTitle">Projects</h2></div><span class="section-symbol" aria-hidden="true">↗</span></div>
+              <div class="section-heading"><div><p class="section-kicker">03 / <span data-i18n="selectedWork">近期作品</span></p><h2 id="projects-title" data-i18n="projectsTitle">项目</h2></div><span class="section-symbol" aria-hidden="true">↗</span></div>
               <div class="projects-list" id="projects-list"></div>
             </section>
           </div>
           <aside class="sidebar">
-            <section class="sidebar-card about-card" id="about" aria-labelledby="about-title"><p class="sidebar-kicker" data-i18n="aboutKicker">A NOTE FROM ME</p><h2 id="about-title" data-i18n="aboutTitle">Hi, I’m Lappio<span class="accent">.</span></h2><p data-i18n="aboutBody">I like turning curiosity into small experiments and clear stories. This blog is my open notebook: part archive, part playground, always evolving.</p><div class="signature">— Lappio</div></section>
-            <section class="sidebar-card links-card" id="links" aria-labelledby="links-title"><p class="sidebar-kicker" data-i18n="linksKicker">FRIEND LINKS</p><h2 id="links-title" data-i18n="linksTitle">Links</h2><p data-i18n="homeFriendsBody">A small constellation of friends and the corners of the web they call home.</p><a class="sidebar-page-link" href="./links/"><span data-i18n="exploreFriends">Explore friend links</span><span aria-hidden="true">↗</span></a></section>
-            <section class="sidebar-card contact-card" id="contact" aria-labelledby="contact-title"><p class="sidebar-kicker" data-i18n="contactKicker">SAY HELLO</p><h2 id="contact-title" data-i18n="contactTitle">Let’s talk.</h2><p data-i18n="contactBody">Have a thought, question, or interesting thing to share? I’d love to hear from you.</p><!-- TODO(Lapp): supply real email / personal profile URL here. --><p data-i18n="emptyContact">联系方式整理中，稍后见。</p><div class="contact-socials"><!-- TODO(Lapp): supply real email / personal profile URL here. --><!-- TODO(Lapp): supply real email / personal profile URL here. --></div><!-- TODO(Lapp): replace sample content; publishing hints removed. --></section>
+            <section class="sidebar-card about-card" id="about" aria-labelledby="about-title"><p class="sidebar-kicker" data-i18n="aboutKicker">关于我</p><h2 id="about-title" data-i18n="aboutTitle">你好，我是 Lappio<span class='accent'>。</span></h2><p data-i18n="aboutBody">我喜欢把好奇心变成小实验，也喜欢把复杂的事情讲清楚。这里是我的公开笔记本：既是档案，也是游乐场。</p><div class="signature">— Lappio</div></section>
+            <section class="sidebar-card links-card" id="links" aria-labelledby="links-title"><p class="sidebar-kicker" data-i18n="linksKicker">友情链接</p><h2 id="links-title" data-i18n="linksTitle">链接</h2><p data-i18n="homeFriendsBody">一张收藏朋友与好去处的小小星图。</p><a class="sidebar-page-link" href="./links/"><span data-i18n="exploreFriends">查看友情链接</span><span aria-hidden="true">↗</span></a></section>
+            <section class="sidebar-card contact-card" id="contact" aria-labelledby="contact-title"><p class="sidebar-kicker" data-i18n="contactKicker">打个招呼</p><h2 id="contact-title" data-i18n="contactTitle">聊聊吧。</h2><p data-i18n="contactBody">有想法、问题，或者想分享有趣的东西？欢迎来信。</p><p data-i18n="emptyContact">联系方式整理中，稍后见。</p><div class="contact-socials"></div></section>
           </aside>
         </div>
       </main>
-      <footer class="site-footer"><span>© <span id="year">2026</span> Lappio Blog</span><span class="hand">thanks for stopping by <span class="heart">♡</span></span><a href="#top" data-i18n="backTop">Back to top ↑</a></footer>
+      <footer class="site-footer"><span>© <span id="year">2026</span> Lappio Blog</span><span class="hand" data-i18n="footerHand">感谢来访 <span class='heart'>♡</span></span><a href="#top" data-i18n="backTop">返回顶部 ↑</a></footer>
     </div>
 
-    <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-box"><div class="search-topline"><div><p class="section-kicker" data-i18n="searchKicker">FIND SOMETHING</p><h2 id="search-title" data-i18n="searchTitle">Search the site</h2></div><button type="button" id="search-close" class="close-button" aria-label="Close search">×</button></div><label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search-input" type="search" autocomplete="off" data-placeholder-en="Search posts, notes, projects..." data-placeholder-zh="搜索文章、笔记、项目……" /></label><div id="search-results" class="search-results" aria-live="polite"></div><p class="search-help" data-i18n="searchHelp">Press Esc to close</p></div></dialog>
+    <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-box"><div class="search-topline"><div><p class="section-kicker" data-i18n="searchKicker">查找内容</p><h2 id="search-title" data-i18n="searchTitle">站内搜索</h2></div><button type="button" id="search-close" class="close-button" aria-label="Close search">×</button></div><label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search-input" type="search" autocomplete="off" data-placeholder-en="Search posts, notes, projects..." data-placeholder-zh="搜索文章、笔记、项目……" /></label><div id="search-results" class="search-results" aria-live="polite"></div><p class="search-help" data-i18n="searchHelp">按 Esc 关闭</p></div></dialog>
   </body>
 </html>
