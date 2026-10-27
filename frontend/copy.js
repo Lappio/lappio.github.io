@@ -1,5 +1,25 @@
 export const sections = ["about", "blog", "notes", "projects", "links", "contact"];
 
+/* Section and block titles stay English in both languages. */
+export const sectionTitles = {
+  home: "Home",
+  about: "About",
+  blog: "Blog",
+  notes: "Notes",
+  projects: "Projects",
+  links: "Links",
+  contact: "Contact",
+};
+
+export const sectionActions = {
+  about: "View About",
+  blog: "View Blog",
+  notes: "View Notes",
+  projects: "View Projects",
+  links: "View Links",
+  contact: "View Contact",
+};
+
 export const copy = {
   zh: {
     homeAbout: "这里是 Lappio 的公开笔记本。",

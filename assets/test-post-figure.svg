@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="320" viewBox="0 0 800 320" role="img" aria-label="Test post figure">
+  <rect width="800" height="320" fill="#e7eef2"/>
+  <rect x="28" y="28" width="744" height="264" fill="none" stroke="#659eb9" stroke-width="4"/>
+  <text x="400" y="168" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="32" fill="#243038">Test post figure</text>
+</svg>

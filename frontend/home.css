@@ -1,12 +1,12 @@
-/* One continuous page, with a centered profile and stacked editorial sections. */
-body:has(.air-app) { background: #111111; color: #2f2f2f; }
+/* One continuous page, with a centered profile and stacked editorial sections.
+   Page color matches joyehuang.me at rest: #fcfcfd plus the viewport highlight wash in styles.css. */
+body:has(.air-app) { background: #fcfcfd; color: #2f2f2f; }
 .air-app {
   display: flow-root;
   min-height: 100vh;
-  background: linear-gradient(180deg, #fafafa 0%, #ececec 40%, #cecece 78%, #b6b6b6 100%);
+  background: #fcfcfd;
 }
-.air-app:not([data-page="home"]) { background: linear-gradient(180deg, #fafafa, #ececec); }
-.air-top-glow { background: radial-gradient(ellipse, #dddddd55, transparent 68%); }
+.air-app:not([data-page="home"]) { background: #fcfcfd; }
 .air-header { background: transparent; border-color: transparent; border-radius: 0; box-shadow: none; backdrop-filter: none; }
 .air-app .air-brand, .air-app .air-brand svg { color: #494949; }
 .air-app .air-brand .brand-period { color: #909090; }
@@ -36,15 +36,16 @@ body:has(.air-app) { background: #111111; color: #2f2f2f; }
 .home-more:focus-visible { outline: 2px solid #585858; outline-offset: 4px; }
 .home-posts { list-style: none; margin: 0; padding: 0; }
 .home-posts li + li { margin-top: 19px; }
-.home-posts a { display: flex; flex-direction: column; gap: 4px; }
+.home-posts a { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; margin-inline: -10px; border-radius: 10px; }
 .home-posts time { color: #646464; font-size: 11px; }
 .home-posts span { color: #333333; font-size: 15px; line-height: 1.8; transition: color 180ms; }
-.home-posts a:hover span { color: #606060; }
+.home-posts a:hover { background: #ffffffb8; }
+.home-posts a:hover span { color: #1f1f1f; }
 .air-app .home-retry { color: #3f3f3f; font-size: 11px; padding-left: 0; }
 .air-app .portal-footer { border-color: #6b6b6b3b; display: flex; align-items: center; justify-content: space-between; padding: 23px 0 30px; margin-top: 13px; color: #4c4c4c; font-size: 10px; letter-spacing: 1px; }
 .air-app .portal-footer .back-top { border-color: #72727266; color: #4c4c4c !important; }
-.air-app[data-page="home"] .portal-footer { width: 100%; margin-top: 0; padding: 60px max(40px, calc((100% - 860px) / 2)) 24px; border-top: none; background: linear-gradient(180deg, transparent, #111111); color: #f9f9f9; }
-.air-app[data-page="home"] .portal-footer .back-top { color: #f9f9f9 !important; border-color: #e5e5e56b; }
+.air-app[data-page="home"] .portal-footer { width: 100%; margin-top: 0; padding: 60px max(40px, calc((100% - 860px) / 2)) 24px; border-top: none; background: transparent; color: #3a3a3a; }
+.air-app[data-page="home"] .portal-footer .back-top { color: #3a3a3a !important; border-color: #72727266; }
 .air-interior { min-height: 65vh; }
 @media (prefers-reduced-motion: no-preference) {
   .home-profile { animation: air-arrive 800ms 70ms both; }
