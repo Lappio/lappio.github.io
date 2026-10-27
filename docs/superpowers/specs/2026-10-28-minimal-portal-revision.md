@@ -11,3 +11,7 @@ The deeper gradient is scoped to the homepage. Interior pages retain a stable, l
 ## Vertical-layout follow-up
 
 The user supplied https://www.joyehuang.me/ as the layout reference and explicitly rejected separate cards. Replace the card grid with a centered profile followed by one continuous vertical column: About, writing, notes, projects, friends, contact. Desktop sections use a left heading and right content; mobile stacks the heading above the content. No section panels or card backgrounds. Keep concise copy, the purple-grey gradient, subtle motion, and a bottom-right shadcn link per section. The writing section lists up to three actual published articles with dates and preserves loading, error/retry, and empty states.
+
+## Grayscale palette override
+
+The user rejected purple and requested a grey-to-black gradient. All React CSS colors, including hover/focus states, dialogs, interior pages and syntax tokens, now use neutral grays. The homepage starts near white, moves through grey, and ends in a charcoal-black footer. Keep the vertical layout and original avatar unchanged. Browser theme color is neutral grey as well.
