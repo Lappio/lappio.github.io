@@ -1,7 +1,14 @@
+import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import { readPosts } from "./lib/posts.mjs";
 import yaml from "js-yaml";
 
 export default function (eleventyConfig) {
+  eleventyConfig.addFilter("postDate", (date, language) =>
+    new Intl.DateTimeFormat(language === "en" ? "en-US" : "zh-CN", {
+      year: "numeric", month: "short", day: "numeric", timeZone: "UTC"
+    }).format(new Date(`${date}T00:00:00Z`))
+  );
+  eleventyConfig.addPlugin(syntaxHighlight, { preAttributes: { tabindex: 0 } });
   eleventyConfig.setFrontMatterParsingOptions({ engines: {
     yaml: input => yaml.load(input, { schema: yaml.JSON_SCHEMA })
   } });

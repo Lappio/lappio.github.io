@@ -9,6 +9,7 @@ export default class ArticleIndex {
       date: data.date,
       summary: data.summary,
       language: data.language,
+      ...(typeof data.category === "string" && data.category.trim() ? { category: data.category } : {}),
       slug: data.slug,
       url: `blog/${data.slug}/`
     })));

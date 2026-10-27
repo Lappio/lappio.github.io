@@ -31,7 +31,7 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 .topbar-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
 .local-pill { white-space: nowrap; padding: 8px 12px; margin-right: 14px; border: 1px solid #d7e2d5; border-radius: 100px; background: #edf3eb; color: #476451; font: 11px var(--mono); }
 .local-pill span { display: inline-block; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: #739778; vertical-align: 1px; }
-.text-button, .solid-button, .outline-button { min-height: 38px; border: 1px solid transparent; padding: 9px 14px; font-size: 12px; font-weight: 700; transition: background .18s, color .18s, transform .18s; }
+.text-button, .solid-button, .outline-button { min-height: 38px; border: 1px solid transparent; padding: 9px 14px; font-size: 12px; font-weight: 700; }
 .text-button { background: transparent; color: var(--ink); }
 .text-button:hover { color: var(--accent); }
 .solid-button { display: inline-flex; align-items: center; gap: 20px; background: var(--ink); color: #fff; }
@@ -96,8 +96,8 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 .field-error:not(:empty) { margin-top: 5px; }
 .draft-control { display: flex; align-items: center; gap: 12px; padding: 13px 0; margin: 7px 0 21px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); cursor: pointer; }
 .draft-control input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.switch-track { position: relative; flex: none; width: 35px; height: 20px; border-radius: 20px; background: #cdd3ca; transition: background .2s; }
-.switch-track:after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.switch-track { position: relative; flex: none; width: 35px; height: 20px; border-radius: 20px; background: #cdd3ca; }
+.switch-track:after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
 .draft-control input:checked + .switch-track { background: #6f9076; }
 .draft-control input:checked + .switch-track:after { transform: translateX(15px); }
 .draft-control input:focus-visible + .switch-track { outline: 2px solid var(--accent); outline-offset: 3px; }

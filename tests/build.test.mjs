@@ -1,10 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { JSDOM } from "jsdom";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -56,26 +57,37 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
   const output = mkdtempSync(join(tmpdir(), "lappio-build-"));
   const files = [
     ["tdd-first.md", post({ title: "First post", slug: "first-post" })],
-    ["tdd-a.md", post({ title: "A post", slug: "a-post" })],
+    ["tdd-a.md", post({ title: "A post", slug: "a-post" }).replace("language: en", "language: en\ncategory: Reading")],
     ["tdd-hidden.md", post({ title: "Hidden post", slug: "hidden", draft: true })],
   ];
   try {
     for (const [name, contents] of files) writeFileSync(join(postsDirectory, name), contents);
     buildTo(project, output);
 
+    const publicFiles = readdirSync(output, { recursive: true }).filter(file => /\.(html|js)$/.test(file));
+    for (const file of publicFiles) assert.doesNotMatch(readFileSync(join(output, file), "utf8"), /TODO\(Lapp\)/, file);
+    assert.doesNotMatch(readFileSync(join(output, "script.js"), "utf8"), /sample|示例|Replace these|Update this/i);
     const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
     assert.deepEqual(index.map(item => item.slug), ["a-post", "first-post"]);
+    assert.equal(index[0].category, "Reading");
+    assert.match(readFileSync(join(output, "blog/a-post/index.html"), "utf8"), /tag-b[^>]*>Reading<\/span>/);
     assert.deepEqual(index[1], {
       title: "First post", date: "2026-09-24", summary: "A short summary",
       language: "en", slug: "first-post", url: "blog/first-post/"
     });
     const html = readFileSync(join(output, "blog/first-post/index.html"), "utf8");
     assert.match(html, /Hello <strong>world<\/strong>/);
-    assert.match(html, /const example = &quot;\{\{ example \}\}&quot;;/);
+    const time = new JSDOM(html).window.document.querySelector(".post-header time");
+    assert.equal(time.dateTime, "2026-09-24");
+    assert.equal(time.textContent, "Sep 24, 2026");
+    const code = new JSDOM(html).window.document.querySelector("pre code");
+    assert.equal(code.textContent.trim(), 'const example = "{{ example }}";');
+    assert.equal(code.querySelector(".token.keyword").textContent, "const");
+    assert.equal(code.querySelector(".token.string").textContent, '"{{ example }}"');
     assert.match(html, /<article[^>]+lang="en"/);
     assert.match(html, /href="\.\.\/\.\.\/styles\.css"/);
     assert.equal(existsSync(join(output, "blog/hidden/index.html")), false);
-    for (const file of ["index.html", "blog/index.html", "notes/index.html", "styles.css", "script.js", "assets/lappio-avatar.png"]) {
+    for (const file of ["index.html", "blog/index.html", "notes/index.html", "styles.css", "script.js", "assets/lappio-avatar-240.webp"]) {
       assert.equal(existsSync(join(output, file)), true, `${file} was not built`);
     }
     assert.equal(existsSync(join(output, "README/index.html")), false);
@@ -102,10 +114,14 @@ test("unquoted calendar dates remain YYYY-MM-DD in the public article index", ()
   const output = mkdtempSync(join(tmpdir(), "lappio-date-build-"));
   try {
     writeFileSync(join(project, "content/posts/plain-date.md"),
-      post({ title: "Plain date", slug: "plain-date", date: "2026-09-25" }));
+      post({ title: "Plain date", slug: "plain-date", date: "2026-09-25" }).replace("language: en", "language: zh"));
     buildTo(project, output);
     const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
     assert.equal(index[0].date, "2026-09-25");
+    const html = readFileSync(join(output, "blog/plain-date/index.html"), "utf8");
+    const time = new JSDOM(html).window.document.querySelector(".post-header time");
+    assert.equal(time.dateTime, "2026-09-25");
+    assert.equal(time.textContent, "2026年9月25日");
   } finally {
     rmSync(project, { recursive: true, force: true });
     rmSync(output, { recursive: true, force: true });
