@@ -766,14 +766,34 @@ body[data-page="post"] .desktop-nav a { padding-inline: 4px; }
   .mobile-nav {
     display: flex;
     margin-bottom: 20px;
-  }
-  .mobile-nav {
     flex-wrap: nowrap;
-    gap: 2px;
+    gap: 4px;
     justify-content: flex-start;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    padding-block: 6px;
+    --fade-start: 0px;
+    --fade-end: 0px;
+    mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+  }
+  .mobile-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .mobile-nav[data-overflow-start] { --fade-start: 18px; }
+  .mobile-nav[data-overflow-end] { --fade-end: 18px; }
+  .mobile-nav:focus-within {
+    /* Keep the focused pill and its outline fully visible. */
+    mask-image: none;
+  }
+  .mobile-nav a:focus-visible {
+    outline-offset: -2px;
   }
   .mobile-nav a {
-    padding: 4px 3px;
+    flex: 0 0 auto;
+    padding: 4px 10px;
     min-height: 32px;
     font-size: 13px;
     text-align: center;

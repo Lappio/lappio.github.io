@@ -151,6 +151,28 @@ function validPostIndex(posts) {
     && /^\d{4}-\d{2}-\d{2}$/.test(post.date));
 }
 
+const mobileNav = document.querySelector(".mobile-nav");
+function updateMobileNav() {
+  if (!mobileNav) return;
+  mobileNav.toggleAttribute("data-overflow-start", mobileNav.scrollLeft > 1);
+  mobileNav.toggleAttribute("data-overflow-end", mobileNav.scrollWidth - mobileNav.clientWidth - mobileNav.scrollLeft > 1);
+}
+function revealCurrentMobileLink() {
+  if (!mobileNav?.clientWidth) return;
+  const current = mobileNav.querySelector('[aria-current="page"]');
+  if (current) {
+    const navRect = mobileNav.getBoundingClientRect();
+    const rect = current.getBoundingClientRect();
+    // Only move the nav, never the document. Instant also respects reduced motion.
+    if (rect.right > navRect.right) mobileNav.scrollLeft += rect.right - navRect.right;
+    else if (rect.left < navRect.left) mobileNav.scrollLeft -= navRect.left - rect.left;
+  }
+  updateMobileNav();
+}
+mobileNav?.addEventListener("scroll", updateMobileNav, { passive: true });
+window.addEventListener("resize", updateMobileNav);
+window.addEventListener("load", revealCurrentMobileLink, { once: true });
+
 function renderContent() {
   document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
   document.querySelectorAll("[data-i18n]").forEach(node => {
@@ -189,6 +211,7 @@ function renderContent() {
   if (projectsList) renderCards(projectsList, "projects");
   if (friendNetwork) renderFriendNetwork();
   renderSearch();
+  updateMobileNav();
 }
 
 // Real notes/projects need their own project-relative detail URL before publication.
