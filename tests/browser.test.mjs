@@ -14,7 +14,7 @@ const posts = [
   { title: "Fourth post", date: "2026-09-21", summary: "Fourth summary", language: "en", slug: "fourth-post", url: "blog/fourth-post/" }
 ];
 
-async function loadPage(path, response = posts, preference, setup = "") {
+async function loadPage(path, response = posts, preference, setup = "", before = "") {
   const html = readFileSync(join(root, path), "utf8");
   const url = `https://example.test/repository-name/${path === "index.html" ? "" : path.replace(/index\.html$/, "")}`;
   const dom = new JSDOM(html, { url, runScripts: "outside-only", pretendToBeVisual: true });
@@ -24,7 +24,8 @@ async function loadPage(path, response = posts, preference, setup = "") {
     if (response instanceof Error) throw response;
     return { ok: true, json: async () => response };
   };
-  dom.window.eval(script + "\n" + setup);
+  dom.window.eval(before);
+  dom.window.eval(script.replace("const entries = { blog: [], notes: [], projects: [] };", "const entries = window.fixtureEntries || { blog: [], notes: [], projects: [] };") + "\n" + setup);
   await new Promise(resolve => setTimeout(resolve, 0));
   return dom;
 }
@@ -192,6 +193,14 @@ test("hand copy and avatar switch language while unfinished content stays hidden
       const hidden = d.querySelector(path === 'index.html' ? '.now' : '.about-story-copy');
       for (const lang of ['zh', 'en', 'zh']) {
         if (d.documentElement.lang !== (lang === 'zh' ? 'zh-CN' : 'en')) d.querySelector('#language-toggle').click();
+        for (const [selector, attr, zh, en] of [
+          [".brand", "aria-label", "Lappio Blog 首页", "Lappio Blog home"],
+          ["#search-open", "aria-label", "搜索", "Search"],
+          ["#search-open", "title", "搜索", "Search"],
+          [".desktop-nav", "aria-label", "主导航", "Main navigation"],
+          [".mobile-nav", "aria-label", "移动端导航", "Mobile navigation"],
+          ["#search-close", "aria-label", "关闭搜索", "Close search"]
+        ]) assert.equal(d.querySelector(selector).getAttribute(attr), lang === "zh" ? zh : en);
         assert.equal(hidden.hidden, true);
         assert.equal(dom.window.getComputedStyle(hidden).display, 'none');
         assert.equal(d.querySelector('#language-toggle').getAttribute('aria-label'), lang === 'zh' ? '切换到英文' : 'Switch to Chinese');
@@ -204,4 +213,118 @@ test("hand copy and avatar switch language while unfinished content stays hidden
       }
     } finally { dom.window.close(); }
   }
+});
+
+
+test("storage failures preserve the Chinese default and in-memory toggles", async () => {
+  for (const methods of [["getItem"], ["setItem"], ["getItem", "setItem"]]) {
+    const before = methods.map(method => `Storage.prototype.${method} = () => { throw new DOMException("Storage disabled", "SecurityError"); };`).join("\n");
+    const dom = await loadPage("index.html", posts, undefined, "", before);
+    try {
+      const d = dom.window.document;
+      assert.equal(d.documentElement.lang, "zh-CN");
+      assert.equal(d.querySelectorAll("#blog-list a").length, 3);
+      d.querySelector("#language-toggle").click();
+      assert.equal(d.documentElement.lang, "en");
+      assert.match(d.querySelector("#notes-list").textContent, /Notes are taking shape/);
+      d.querySelector("#language-toggle").click();
+      assert.equal(d.documentElement.lang, "zh-CN");
+    } finally { dom.window.close(); }
+  }
+});
+
+test("cards and search exclude missing URLs and use published detail URLs", async () => {
+  const dom = await loadPage("index.html", posts, undefined, `
+    const fixtures = [
+      {title:"URL fixture missing",description:"Description"},
+      {title:"URL fixture empty",description:"Description",url:""},
+      {title:"URL fixture null",description:"Description",url:null},
+      {title:"URL fixture valid",description:"Description",url:"details/real/"},
+      {title:"URL fixture sample",description:"Description",url:"details/sample/",sample:true}
+    ];
+    entries.notes = fixtures; entries.projects = fixtures;
+    entries.blog.push({title:"URL fixture missing blog",summary:"Description",url:""});
+    renderContent();
+  `);
+  try {
+    const d = dom.window.document;
+    for (const selector of ["#notes-list", "#projects-list"]) {
+      assert.equal(d.querySelectorAll(`${selector} a`).length, 1);
+      assert.equal(d.querySelector(`${selector} a`).getAttribute("href"), "./details/real/");
+    }
+    d.querySelector("#search-input").value = "URL fixture";
+    d.querySelector("#search-input").dispatchEvent(new dom.window.Event("input"));
+    assert.deepEqual([...d.querySelectorAll("#search-results a")].map(a => a.getAttribute("href")), ["./details/real/", "./details/real/"]);
+  } finally { dom.window.close(); }
+});
+
+test("friend network loads the optimized avatar", async () => {
+  const dom = await loadPage("links/index.html", posts, undefined, `
+    visibleFriends.push({name:"Fixture",description:"Fixture",url:"https://example.test/",x:10,y:10});
+    renderContent();
+  `);
+  try {
+    assert.equal(dom.window.document.querySelector("#friend-avatar").getAttribute("src"), "../assets/lappio-avatar-240.webp");
+  } finally { dom.window.close(); }
+});
+
+test("entrance animation is disabled for cards recreated after the first render", async () => {
+  const dom = await loadPage("index.html", posts, undefined, "", `
+    window.fetch = () => new Promise(() => {});
+    window.fixtureEntries = {blog: [], notes: [{title:"Fixture",url:"notes/fixture/"}], projects: [{title:"Fixture",url:"projects/fixture/"}]};
+  `);
+  try {
+    const d = dom.window.document;
+    const css = readFileSync(join(root, "styles.css"), "utf8");
+    const style = d.createElement("style");
+    // jsdom does not evaluate media queries: exercise the motion rules directly.
+    style.textContent = css.replace(/@media \(prefers-reduced-motion: no-preference\)\s*{([\s\S]*?)\n}/g, "$1");
+    d.head.append(style);
+
+    for (const card of d.querySelectorAll(".note-card")) assert.match(dom.window.getComputedStyle(card).animation, /card-arrive/);
+    d.querySelector("#language-toggle").click();
+    for (const card of d.querySelectorAll(".note-card, .project")) assert.equal(dom.window.getComputedStyle(card).animation, "none");
+  } finally { dom.window.close(); }
+});
+
+
+test("blog cards enter after a delayed fetch and skip entrance on language toggle", async () => {
+  const dom = await loadPage("index.html", posts, undefined, "", `
+    window.fetch = () => new Promise(resolve => { window.resolveArticles = resolve; });
+  `);
+  try {
+    const d = dom.window.document;
+    const list = d.querySelector("#blog-list");
+    assert.ok(list.querySelector(".entry-state"));
+    assert.equal(list.querySelectorAll(".entry").length, 0);
+    dom.window.resolveArticles({ok: true, json: async () => [posts[0]]});
+    await new Promise(resolve => setTimeout(resolve, 0));
+    assert.equal(list.querySelectorAll(".entry").length, 1);
+    assert.equal(list.hasAttribute("data-no-enter"), false);
+    d.querySelector("#language-toggle").click();
+    assert.equal(list.querySelectorAll(".entry").length, 1);
+    assert.equal(list.hasAttribute("data-no-enter"), true);
+  } finally { dom.window.close(); }
+});
+
+test("empty notes and projects preserve entrance for their first real cards", async () => {
+  const dom = await loadPage("index.html", [], undefined, `
+    window.showCards = () => {
+      entries.notes = [{title:"Note",url:"notes/fixture/"}];
+      entries.projects = [{title:"Project",url:"projects/fixture/"}];
+      renderContent();
+    };
+  `);
+  try {
+    const d = dom.window.document;
+    dom.window.showCards();
+    for (const selector of ["#notes-list", "#projects-list"]) {
+      assert.equal(d.querySelector(selector).children.length, 1);
+      assert.equal(d.querySelector(selector).hasAttribute("data-no-enter"), false);
+    }
+    d.querySelector("#language-toggle").click();
+    for (const selector of ["#notes-list", "#projects-list"]) {
+      assert.equal(d.querySelector(selector).hasAttribute("data-no-enter"), true);
+    }
+  } finally { dom.window.close(); }
 });

@@ -26,6 +26,14 @@ for (const source of sources) {
         assert.equal(normalizedHTML(actual), normalizedHTML(copy.zh[attr.value]), `${source}: ${attr.name}=${attr.value}`);
       }
     }
+    for (const [selector, attr, expected] of [
+      ['.brand', 'aria-label', 'Lappio Blog 首页'],
+      ['#search-open', 'aria-label', '搜索'],
+      ['#search-open', 'title', '搜索'],
+      ['.desktop-nav', 'aria-label', '主导航'],
+      ['.mobile-nav', 'aria-label', '移动端导航'],
+      ['#search-close', 'aria-label', '关闭搜索']
+    ]) assert.equal(d.querySelector(selector).getAttribute(attr), expected, `${source}: ${selector} ${attr}`);
     assert.equal(d.querySelector('#language-toggle').getAttribute('aria-label'), copy.zh.languageToggleLabel);
     for (const nav of d.querySelectorAll('.desktop-nav, .mobile-nav')) assert.equal(nav.querySelector('a').dataset.i18n, 'homeLabel');
     assert.ok(d.querySelector('.site-footer [data-i18n="footerHand"] .heart'));

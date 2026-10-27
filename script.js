@@ -55,7 +55,7 @@ Object.assign(copy.zh, {
 Object.assign(copy.zh, { navBlog: "文章", navLinks: "友链", homeLabel: "首页", blogTitle: "最近写的", heroGreeting: "你好，我是 <span class='hero-name'>Lappio 👋</span>", nowLearning: "在学 CSS 布局", nowMaking: "在做 本地写作编辑器", nowListening: "在听 Lo-fi", emptyArticles: "还没有发布文章，很快就来。" });
 Object.assign(copy.en, { heroGreeting: "Hello, I’m <span class='hero-name'>Lappio 👋</span>", nowLearning: "Learning CSS layouts", nowMaking: "Making a local writing editor", nowListening: "Listening to Lo-fi" });
 
-const friendAvatarSource = "../assets/lappio-avatar.png";
+const friendAvatarSource = "../assets/lappio-avatar-240.webp";
 const friendLinks = [];
 
 const entries = { blog: [], notes: [], projects: [] };
@@ -68,7 +68,21 @@ const visibleFriends = publishedItems(friendLinks);
 Object.assign(copy.en, { footerHand: "thanks for stopping by <span class='heart'>♡</span>", heroHand: "hi there!", avatarAlt: "Lappio’s avatar", languageToggleLabel: "Switch to Chinese" });
 Object.assign(copy.zh, { footerHand: "感谢来访 <span class='heart'>♡</span>", heroHand: "嗨！", avatarAlt: "Lappio 的头像", languageToggleLabel: "切换到英文" });
 
-let language = localStorage.getItem("lappio-language") === "en" ? "en" : "zh";
+Object.assign(copy.zh, { brandLabel: "Lappio Blog 首页" });
+Object.assign(copy.en, { brandLabel: "Lappio Blog home" });
+
+function readLanguage() {
+  try { return localStorage.getItem("lappio-language") === "en" ? "en" : "zh"; }
+  catch { return "zh"; }
+}
+
+function saveLanguage(value) {
+  try { localStorage.setItem("lappio-language", value); }
+  catch { /* Keep the in-memory preference when storage is unavailable. */ }
+}
+
+let language = readLanguage();
+const enteredContainers = new WeakSet();
 const page = document.body.dataset.page || "home";
 const rootPrefix = document.body.dataset.rootPrefix || (page === "home" ? "./" : "../");
 const searchDialog = document.querySelector("#search-dialog");
@@ -88,6 +102,7 @@ function formatPostDate(date) {
 }
 
 function renderBlogList(blogList) {
+  blogList.toggleAttribute("data-no-enter", enteredContainers.has(blogList));
   blogList.replaceChildren();
   const posts = page === "home" ? entries.blog.slice(0, 3) : entries.blog;
   if (blogLoading || blogLoadFailed || posts.length === 0) {
@@ -124,6 +139,7 @@ function renderBlogList(blogList) {
     article.append(date, link, arrow);
     blogList.append(article);
   });
+  enteredContainers.add(blogList);
 }
 
 function validPostIndex(posts) {
@@ -143,6 +159,7 @@ function renderContent() {
     if (node.dataset.i18n === "aboutTitle" || node.dataset.i18n === "heroGreeting" || node.dataset.i18n === "footerHand") node.innerHTML = value;
     else node.textContent = value;
   });
+  document.querySelector(".brand").setAttribute("aria-label", copy[language].brandLabel);
   document.querySelectorAll("[data-i18n-alt]").forEach(node => {
     const value = copy[language][node.dataset.i18nAlt];
     if (value !== undefined) node.setAttribute("alt", value);
@@ -176,8 +193,9 @@ function renderContent() {
 
 // Real notes/projects need their own project-relative detail URL before publication.
 function renderCards(container, type) {
+  container.toggleAttribute("data-no-enter", enteredContainers.has(container));
   container.replaceChildren();
-  const items = publishedItems(entries[type]);
+  const items = publishedItems(entries[type]).filter(item => item.url);
   if (!items.length) {
     const empty = document.createElement("p");
     empty.className = "entry-state";
@@ -215,6 +233,7 @@ function renderCards(container, type) {
     }
     container.append(card);
   });
+  enteredContainers.add(container);
 }
 
 function drawFriendLines() {
@@ -324,9 +343,9 @@ function renderSearch() {
   const query = searchInput.value.trim().toLocaleLowerCase();
   if (!query) { searchResults.innerHTML = `<div class="search-empty">${copy[language].searchStart}</div>`; return; }
   const records = [
-    ...entries.blog.map(item=>({type:copy[language].blogLabel,title:item.title,description:item.summary,target:`${rootPrefix}${item.url}`})),
-    ...publishedItems(entries.notes).map((item,index)=>({type:copy[language].noteLabel,title:textFor(item.title),description:"",target:`${rootPrefix}notes/#note-${index+1}`})),
-    ...publishedItems(entries.projects).map((item,index)=>({type:copy[language].projectLabel,title:textFor(item.title),description:textFor(item.description),target:`${rootPrefix}projects/#project-${index+1}`}))
+    ...entries.blog.filter(item => item.url).map(item=>({type:copy[language].blogLabel,title:item.title,description:item.summary,target:`${rootPrefix}${item.url}`})),
+    ...publishedItems(entries.notes).filter(item => item.url).map(item=>({type:copy[language].noteLabel,title:textFor(item.title),description:"",target:`${rootPrefix}${item.url}`})),
+    ...publishedItems(entries.projects).filter(item => item.url).map(item=>({type:copy[language].projectLabel,title:textFor(item.title),description:textFor(item.description),target:`${rootPrefix}${item.url}`}))
   ];
   const matches = records.filter(item => `${item.title} ${item.description} ${item.type}`.toLocaleLowerCase().includes(query));
   searchResults.replaceChildren();
@@ -334,7 +353,7 @@ function renderSearch() {
   matches.forEach(item => { const link=document.createElement("a");link.className="search-result";link.href=item.target;const label=document.createElement("small");label.textContent=item.type;const title=document.createElement("strong");title.textContent=item.title;link.append(label,title);link.addEventListener("click",()=>searchDialog.close());searchResults.append(link); });
 }
 
-document.querySelector("#language-toggle").addEventListener("click",()=>{ language = language === "en" ? "zh" : "en"; localStorage.setItem("lappio-language",language);renderContent(); });
+document.querySelector("#language-toggle").addEventListener("click",()=>{ language = language === "en" ? "zh" : "en"; saveLanguage(language);renderContent(); });
 document.querySelector("#search-open").addEventListener("click",()=>{ searchDialog.showModal();searchInput.focus(); });
 document.querySelector("#search-close").addEventListener("click",()=>searchDialog.close());
 searchDialog.addEventListener("click",event=>{ if(event.target===searchDialog) searchDialog.close(); });
