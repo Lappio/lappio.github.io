@@ -485,7 +485,7 @@ small {
   display: flex;
   align-items: center;
   gap: 12px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--muted);
   padding: 12px;
   border-radius: var(--radius);
 }
@@ -767,9 +767,13 @@ body[data-page="post"] .desktop-nav a { padding-inline: 4px; }
     display: flex;
     margin-bottom: 20px;
   }
-  .mobile-nav { gap: 3px; justify-content: flex-start; }
+  .mobile-nav {
+    flex-wrap: nowrap;
+    gap: 2px;
+    justify-content: flex-start;
+  }
   .mobile-nav a {
-    padding: 4px 8px;
+    padding: 4px 3px;
     min-height: 32px;
     font-size: 13px;
     text-align: center;
@@ -833,8 +837,8 @@ body[data-page="post"] .desktop-nav a { padding-inline: 4px; }
   .interior-hero h1 {
     font-size: 32px;
   }
-  body[data-page="post"] .site-header { padding-inline: 21px; }
-  body[data-page="post"] .breadcrumbs { margin-inline: 21px; }
+  body[data-page="post"] .site-header { padding-inline: 0; }
+  body[data-page="post"] .breadcrumbs { margin-inline: 0; }
   .post-article {
     padding: 20px;
   }
