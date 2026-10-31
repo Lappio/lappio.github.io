@@ -34,7 +34,7 @@ export default function (eleventyConfig) {
       .replace(/(<body[^>]*>)/, '$1<div id="react-root">')
       .replace("</body>", "</div></body>");
   });
-  for (const copied of ["assets", "styles.css", "script.js", "favicon.svg", ".nojekyll"]) {
+  for (const copied of ["assets", "styles.css", "favicon.svg", ".nojekyll"]) {
     eleventyConfig.addPassthroughCopy(copied);
   }
   eleventyConfig.on("eleventy.before", () => {
