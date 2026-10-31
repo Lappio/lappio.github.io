@@ -13,7 +13,7 @@ function makeProject() {
   const project = mkdtempSync(join(tmpdir(), "lappio-project-"));
   for (const path of [
     "package.json", "eleventy.config.js", "articles.11ty.js", "index.html",
-    "styles.css", "script.js", "favicon.svg", ".nojekyll", "README.md",
+    "styles.css", "components.json", "jsconfig.json", "favicon.svg", ".nojekyll", "README.md",
     "assets", "_includes", "lib", "scripts", "writer", "about", "blog", "notes", "links", "projects", "contact", "frontend", "vite.config.js"
   ]) {
     cpSync(join(root, path), join(project, path), { recursive: true });
@@ -66,7 +66,7 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
 
     const publicFiles = readdirSync(output, { recursive: true }).filter(file => /\.(html|js)$/.test(file));
     for (const file of publicFiles) assert.doesNotMatch(readFileSync(join(output, file), "utf8"), /TODO\(Lapp\)/, file);
-    assert.doesNotMatch(readFileSync(join(output, "script.js"), "utf8"), /sample|示例|Replace these|Update this/i);
+    assert.equal(existsSync(join(output, "script.js")), false);
     const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
     assert.deepEqual(index.map(item => item.slug), ["a-post", "first-post"]);
     assert.equal(index[0].category, "Reading");
@@ -94,7 +94,7 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     const article = new JSDOM(html).window.document;
     assert.equal(article.querySelector('script[type="module"]').getAttribute("src"), "../../ui/app.js");
     for (const asset of ["ui/app.js", "ui/app.css"]) assert.equal(existsSync(join(output, asset)), true);
-    for (const file of ["index.html", "blog/index.html", "notes/index.html", "styles.css", "script.js", "assets/lappio-avatar-240.webp"]) {
+    for (const file of ["index.html", "blog/index.html", "notes/index.html", "styles.css", "assets/lappio-avatar-240.webp"]) {
       assert.equal(existsSync(join(output, file)), true, `${file} was not built`);
     }
     assert.equal(existsSync(join(output, "README/index.html")), false);
@@ -106,7 +106,7 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
       "node scripts/writer-server.mjs");
     for (const base of ["https://example.test/", "https://example.test/repository-name/"]) {
       const article = new URL("blog/first-post/", base);
-      for (const relative of ["../../", "../../script.js", "../../styles.css"]) {
+      for (const relative of ["../../", "../../styles.css"]) {
         assert.ok(new URL(relative, article).href.startsWith(base));
       }
     }
