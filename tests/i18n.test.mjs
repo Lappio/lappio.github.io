@@ -1,48 +1,19 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import vm from 'node:vm';
-import { JSDOM } from 'jsdom';
+import test from "node:test";
+import assert from "node:assert/strict";
+import { copy, sections, sectionTitles } from "../frontend/copy.js";
 
-const sources = ['index.html', ...['blog', 'notes', 'projects', 'links', 'about', 'contact'].map(p => `${p}/index.html`), '_includes/post.njk'];
-const script = readFileSync('script.js', 'utf8');
-const copy = vm.runInNewContext(`${script.split('let language =')[0]}; copy`);
-const normalizationDocument = new JSDOM('').window.document;
-const normalizedHTML = html => {
-  const div = normalizationDocument.createElement('div');
-  div.innerHTML = html;
-  return div.innerHTML.replace(/\s+/g, ' ').trim();
-};
-
-for (const source of sources) {
-  test(`${source} ships Chinese translations and accessible navigation`, () => {
-    const d = new JSDOM(readFileSync(source, 'utf8')).window.document;
-    assert.equal(d.documentElement.lang, 'zh-CN');
-    for (const node of d.querySelectorAll('*')) {
-      for (const attr of node.attributes) {
-        if (attr.name !== 'data-i18n' && !attr.name.startsWith('data-i18n-')) continue;
-        assert.equal(typeof copy.zh[attr.value], 'string', `${source}: missing ${attr.value}`);
-        const actual = attr.name === 'data-i18n' ? node.innerHTML : node.getAttribute(attr.name.slice('data-i18n-'.length));
-        assert.equal(normalizedHTML(actual), normalizedHTML(copy.zh[attr.value]), `${source}: ${attr.name}=${attr.value}`);
-      }
+test("React Chinese and English copy have matching keys and non-empty strings", () => {
+  assert.deepEqual(Object.keys(copy).sort(), ["en", "zh"]);
+  assert.ok(Object.keys(copy.zh).length > 0);
+  assert.deepEqual(Object.keys(copy.zh).sort(), Object.keys(copy.en).sort());
+  for (const [language, values] of Object.entries(copy)) {
+    for (const [key, value] of Object.entries(values)) {
+      assert.equal(typeof value, "string", `${language}.${key}`);
+      assert.ok(value.trim(), `${language}.${key} is empty`);
     }
-    for (const [selector, attr, expected] of [
-      ['.brand', 'aria-label', 'Lappio Blog 首页'],
-      ['#search-open', 'aria-label', '搜索'],
-      ['#search-open', 'title', '搜索'],
-      ['.desktop-nav', 'aria-label', '主导航'],
-      ['.mobile-nav', 'aria-label', '移动端导航'],
-      ['#search-close', 'aria-label', '关闭搜索']
-    ]) assert.equal(d.querySelector(selector).getAttribute(attr), expected, `${source}: ${selector} ${attr}`);
-    assert.equal(d.querySelector('#language-toggle').getAttribute('aria-label'), copy.zh.languageToggleLabel);
-    for (const nav of d.querySelectorAll('.desktop-nav, .mobile-nav')) assert.equal(nav.querySelector('a').dataset.i18n, 'homeLabel');
-    assert.ok(d.querySelector('.site-footer [data-i18n="footerHand"] .heart'));
-    if (source === 'index.html') {
-      assert.ok(d.querySelector('.now').hidden);
-      assert.equal(d.querySelector('.hero-avatar').getAttribute('data-i18n-alt'), 'avatarAlt');
+    for (const section of sections) {
+      assert.ok(values[section]?.trim(), `${language}.${section}`);
+      assert.ok(sectionTitles[section]?.trim(), section);
     }
-    if (source === 'about/index.html') assert.ok(d.querySelector('.about-story').hidden);
-    const page = d.body.dataset.page;
-    if (page !== 'home' && page !== 'post') assert.equal(d.title, `${copy.zh[`nav${page[0].toUpperCase()}${page.slice(1)}`]} · Lappio Blog`);
-  });
-}
+  }
+});
