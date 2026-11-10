@@ -23,7 +23,7 @@ export const sectionActions = {
 export const copy = {
   zh: {
     usageOverview: "用量总览", usageCalendar: "每天一格，积少成多", usageScroll: "左右滑动，查看更早的记录。",
-    heroFirst: "把好奇，", heroSecond: "写成日常。", openNotebook: "翻开笔记本", recentWriting: "最近写下的", takeYourTime: "慢慢来，随意翻翻。", notebookMargin: "手帐页边", backHome: "返回首页",
+    heroFirst: "", heroSecond: "", openNotebook: "翻开笔记本", recentWriting: "最近写下的", takeYourTime: "take it easy.", notebookMargin: "手帐页边", backHome: "返回首页",
     homeAbout: "这里是 Lappio 的公开笔记本。",
     homeBlog: "还没有发布文章。",
     homeNotes: "笔记整理中。",
@@ -40,13 +40,13 @@ export const copy = {
     emptyNotes: "让灵感慢慢落笔。", emptyNotesBody: "笔记正在整理，\n那些细小的发现，很快会在这里相遇。",
     emptyProjects: "一些小小的可能。", emptyProjectsBody: "项目正在整理，\n让好奇心慢慢长成可以触摸的东西。",
     emptyLinks: "相遇的地方，慢慢收藏。", emptyLinksBody: "友链正在整理。\n期待在互联网的小路上，遇见更多有趣的角落。",
-    aboutKicker: "THE PERSON BEHIND THE PAGES", aboutTitle: "把好奇，写成日常。", aboutBody: "我喜欢把好奇心变成小实验，也喜欢把复杂的事情讲清楚。这里是我的公开笔记本：既是档案，也是游乐场。",
+    aboutKicker: "THE PERSON BEHIND THE PAGES", aboutTitle: "把好奇，写成日常。", aboutBody: "此男阿尔托莉雅重度依赖，拉普兰德中度依赖。",
     notebook: "保持好奇，持续生长", notebookBody: "不急着找到所有答案。\n先记录，再探索，慢慢来。", explore: "沿着好奇心，继续走走", exploreLead: "换一条小路，也许会有新的发现。",
     discoverNotes: "零散的灵感与日常观察", discoverProjects: "让想法落地的小实验", discoverLinks: "朋友与喜欢的互联网角落", discoverContact: "从一句你好开始", sayHello: "很高兴，在这里遇见你。",
     contactBody: "有想法、问题，或者想分享有趣的东西？欢迎来聊聊。", contactEmpty: "联系方式正在整理，稍后见。",
     blogLead: "把学到的、想到的，认真写下来。", notesLead: "捕捉日常里，转瞬即逝的小小灵光。", projectsLead: "好奇心驱动，一点一点把想法变成现实。", linksLead: "互联网很大，也有一些值得常去的小地方。", aboutLead: "一份关于我，也关于这本笔记的小小介绍。", contactLead: "有趣的对话，往往从一个简单的招呼开始。",
     searchTitle: "在笔记本里找一找", searchDescription: "搜索已发布文章，或跳转到一个栏目。", placeholder: "搜索文章、想法，或前往一个栏目…", noResults: "没有找到结果，换个关键词试试。", pages: "去一个地方", articles: "文章", searchHint: "选择", searchMove: "移动", searchEsc: "关闭", searchError: "文章加载失败，栏目仍可访问。",
-    footer: "带着好奇心，一页一页写下去。", thanks: "感谢来访", backTop: "回到顶部", overview: "开放笔记本", articleBack: "返回所有文章", noArticles: "篇文章", avatar: "Lappio 的头像",
+    footer: "仍许飞鸿荡云间.", thanks: "感谢来访", backTop: "回到顶部", overview: "开放笔记本", articleBack: "返回所有文章", noArticles: "篇文章", avatar: "Lappio 的头像",
   },
   en: {
     usageOverview: "Usage overview", usageCalendar: "One square, one day", usageScroll: "Swipe to explore earlier days.",
@@ -67,13 +67,13 @@ export const copy = {
     emptyNotes: "Let inspiration settle.", emptyNotesBody: "The notes are taking shape.\nSmall discoveries will find a home here soon.",
     emptyProjects: "Little possibilities.", emptyProjectsBody: "Projects are taking shape.\nTurning curiosity into something you can explore.",
     emptyLinks: "Good places, slowly collected.", emptyLinksBody: "Friend links are on the way.\nHere’s to finding more lovely corners of the internet.",
-    aboutKicker: "THE PERSON BEHIND THE PAGES", aboutTitle: "Making curiosity a habit.", aboutBody: "I like turning curiosity into small experiments and clear stories. This is my open notebook: part archive, part playground, always evolving.",
+    aboutKicker: "THE PERSON BEHIND THE PAGES", aboutTitle: "Making curiosity a habit.", aboutBody: "This guy is heavily dependent on Artoria and moderately dependent on Lappland.",
     notebook: "Stay curious. Keep growing.", notebookBody: "No need for all the answers.\nNotice, explore, and take your time.", explore: "Follow your curiosity", exploreLead: "A different path might lead to a new discovery.",
     discoverNotes: "Small sparks and everyday observations", discoverProjects: "Little experiments that bring ideas to life", discoverLinks: "Friends and favorite corners of the web", discoverContact: "It starts with a simple hello", sayHello: "Glad our paths crossed.",
     contactBody: "A thought, a question, or something interesting to share? Let’s talk.", contactEmpty: "Contact details are on the way.",
     blogLead: "Writing down the things I learn and keep coming back to.", notesLead: "Catching the small sparks before they slip away.", projectsLead: "Curiosity, made into things. One small step at a time.", linksLead: "The internet is big. Here are corners worth returning to.", aboutLead: "A little about me, and this open notebook.", contactLead: "An interesting conversation can begin with a simple hello.",
     searchTitle: "Look inside the notebook", searchDescription: "Search published articles or jump to a section.", placeholder: "Search writing, ideas, or jump to a page…", noResults: "No matches. Try another word.", pages: "Go somewhere", articles: "Writing", searchHint: "select", searchMove: "navigate", searchEsc: "close", searchError: "Writing is unavailable. You can still explore the pages.",
-    footer: "Made with curiosity, one page at a time.", thanks: "Thanks for stopping by", backTop: "Back to top", overview: "OPEN NOTEBOOK", articleBack: "Back to all writing", noArticles: "articles", avatar: "Lappio’s avatar",
+    footer: "Iacta alea est.", thanks: "Thanks for stopping by", backTop: "Back to top", overview: "OPEN NOTEBOOK", articleBack: "Back to all writing", noArticles: "articles", avatar: "Lappio’s avatar",
   },
 };
 
