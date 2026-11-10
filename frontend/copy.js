@@ -1,6 +1,6 @@
 export const sections = ["about", "blog", "notes", "projects", "links", "contact"];
 
-/* Section and block titles stay English in both languages. */
+/* Section names stay English; page copy follows the selected language. */
 export const sectionTitles = {
   home: "Home",
   about: "About",
@@ -22,6 +22,7 @@ export const sectionActions = {
 
 export const copy = {
   zh: {
+    heroFirst: "把好奇，", heroSecond: "写成日常。", openNotebook: "翻开笔记本", recentWriting: "最近写下的", takeYourTime: "慢慢来，随意翻翻。", notebookMargin: "手帐页边", backHome: "返回首页",
     homeAbout: "这里是 Lappio 的公开笔记本。",
     homeBlog: "还没有发布文章。",
     homeNotes: "笔记整理中。",
@@ -47,6 +48,7 @@ export const copy = {
     footer: "带着好奇心，一页一页写下去。", thanks: "感谢来访", backTop: "回到顶部", overview: "开放笔记本", articleBack: "返回所有文章", noArticles: "篇文章", avatar: "Lappio 的头像",
   },
   en: {
+    heroFirst: "Stay curious.", heroSecond: "Keep a notebook.", openNotebook: "Open the notebook", recentWriting: "Recent writing", takeYourTime: "Take your time. Look around.", notebookMargin: "Notebook margin", backHome: "Back to home",
     homeAbout: "Lappio’s open notebook.",
     homeBlog: "No articles published yet.",
     homeNotes: "Notes are taking shape.",

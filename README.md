@@ -77,18 +77,22 @@ The `markdown-it` override in `package.json` forces Eleventy 3.1.6's declared `^
 
 ## Customize the site
 
-The public interface is a React application enhanced over Eleventy's static HTML. Vite builds the UI into `.ui-build/`, which Eleventy copies to `_site/ui/`. Article HTML remains available before JavaScript loads; the React entry reads that content and mounts the shared interface. Markdown publishing and the private local editor still use the existing workflow.
+The public interface is a React application enhanced over Eleventy's static HTML. Vite builds the UI into `.ui-build/`, which Eleventy copies to `_site/ui/`. Article HTML remains available before JavaScript loads; the React entry reads that content and mounts the shared interface. Markdown publishing and the private local editor keep their existing workflow.
 
-- Edit the React layout in `frontend/app.jsx`, shared copy in `frontend/copy.js`, and the airy design/motion in `frontend/styles.css`.
-- UI primitives in `frontend/components/ui/` are installed from the official shadcn/ui registry; `components.json` configures future additions.
-- `npm run dev` builds and watches the React UI alongside Eleventy. `npm run build` creates the complete static `_site/` output.
-- Search uses published articles from `articles.json`; empty notes, projects, friends, and contact information remain empty until real content is supplied.
-- Navigation and assets use relative URLs, including nested article pages and repository-path GitHub Pages hosting. Language preferences persist locally, and reduced-motion preferences disable the entrance and floating effects.
+- Edit the notebook homepage in `frontend/home.jsx` and its layout in `frontend/home.css`. Recent articles occupy the main manuscript sheet; Notes and Projects appear as margin notes.
+- Edit shared navigation and interior pages in `frontend/app.jsx`, article rendering in `frontend/article-page.jsx`, and bilingual copy in `frontend/copy.js`. Section names stay English in both interface languages.
+- `frontend/styles.css` defines the handdrawn-ui paper/ink palette, irregular borders, hard shadows, typography, shared components, and reduced-motion behavior. Decorative SVG marks live in `frontend/components/sketch.jsx`. The handwritten font is served locally from `assets/fonts/`; no external font service is required.
+- UI primitives in `frontend/components/ui/` come from shadcn/ui; `components.json` configures future additions.
+- `npm run dev` watches the React UI alongside Eleventy. `npm run build` creates the complete static `_site/` output.
+- Search reads published articles from `articles.json`. Notes, projects, friends, and contact information remain empty until real content is supplied.
+- Navigation and assets use relative URLs, including nested article pages and repository-path GitHub Pages hosting. Language preferences persist locally. Reduced-motion preferences disable animated entrances and interactions.
 
-The HTML templates, `styles.css`, and `script.js` below are retained as the static fallback and existing content compatibility layer. The generated React pages do not execute the legacy script.
+The section `index.html` files, root `styles.css`, and `_includes/post.njk` provide the static fallback; they are not the mounted React layout. Contributor documentation such as `AGENTS.md` is excluded from the public build.
 
-- Edit bilingual interface copy and the sample note and project entries in `script.js`.
-- Edit page layouts in their respective `index.html` files; article pages use `_includes/post.njk`.
-- Replace the six sample `friendLinks` in `script.js` with friends’ names, descriptions, and URLs.
-- Replace `hello@example.com`, the generic GitHub URL, and the generic Are.na URL in the homepage and Contact page.
-- Adjust colors and typography in `styles.css`.
+For browser tests on macOS, point `CHROME_PATH` at an installed Chrome executable:
+
+```sh
+CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm test
+```
+
+Without a detected Chrome executable, the browser suites skip rather than checking the rendered interface.

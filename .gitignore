@@ -3,4 +3,5 @@ _site/
 .ui-build/
 artifacts/
 .DS_Store
+.archify/
 

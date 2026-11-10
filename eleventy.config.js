@@ -14,7 +14,7 @@ export default function (eleventyConfig) {
   eleventyConfig.setFrontMatterParsingOptions({ engines: {
     yaml: input => yaml.load(input, { schema: yaml.JSON_SCHEMA })
   } });
-  for (const ignored of ["README.md", "docs/**", "tests/**", "lib/**", "writer/**", "frontend/**", "artifacts/**", ".superpowers/**"]) {
+  for (const ignored of ["README.md", "AGENTS.md", "CLAUDE.md", "docs/**", "tests/**", "lib/**", "writer/**", "frontend/**", "artifacts/**", ".archify/**", ".superpowers/**"]) {
     eleventyConfig.ignores.add(ignored);
   }
   eleventyConfig.addPassthroughCopy({ ".ui-build": "ui" });
@@ -29,7 +29,7 @@ export default function (eleventyConfig) {
     return content
       .replace(/<script src="[^"]*script\.js" defer><\/script>/, "")
       .replace(/(<link rel="stylesheet" href="[^"]*styles\.css")/, '$1 data-static-fallback')
-      .replace('content="#f7f1e6"', 'content="#fcfcfd"')
+      .replace('content="#f7f1e6"', 'content="#fffdf8"')
       .replace("</head>", `<link rel="stylesheet" href="${prefix}ui/app.css" /><script type="module" src="${prefix}ui/app.js"></script></head>`)
       .replace(/(<body[^>]*>)/, '$1<div id="react-root">')
       .replace("</body>", "</div></body>");
