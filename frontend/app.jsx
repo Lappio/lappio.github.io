@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUp, ArrowUpRight, BookOpen, FolderOpen, Globe2, Leaf, Mail, NotebookPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -80,11 +80,6 @@ export function App({ page, rootPrefix, article }) {
   const t = copy[language];
   const href = path => `${rootPrefix}${path}`;
   const reload = () => setLoadKey(key => key + 1);
-  useLayoutEffect(() => {
-    const fallback = document.querySelector("link[data-static-fallback]");
-    if (fallback) fallback.disabled = true;
-    return () => { if (fallback) fallback.disabled = false; };
-  }, []);
   useEffect(() => {
     const controller = new AbortController();
     setStatus("loading");

@@ -13,7 +13,7 @@ function makeProject() {
   const project = mkdtempSync(join(tmpdir(), "lappio-project-"));
   for (const path of [
     "package.json", "eleventy.config.js", "articles.11ty.js", "notes.11ty.js", "index.html",
-    "styles.css", "components.json", "jsconfig.json", "favicon.svg", ".nojekyll", "README.md",
+    "components.json", "jsconfig.json", "favicon.svg", ".nojekyll", "README.md",
     "assets", "_includes", "lib", "scripts", "about", "blog", "notes", "links", "projects", "contact", "frontend", "vite.config.js"
   ]) {
     cpSync(join(root, path), join(project, path), { recursive: true });
@@ -55,6 +55,41 @@ function buildTo(project, output) {
   });
 }
 
+function articleData(html) {
+  const data = new JSDOM(html).window.document.querySelector("#article-data");
+  assert.ok(data, "article pages must supply inert data for the React interface");
+  return JSON.parse(data.textContent);
+}
+
+test("new-only pages ship one React mount without legacy markup or assets", () => {
+  const project = makeProject();
+  const output = mkdtempSync(join(tmpdir(), "lappio-new-only-"));
+  const title = "Title </script><script id='unexpected'> & 中文";
+  try {
+    writeFileSync(join(project, "content/posts/safe-data.md"), post({ title, slug: "safe-data" }));
+    buildTo(project, output);
+    assert.equal(existsSync(join(output, "styles.css")), false, "legacy stylesheet must not be published");
+    for (const path of ["index.html", "about/index.html", "blog/index.html", "notes/index.html",
+      "projects/index.html", "links/index.html", "contact/index.html", "blog/safe-data/index.html"]) {
+      const document = new JSDOM(readFileSync(join(output, path), "utf8")).window.document;
+      assert.equal(document.querySelectorAll("#react-root").length, 1, path);
+      assert.equal(document.querySelector("#react-root").childElementCount, 0, path);
+      assert.equal(document.querySelector(".page-shell, .post-article, [data-static-fallback], #unexpected"), null, path);
+      assert.equal(document.querySelectorAll('link[rel="stylesheet"]').length, 1, path);
+      assert.ok(document.querySelector('link[rel="stylesheet"]').getAttribute("href").endsWith("ui/app.css"), path);
+      assert.equal(document.querySelectorAll('script:not([type="application/json"])').length, 1, path);
+    }
+    const data = articleData(readFileSync(join(output, "blog/safe-data/index.html"), "utf8"));
+    assert.equal(data.title, title);
+    assert.equal(data.kind, "post");
+    assert.equal(data.language, "en");
+    assert.match(data.html, /Hello <strong>world<\/strong>/);
+  } finally {
+    rmSync(project, { recursive: true, force: true });
+    rmSync(output, { recursive: true, force: true });
+  }
+});
+
 test("Eleventy publishes ordered articles and excludes drafts and project files", () => {
   const project = makeProject();
   const postsDirectory = join(project, "content/posts");
@@ -76,32 +111,30 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
     assert.deepEqual(index.map(item => item.slug), ["a-post", "first-post"]);
     assert.equal(index[0].category, "Reading");
-    assert.match(readFileSync(join(output, "blog/a-post/index.html"), "utf8"), /tag-b[^>]*>Reading<\/span>/);
+    assert.equal(articleData(readFileSync(join(output, "blog/a-post/index.html"), "utf8")).category, "Reading");
     assert.deepEqual(index[1], {
       title: "First post", date: "2026-09-24", summary: "A short summary",
       language: "en", slug: "first-post", url: "blog/first-post/"
     });
     const html = readFileSync(join(output, "blog/first-post/index.html"), "utf8");
-    assert.match(html, /Hello <strong>world<\/strong>/);
-    const time = new JSDOM(html).window.document.querySelector(".post-header time");
-    assert.equal(time.dateTime, "2026-09-24");
-    assert.equal(time.textContent, "Sep 24, 2026");
-    const code = new JSDOM(html).window.document.querySelector("pre code");
+    const data = articleData(html);
+    assert.match(data.html, /Hello <strong>world<\/strong>/);
+    assert.equal(data.date, "2026-09-24");
+    const code = new JSDOM(data.html).window.document.querySelector("pre code");
     assert.equal(code.textContent.trim(), 'const example = "{{ example }}";');
     assert.equal(code.querySelector(".token.keyword").textContent, "const");
     assert.equal(code.querySelector(".token.string").textContent, '"{{ example }}"');
-    assert.match(html, /<article[^>]+lang="en"/);
-    assert.match(html, /href="\.\.\/\.\.\/styles\.css"/);
+    assert.equal(data.language, "en");
     assert.equal(existsSync(join(output, "blog/hidden/index.html")), false);
     const home = new JSDOM(readFileSync(join(output, "index.html"), "utf8")).window.document;
     assert.equal(home.querySelector('meta[name="theme-color"]').content, "#fffdf8");
     assert.equal(home.querySelector('script[type="module"]').getAttribute("src"), "./ui/app.js");
-    assert.ok(home.querySelector("#react-root .page-shell"), "static HTML stays readable before React mounts");
+    assert.equal(home.querySelector("#react-root").childElementCount, 0, "only React owns the visible interface");
     assert.equal(home.querySelector('script[src="./script.js"]'), null, "legacy DOM code does not race React");
     const article = new JSDOM(html).window.document;
     assert.equal(article.querySelector('script[type="module"]').getAttribute("src"), "../../ui/app.js");
     for (const asset of ["ui/app.js", "ui/app.css"]) assert.equal(existsSync(join(output, asset)), true);
-    for (const file of ["index.html", "blog/index.html", "notes/index.html", "styles.css", "assets/lappio-avatar-240.webp"]) {
+    for (const file of ["index.html", "blog/index.html", "notes/index.html", "assets/lappio-avatar-240.webp"]) {
       assert.equal(existsSync(join(output, file)), true, `${file} was not built`);
     }
     assert.equal(existsSync(join(output, "README/index.html")), false);
@@ -110,7 +143,7 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     assert.equal(existsSync(join(output, "writer")), false);
     for (const base of ["https://example.test/", "https://example.test/repository-name/"]) {
       const article = new URL("blog/first-post/", base);
-      for (const relative of ["../../", "../../styles.css"]) {
+      for (const relative of ["../../", "../../ui/app.css", "../../ui/app.js"]) {
         assert.ok(new URL(relative, article).href.startsWith(base));
       }
     }
@@ -155,9 +188,7 @@ test("unquoted calendar dates remain YYYY-MM-DD in the public article index", ()
     const index = JSON.parse(readFileSync(join(output, "articles.json"), "utf8"));
     assert.equal(index[0].date, "2026-09-25");
     const html = readFileSync(join(output, "blog/plain-date/index.html"), "utf8");
-    const time = new JSDOM(html).window.document.querySelector(".post-header time");
-    assert.equal(time.dateTime, "2026-09-25");
-    assert.equal(time.textContent, "2026年9月25日");
+    assert.equal(articleData(html).date, "2026-09-25");
   } finally {
     rmSync(project, { recursive: true, force: true });
     rmSync(output, { recursive: true, force: true });
@@ -205,7 +236,9 @@ test("Notes publishes its own ordered index and detail pages without leaking dra
     assert.deepEqual(index.map(note=>note.url),["notes/public-note/"]);
     assert.deepEqual(JSON.parse(readFileSync(join(output,"articles.json"),"utf8")),[]);
     const html=readFileSync(join(output,"notes/public-note/index.html"),"utf8");
-    assert.match(html,/data-page="note"/);assert.match(html,/Hello <strong>world<\/strong>/);
+    assert.match(html,/data-page="note"/);
+    assert.equal(articleData(html).kind,"note");
+    assert.match(articleData(html).html,/Hello <strong>world<\/strong>/);
     assert.ok(!existsSync(join(output,"notes/hidden-note/index.html")));
   } finally {rmSync(project,{recursive:true,force:true});rmSync(output,{recursive:true,force:true});}
 });

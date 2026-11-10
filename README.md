@@ -83,7 +83,7 @@ The `markdown-it` override in `package.json` forces Eleventy 3.1.6's declared `^
 
 ## Customize the site
 
-The public interface is a React application enhanced over Eleventy's static HTML. Vite builds the UI into `.ui-build/`, which Eleventy copies to `_site/ui/`. Article HTML remains available before JavaScript loads; the React entry reads that content and mounts the shared interface. Articles are authored directly as Markdown files in `content/posts/`.
+The public interface is a single React application. Vite builds the UI into `.ui-build/`, which Eleventy copies to `_site/ui/`. Eleventy generates lightweight page shells and embeds article metadata and rendered Markdown as inert JSON; `frontend/main.jsx` reads this data and mounts the shared interface. Articles are authored directly as Markdown files in `content/posts/`.
 
 - Edit the notebook homepage in `frontend/home.jsx` and its layout in `frontend/home.css`. Recent articles occupy the main manuscript sheet; Notes and Projects appear as margin notes.
 - Edit shared navigation and interior pages in `frontend/app.jsx`, article rendering in `frontend/article-page.jsx`, and bilingual copy in `frontend/copy.js`. Section names stay English in both interface languages.
@@ -93,7 +93,7 @@ The public interface is a React application enhanced over Eleventy's static HTML
 - Search reads published articles from `articles.json`. Notes, projects, friends, and contact information remain empty until real content is supplied.
 - Navigation and assets use relative URLs, including nested article pages and repository-path GitHub Pages hosting. Language preferences persist locally. Reduced-motion preferences disable animated entrances and interactions.
 
-The section `index.html` files, root `styles.css`, and `_includes/post.njk` provide the static fallback; they are not the mounted React layout. Contributor documentation such as `AGENTS.md` is excluded from the public build.
+The section `index.html` files contain page metadata and use `_includes/shell.njk` for the document shell. `_includes/post.njk` serializes article and note data with the `scriptJson` filter, which escapes `<` so content cannot close the JSON script element. There is no legacy interface or fallback stylesheet. Browsing requires JavaScript; disabled JavaScript or a failed UI download shows a bilingual notice instead of another layout. Contributor documentation such as `AGENTS.md` is excluded from the public build.
 
 For browser tests on macOS, point `CHROME_PATH` at an installed Chrome executable:
 

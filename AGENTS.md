@@ -6,7 +6,7 @@ This bilingual blog uses Eleventy for static HTML and React/Vite for the public 
 
 - `frontend/`: React views, bilingual copy (`copy.js`), styles, and shadcn/ui primitives in `components/ui/`.
 - `content/posts/`: Markdown articles with YAML front matter.
-- `_includes/post.njk` and section `index.html` files: static templates and fallback markup.
+- `_includes/shell.njk`: document shell; `_includes/post.njk`: inert article/note JSON; section `index.html` files: page metadata. React is the only public interface.
 - `lib/`: Markdown article parsing and validation.
 - `assets/`: public images, fonts, and other static assets.
 - `tests/`: automated tests; `docs/`: design notes and plans.

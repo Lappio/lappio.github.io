@@ -15,7 +15,7 @@ export const browserOptions = {
 
 export function copyBrowserProject(project) {
   for (const path of ["package.json", "eleventy.config.js", "articles.11ty.js", "notes.11ty.js", "index.html",
-    "styles.css", "favicon.svg", ".nojekyll", "assets", "_includes", "lib", "scripts",
+    "favicon.svg", ".nojekyll", "assets", "_includes", "lib", "scripts",
     "about", "blog", "notes", "links", "projects", "contact", "frontend",
     "vite.config.js", "components.json", "jsconfig.json"]) {
     cpSync(join(root, path), join(project, path), { recursive: true });

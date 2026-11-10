@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fffdf8" />
+    <meta name="description" content="{{ summary or description }}" />
+    <title>{% if title %}{{ title }} · {% endif %}Lappio Blog</title>
+    <link rel="icon" href="{{ rootPrefix }}favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="{{ rootPrefix }}ui/app.css" />
+    <script type="module" src="{{ rootPrefix }}ui/app.js" onerror="document.getElementById('ui-load-error').hidden = false"></script>
+  </head>
+  <body data-page="{{ pageKind | default('post') }}" data-root-prefix="{{ rootPrefix }}">
+    <div id="react-root"></div>
+    {{ content | safe }}
+    <noscript><p class="ui-message" id="ui-noscript"><span lang="zh-CN">{{ copy.zh.enableJavaScript }}</span><br /><span lang="en">{{ copy.en.enableJavaScript }}</span></p></noscript>
+    <p class="ui-message" id="ui-load-error" role="alert" hidden><span lang="zh-CN">{{ copy.zh.interfaceLoadError }}</span><br /><span lang="en">{{ copy.en.interfaceLoadError }}</span></p>
+  </body>
+</html>

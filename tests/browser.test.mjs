@@ -9,6 +9,58 @@ test("built React site", browserOptions, async t => {
   t.after(() => context.close());
   const page = await context.newPage();
 
+  await t.test("navigation never paints the legacy interface while the React bundle loads", async () => {
+    for (const width of [390, 1280]) {
+      const delayedContext = await browser.newContext({ viewport: { width, height: 844 } });
+      try {
+        const delayedPage = await delayedContext.newPage();
+        let release;
+        let requested;
+        await delayedPage.route("**/ui/app.js", async route => {
+          requested();
+          await new Promise(resolve => { release = resolve; });
+          await route.continue();
+        });
+        for (const section of ["blog", "notes", "blog"]) {
+          const bundleRequested = new Promise(resolve => { requested = resolve; });
+          if (new URL(delayedPage.url()).protocol === "about:") {
+            await delayedPage.goto(`${url}/${section}/`, { waitUntil: "commit" });
+          } else {
+            const nav = width === 1280 ? ".air-desktop-nav" : ".air-mobile-nav";
+            await delayedPage.locator(`${nav} a[href="../${section}/"]`).click({ noWaitAfter: true });
+            await delayedPage.waitForURL(`${url}/${section}/`, { waitUntil: "commit" });
+          }
+          try {
+            await bundleRequested;
+            await delayedPage.locator("#react-root").waitFor({ state: "attached" });
+            assert.equal(await delayedPage.locator("#react-root").evaluate(el => el.childElementCount), 0);
+            assert.equal(await delayedPage.locator(".page-shell, .post-article, [data-static-fallback]").count(), 0);
+            assert.equal(await delayedPage.locator("body").evaluate(el => getComputedStyle(el).backgroundColor), "rgb(255, 253, 248)");
+          } finally { release(); }
+          await delayedPage.locator(`.air-app[data-page="${section}"]`).waitFor();
+          assert.equal(await delayedPage.locator(".air-app").isVisible(), true);
+          assert.equal(await delayedPage.locator("#ui-load-error").isVisible(), false);
+        }
+      } finally { await delayedContext.close(); }
+    }
+  });
+
+  await t.test("missing JavaScript shows a useful notice, never the legacy interface", async () => {
+    for (const javaScriptEnabled of [false, true]) {
+      const fallbackContext = await browser.newContext({ javaScriptEnabled });
+      try {
+        const fallbackPage = await fallbackContext.newPage();
+        if (javaScriptEnabled) await fallbackPage.route("**/ui/app.js", route => route.abort());
+        await fallbackPage.goto(`${url}/blog/test-post-1/`);
+        const notice = fallbackPage.locator(javaScriptEnabled ? "#ui-load-error" : "#ui-noscript");
+        await notice.waitFor();
+        assert.equal(await notice.locator('[lang="zh-CN"]').innerText(), javaScriptEnabled ? copy.zh.interfaceLoadError : copy.zh.enableJavaScript);
+        assert.equal(await notice.locator('[lang="en"]').innerText(), javaScriptEnabled ? copy.en.interfaceLoadError : copy.en.enableJavaScript);
+        assert.equal(await fallbackPage.locator(".page-shell, .post-article, [data-static-fallback]").count(), 0);
+      } finally { await fallbackContext.close(); }
+    }
+  });
+
   await t.test("home renders all six sections and published article links", async () => {
     await visit(page, url);
     assert.equal(await page.locator("html").getAttribute("lang"), "zh-CN");

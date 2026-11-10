@@ -4,13 +4,12 @@ import { readNotes } from "./lib/notes.mjs";
 import yaml from "js-yaml";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { copy } from "./frontend/copy.js";
 
 export default function (eleventyConfig) {
-  eleventyConfig.addFilter("postDate", (date, language) =>
-    new Intl.DateTimeFormat(language === "en" ? "en-US" : "zh-CN", {
-      year: "numeric", month: "short", day: "numeric", timeZone: "UTC"
-    }).format(new Date(`${date}T00:00:00Z`))
-  );
+  eleventyConfig.addGlobalData("copy", copy);
+  // Keep article HTML inert inside JSON, even when it contains </script>.
+  eleventyConfig.addFilter("scriptJson", value => JSON.stringify(value).replaceAll("<", "\\u003c"));
   eleventyConfig.addPlugin(syntaxHighlight, { preAttributes: { tabindex: 0 } });
   eleventyConfig.setFrontMatterParsingOptions({ engines: {
     yaml: input => yaml.load(input, { schema: yaml.JSON_SCHEMA })
@@ -23,19 +22,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addWatchTarget("vite.config.js");
   // React owns the mounted DOM; preview updates must reload the page.
   eleventyConfig.setServerOptions({ domDiff: false });
-  eleventyConfig.addTransform("react-interface", function (content) {
-    if (typeof this.page.outputPath !== "string" || !this.page.outputPath.endsWith(".html")) return content;
-    const prefix = content.match(/data-root-prefix="([^"]+)"/)?.[1]
-      || (content.includes('data-page="home"') ? "./" : "../");
-    return content
-      .replace(/<script src="[^"]*script\.js" defer><\/script>/, "")
-      .replace(/(<link rel="stylesheet" href="[^"]*styles\.css")/, '$1 data-static-fallback')
-      .replace('content="#f7f1e6"', 'content="#fffdf8"')
-      .replace("</head>", `<link rel="stylesheet" href="${prefix}ui/app.css" /><script type="module" src="${prefix}ui/app.js"></script></head>`)
-      .replace(/(<body[^>]*>)/, '$1<div id="react-root">')
-      .replace("</body>", "</div></body>");
-  });
-  for (const copied of ["assets", "styles.css", "favicon.svg", ".nojekyll"]) {
+  for (const copied of ["assets", "favicon.svg", ".nojekyll"]) {
     eleventyConfig.addPassthroughCopy(copied);
   }
   eleventyConfig.on("eleventy.before", () => {

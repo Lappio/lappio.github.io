@@ -6,15 +6,7 @@ import "./home.css";
 
 const page = document.body.dataset.page || "home";
 const rootPrefix = document.body.dataset.rootPrefix || (page === "home" ? "./" : "../");
-const post = document.querySelector(".post-article");
-const article = post ? {
-  kind: page === "note" ? "note" : "post",
-  title: post.querySelector("h1").textContent,
-  summary: post.querySelector(".post-summary").textContent,
-  date: post.querySelector("time").dateTime,
-  category: post.querySelector(".tag").textContent,
-  language: post.lang,
-  html: post.querySelector(".post-body").innerHTML,
-} : null;
+const articleData = document.querySelector("#article-data");
+const article = articleData ? JSON.parse(articleData.textContent) : null;
 
 createRoot(document.querySelector("#react-root")).render(<App {...{ page, rootPrefix, article }}/>);

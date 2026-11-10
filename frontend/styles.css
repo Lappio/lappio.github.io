@@ -38,15 +38,15 @@
   --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px;
 }
 
-/* The static HTML remains untouched and readable until React mounts. */
-html:has(.air-app) { scroll-behavior: smooth; scroll-padding-top: 24px; background: var(--paper); }
-body:has(.air-app) {
+html { scroll-behavior: smooth; scroll-padding-top: 24px; background: var(--paper); }
+body {
   background-color: var(--paper);
   background-image: radial-gradient(circle, rgba(30,30,30,.08) 1.2px, transparent 1.2px);
   background-size: 22px 22px;
   color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.8;
   -webkit-font-smoothing: antialiased;
 }
+.ui-message { max-width: 40rem; margin: 15vh auto; padding: 24px; text-align: center; }
 ::selection { background: var(--mac-yellow); color: var(--ink); }
 .air-app { position: relative; display: flow-root; min-height: 100vh; }
 .air-app h1, .air-app h2, .air-app h3, .air-app p, .air-search p { margin: 0; }

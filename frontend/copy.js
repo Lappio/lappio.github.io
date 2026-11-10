@@ -22,6 +22,7 @@ export const sectionActions = {
 
 export const copy = {
   zh: {
+    enableJavaScript: "请启用 JavaScript 以浏览本站。", interfaceLoadError: "页面加载失败，请刷新重试。",
     usageOverview: "用量总览", usageCalendar: "每天一格，积少成多", usageScroll: "左右滑动，查看更早的记录。",
     heroFirst: "", heroSecond: "", openNotebook: "翻开笔记本", recentWriting: "最近写下的", takeYourTime: "take it easy.", notebookMargin: "手帐页边", backHome: "返回首页",
     homeAbout: "这里是 Lappio 的公开笔记本。",
@@ -49,6 +50,7 @@ export const copy = {
     footer: "仍许飞鸿荡云间.", thanks: "感谢来访", backTop: "回到顶部", overview: "开放笔记本", articleBack: "返回所有文章", noArticles: "篇文章", avatar: "Lappio 的头像",
   },
   en: {
+    enableJavaScript: "Please enable JavaScript to browse this site.", interfaceLoadError: "The page could not load. Please refresh to try again.",
     usageOverview: "Usage overview", usageCalendar: "One square, one day", usageScroll: "Swipe to explore earlier days.",
     heroFirst: "Stay curious.", heroSecond: "Keep a notebook.", openNotebook: "Open the notebook", recentWriting: "Recent writing", takeYourTime: "Take your time. Look around.", notebookMargin: "Notebook margin", backHome: "Back to home",
     homeAbout: "Lappio’s open notebook.",

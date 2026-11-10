@@ -6,7 +6,7 @@ Reply in Chinese.
 
 ## What this repository is
 
-A bilingual (zh/en) personal blog. Markdown articles live in Git; Eleventy renders static HTML; a React/Vite bundle replaces the static markup in the browser. Articles are edited directly in `content/posts/`. Pushes to `main` run tests, build, and deploy `_site/` to GitHub Pages for the custom domain `lappio.top`.
+A bilingual (zh/en) personal blog. Markdown articles live in Git; Eleventy generates page shells and inert article data; React/Vite provides the only public interface. Articles are edited directly in `content/posts/`. Pushes to `main` run tests, build, and deploy `_site/` to GitHub Pages for the custom domain `lappio.top`.
 
 `README.md` documents the authoring and publishing workflow; `AGENTS.md` holds contributor conventions; `docs/superpowers/specs/` and `docs/superpowers/plans/` hold design history.
 
@@ -32,12 +32,12 @@ Without Chrome they skip rather than fail. Before handing off changes, run `npm 
 
 ## Architecture
 
-### Build pipeline and the static-to-React handoff
+### Build pipeline and the React page shell
 
 1. `scripts/build.mjs` deletes `_site/`, runs Vite, then Eleventy. Vite uses library mode (`vite.config.js`), emitting `.ui-build/app.js` and `.ui-build/app.css`; Eleventy passthrough-copies that directory to `_site/ui/`.
 2. Eleventy's input is the repository root (`.`), output `_site/`. Root files become pages unless listed in `eleventyConfig.ignores` (`README.md`, `AGENTS.md`, `CLAUDE.md`, `docs/**`, `tests/**`, `lib/**`, `frontend/**`, `.archify/**`, …) — add any new contributor-only root file there or it leaks into the public site (there is a regression test for this).
-3. The `react-interface` transform rewrites every generated HTML page: it removes the legacy `script.js` tag, marks `styles.css` as `data-static-fallback`, injects `ui/app.css` + `ui/app.js`, and wraps body content in `<div id="react-root">`. The asset prefix comes from `data-root-prefix` (set to `../../` in `_includes/post.njk`), otherwise `./` for home and `../` for interior pages. Deeper page types need an explicit `data-root-prefix`.
-4. `frontend/main.jsx` reads `document.body.dataset.page`, scrapes article metadata from the static `.post-article` DOM, and mounts `<App>`. React disables the fallback stylesheet on mount, so static HTML remains readable before JavaScript loads. Preserve `#main` content and, for posts, the `.post-article h1`, `.post-summary`, `time`, `.tag`, `.post-body` structure — React reads these.
+3. Section `index.html` files provide front matter (`layout`, `pageKind`, `rootPrefix`, title and description). `_includes/shell.njk` supplies metadata, `ui/app.css`, `ui/app.js` and an empty `#react-root`. Relative `rootPrefix` values are `./` for home, `../` for sections and `../../` for article/note pages. Deeper page types need an explicit prefix.
+4. `_includes/post.njk` embeds metadata and rendered Markdown in `<script type="application/json" id="article-data">`; `scriptJson` escapes `<` to keep the data inert. `frontend/main.jsx` reads the JSON and body datasets, then mounts `<App>`. No old markup or fallback stylesheet is shipped. JavaScript is required; disabled JavaScript and failed UI downloads show bilingual notices from `frontend/copy.js`.
 5. `App` fetches `${rootPrefix}articles.json` and validates it with `frontend/lib/posts.js` (`validPostIndex`); an invalid or failed index produces the retry/error state. `articles.json` is rendered by `articles.11ty.js` from the `publishedPosts` collection, with URLs stored as `blog/<slug>/` (no prefix); React prepends `rootPrefix` for relative hosting.
 
 ### Article pipeline and validation
@@ -45,7 +45,7 @@ Without Chrome they skip rather than fail. Before handing off changes, run `npm 
 - Eleventy front matter is parsed with `js-yaml`'s `JSON_SCHEMA` (both in `eleventy.config.js` and `lib/post-document.mjs`). That is what keeps unquoted `date: 2026-09-24` as a string instead of a `Date`; do not relax the schema.
 - `lib/posts.mjs` is the single validator: required nonempty `title`, `date`, `summary`, `language` (`en`/`zh`), `slug`; real `YYYY-MM-DD` date; boolean `draft` (defaults to `false`); nonempty body; unique slugs. `eleventy.before` calls `readPosts()` so any invalid article fails the whole build by filename.
 - `content/posts/posts.11tydata.js` sets the layout and permalink; drafts get `permalink: false`, so they produce no page and never enter `publishedPosts`, lists, or search. Sorting is date descending, then slug.
-- `_includes/post.njk` is both the static article fallback and the source of the React-read metadata. Keep it in sync with `frontend/article-page.jsx`/`copy.js` when changing article structure.
+- `_includes/post.njk` supplies the article/note data consumed by `frontend/main.jsx` and `frontend/article-page.jsx`. Keep its metadata and rendered Markdown intact when changing the data contract.
 - `markdownTemplateEngine` and `htmlTemplateEngine` are disabled: Nunjucks does not run inside Markdown, which is why code samples containing `{{ ... }}` survive. A build test covers this.
 
 ### Frontend organization
@@ -71,7 +71,7 @@ The visual system is hand-drawn Excalidraw-style with macaron accents: paper/ink
 
 - Never edit `_site/` or `.ui-build/`; both are generated and Git-ignored.
 - Keep `title`/`date` quoted in new articles per README (unquoted dates still work because of `JSON_SCHEMA`, but quoted is the documented style). `draft` must be a boolean.
-- `frontend/styles.css` is the mounted UI stylesheet; root `styles.css` and the section `index.html` files are the pre-React static fallback and are largely legacy. Do not add UI features to the fallback.
+- `frontend/styles.css` is the shared UI stylesheet, including the page background before React mounts. Section `index.html` files are metadata-only; do not add a second interface there.
 - `package.json` pins an `overrides` entry forcing `markdown-it` 15.x for Eleventy 3.1.6's ReDoS fixes. Re-evaluate it on Eleventy upgrades (see README Maintenance).
 - `docs/sample-content.js` is reference-only, unpublished content; do not surface it. `docs/TODO-lapp.md` tracks real content still missing.
 - Commits/deploys: pushing `main` runs `.github/workflows/pages.yml` (`npm ci` → `npm test` → `npm run build` → deploy). A failing test or invalid article blocks deployment.
