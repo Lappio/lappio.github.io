@@ -23,7 +23,7 @@ export function Home({ t, href, posts, notes, language, status, reload }) {
     <section className="notebook-hero home-section home-section-about" aria-labelledby="home-about-title">
       <div className="hero-writing">
         <div className="hero-intro"><span className="intro-dot"/>{t.intro}<h2 id="home-about-title" className="sr-only">About</h2></div>
-        <h1>{t.heroFirst}<br/><Marker>{t.heroSecond}</Marker></h1>
+        {t.heroFirst || t.heroSecond ? <h1>{t.heroFirst ? <>{t.heroFirst}{t.heroSecond && <br/>}</> : null}{t.heroSecond ? <Marker>{t.heroSecond}</Marker> : null}</h1> : <h1 className="sr-only">{t.intro}</h1>}
         <p className="hero-description">{t.aboutBody}</p>
         <div className="hero-actions"><a className="home-open sketch-button" href="#writing"><BookOpen size={18} aria-hidden="true"/>{t.openNotebook}<ArrowUpRight size={18} aria-hidden="true"/></a><a className="hero-about-link" href={href("about/")}>{t.meet}<ArrowUpRight size={17} aria-hidden="true"/></a></div>
       </div>
