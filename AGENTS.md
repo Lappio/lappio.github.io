@@ -7,8 +7,7 @@ This bilingual blog uses Eleventy for static HTML and React/Vite for the public 
 - `frontend/`: React views, bilingual copy (`copy.js`), styles, and shadcn/ui primitives in `components/ui/`.
 - `content/posts/`: Markdown articles with YAML front matter.
 - `_includes/post.njk` and section `index.html` files: static templates and fallback markup.
-- `lib/`: article parsing, validation, and local writer storage.
-- `writer/` and `scripts/writer-server.mjs`: private local editor and server.
+- `lib/`: Markdown article parsing and validation.
 - `assets/`: public images, fonts, and other static assets.
 - `tests/`: automated tests; `docs/`: design notes and plans.
 
@@ -20,7 +19,6 @@ Use Node.js 22 or newer.
 
 - `npm ci`: install dependencies from the lockfile.
 - `npm run dev`: serve Eleventy locally and rebuild the React interface on changes.
-- `npm run write`: start the local article editor, normally at `http://127.0.0.1:4173/`.
 - `npm test`: run all `tests/*.test.mjs` with Node's test runner.
 - `npm run build`: build Vite assets, then generate the complete `_site/` site.
 

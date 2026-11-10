@@ -1,5 +1,7 @@
 # Local Article Editor Implementation Plan
 
+> Historical record: the local editor was removed on 2026-11-10. For the current Markdown authoring workflow, see `README.md`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a local browser editor that lists, creates, edits, previews, saves, imports, and downloads the blog's Markdown articles while leaving Git commits and pushes to the owner.

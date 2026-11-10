@@ -14,7 +14,7 @@ function makeProject() {
   for (const path of [
     "package.json", "eleventy.config.js", "articles.11ty.js", "index.html",
     "styles.css", "components.json", "jsconfig.json", "favicon.svg", ".nojekyll", "README.md",
-    "assets", "_includes", "lib", "scripts", "writer", "about", "blog", "notes", "links", "projects", "contact", "frontend", "vite.config.js"
+    "assets", "_includes", "lib", "scripts", "about", "blog", "notes", "links", "projects", "contact", "frontend", "vite.config.js"
   ]) {
     cpSync(join(root, path), join(project, path), { recursive: true });
   }
@@ -107,11 +107,7 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     assert.equal(existsSync(join(output, "README/index.html")), false);
     assert.equal(existsSync(join(output, "docs")), false);
     assert.equal(existsSync(join(output, ".archify")), false, "Local repository diagrams must not become public pages");
-    for (const file of ["writer/index.html", "writer/app.js", "writer/writer.css"]) {
-      assert.equal(existsSync(join(output, file)), false, `${file} leaked into the public site`);
-    }
-    assert.equal(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).scripts.write,
-      "node scripts/writer-server.mjs");
+    assert.equal(existsSync(join(output, "writer")), false);
     for (const base of ["https://example.test/", "https://example.test/repository-name/"]) {
       const article = new URL("blog/first-post/", base);
       for (const relative of ["../../", "../../styles.css"]) {
@@ -121,6 +117,15 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
   } finally {
     rmSync(project, { recursive: true, force: true });
     rmSync(output, { recursive: true, force: true });
+  }
+});
+
+test("repository no longer ships the local article editor", () => {
+  const { scripts } = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
+  assert.equal(scripts.write, undefined, "The local editor command must be removed");
+  for (const path of ["writer", "scripts/writer-server.mjs", "lib/writer-store.mjs",
+    "tests/writer-server.test.mjs", "tests/writer-store.test.mjs", "tests/writer-ui.test.mjs"]) {
+    assert.equal(existsSync(join(root, path)), false, `${path} must be removed`);
   }
 });
 

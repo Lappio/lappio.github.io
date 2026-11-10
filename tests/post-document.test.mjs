@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { decodeArticle, encodeArticle } from "../lib/post-document.mjs";
+import { decodeArticle } from "../lib/post-document.mjs";
 import { parsePost } from "../lib/posts.mjs";
 
 const source = `---
@@ -19,14 +19,15 @@ const value = "{{ example }}";
 ~~~
 `;
 
-test("article metadata and body survive a decode and encode round trip", () => {
-  const decoded = decodeArticle(source, "import.md");
-  const roundTrip = decodeArticle(encodeArticle(decoded), "export.md");
-  assert.equal(roundTrip.fields.date, "2026-09-25");
-  assert.equal(roundTrip.extraFields.series, "Notebook");
-  assert.equal(roundTrip.fields.body, decoded.fields.body);
-  assert.match(roundTrip.fields.body, /\{\{ example \}\}/);
-  assert.equal(parsePost("export.md", encodeArticle(decoded)).slug, "first-post");
+test("article decoding preserves metadata and the Markdown body", () => {
+  const decoded = decodeArticle(source, "article.md");
+  assert.deepEqual(decoded.fields, {
+    title: "First post", date: "2026-09-25", summary: "A short summary",
+    language: "en", slug: "first-post", draft: false,
+    body: '\nHello **world**.\n\n~~~js\nconst value = "{{ example }}";\n~~~\n'
+  });
+  assert.deepEqual(decoded.extraFields, { series: "Notebook" });
+  assert.equal(parsePost("article.md", source).slug, "first-post");
 });
 
 test("malformed YAML names its source", () => {
@@ -46,20 +47,22 @@ test("an impossible unquoted calendar date is rejected without rollover", () => 
 });
 
 test("executable front matter language is rejected without evaluating it", () => {
-  const executable = "---javascript\n({ title: (globalThis.__writerProbe = true) })\n---\nBody";
+  const executable = "---javascript\n({ title: (globalThis.__articleProbe = true) })\n---\nBody";
   try {
     assert.throws(() => decodeArticle(executable, "unsafe.md"), /YAML|front matter|unsupported/i);
-    assert.equal(globalThis.__writerProbe, undefined);
+    assert.equal(globalThis.__articleProbe, undefined);
   } finally {
-    delete globalThis.__writerProbe;
+    delete globalThis.__articleProbe;
   }
 });
 
-test("invalid metadata survives round trip so validation rejects it", () => {
+test("decoding preserves invalid metadata so article validation rejects it", () => {
   const invalidDraft = source.replace("series: Notebook", "draft: yes");
   const document = decodeArticle(invalidDraft, "draft.md");
-  assert.throws(() => parsePost("draft.md", encodeArticle(document)), /draft\.md.*draft/i);
+  assert.equal(document.fields.draft, "yes");
+  assert.throws(() => parsePost("draft.md", invalidDraft), /draft\.md.*draft/i);
 
   const paddedSlug = source.replace("slug: first-post", 'slug: " first-post "');
-  assert.throws(() => parsePost("slug.md", encodeArticle(decodeArticle(paddedSlug))), /slug\.md.*whitespace/i);
+  assert.equal(decodeArticle(paddedSlug).fields.slug, " first-post ");
+  assert.throws(() => parsePost("slug.md", paddedSlug), /slug\.md.*whitespace/i);
 });

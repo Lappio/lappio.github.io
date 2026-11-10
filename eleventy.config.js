@@ -14,7 +14,7 @@ export default function (eleventyConfig) {
   eleventyConfig.setFrontMatterParsingOptions({ engines: {
     yaml: input => yaml.load(input, { schema: yaml.JSON_SCHEMA })
   } });
-  for (const ignored of ["README.md", "AGENTS.md", "CLAUDE.md", "docs/**", "tests/**", "lib/**", "writer/**", "frontend/**", "artifacts/**", ".archify/**", ".superpowers/**"]) {
+  for (const ignored of ["README.md", "AGENTS.md", "CLAUDE.md", "docs/**", "tests/**", "lib/**", "frontend/**", "artifacts/**", ".archify/**", ".superpowers/**"]) {
     eleventyConfig.ignores.add(ignored);
   }
   eleventyConfig.addPassthroughCopy({ ".ui-build": "ui" });

@@ -1,5 +1,7 @@
 # Local article editor design
 
+> Historical record: the local editor was removed on 2026-11-10. For the current Markdown authoring workflow, see `README.md`.
+
 ## Purpose and scope
 
 Give the blog owner a comfortable browser interface for creating articles and managing the articles already in the repository. The owner can browse local articles, open one for editing, import an external `.md` file, edit metadata and Markdown, inspect a live preview, save into `content/posts/`, and download a Markdown copy. The owner still commits and pushes changes to GitHub manually. This design adds a local authoring tool; it does not change the public article format or GitHub Pages deployment. It supersedes the earlier publishing spec's exclusion of a browser editor only for this local tool.
