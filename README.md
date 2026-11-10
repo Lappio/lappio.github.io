@@ -102,3 +102,7 @@ CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm t
 ```
 
 Without a detected Chrome executable, the browser suites skip rather than checking the rendered interface.
+
+## Write and publish notes
+
+Notes live in `content/notes/*.md` with the same front matter as articles: title, quoted date, summary, language, slug and optional draft/category. They have an independent slug namespace and publish to `/notes/<slug>/`, not Blog. The Notes index, homepage margin and search show only public notes. `draft: true` suppresses the detail page and all indexes. The adjacent local editor supports creating, editing, cancelling unsaved changes, deleting and restoring both articles and notes; saving is local until an explicit publication.

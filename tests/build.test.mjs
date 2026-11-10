@@ -12,7 +12,7 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 function makeProject() {
   const project = mkdtempSync(join(tmpdir(), "lappio-project-"));
   for (const path of [
-    "package.json", "eleventy.config.js", "articles.11ty.js", "index.html",
+    "package.json", "eleventy.config.js", "articles.11ty.js", "notes.11ty.js", "index.html",
     "styles.css", "components.json", "jsconfig.json", "favicon.svg", ".nojekyll", "README.md",
     "assets", "_includes", "lib", "scripts", "about", "blog", "notes", "links", "projects", "contact", "frontend", "vite.config.js"
   ]) {
@@ -191,4 +191,21 @@ test("a removed article disappears from the next local build", () => {
   } finally {
     rmSync(project, { recursive: true, force: true });
   }
+});
+
+test("Notes publishes its own ordered index and detail pages without leaking drafts into Blog", () => {
+  const project=makeProject(),output=mkdtempSync(join(tmpdir(),"lappio-notes-build-"));
+  try {
+    const notes=join(project,"content/notes");mkdirSync(notes,{recursive:true});
+    cpSync(join(root,"content/notes/notes.11tydata.js"),join(notes,"notes.11tydata.js"));
+    writeFileSync(join(notes,"public.md"),post({title:"A public note",slug:"public-note"}));
+    writeFileSync(join(notes,"hidden.md"),post({title:"A hidden note",slug:"hidden-note",draft:true}));
+    buildTo(project,output);
+    const index=JSON.parse(readFileSync(join(output,"notes.json"),"utf8"));
+    assert.deepEqual(index.map(note=>note.url),["notes/public-note/"]);
+    assert.deepEqual(JSON.parse(readFileSync(join(output,"articles.json"),"utf8")),[]);
+    const html=readFileSync(join(output,"notes/public-note/index.html"),"utf8");
+    assert.match(html,/data-page="note"/);assert.match(html,/Hello <strong>world<\/strong>/);
+    assert.ok(!existsSync(join(output,"notes/hidden-note/index.html")));
+  } finally {rmSync(project,{recursive:true,force:true});rmSync(output,{recursive:true,force:true});}
 });

@@ -25,7 +25,7 @@ export async function builtSite(t) {
       finally { rmSync(project, { recursive: true, force: true }); }
     }
   });
-  for (const path of ["package.json", "eleventy.config.js", "articles.11ty.js", "index.html",
+  for (const path of ["package.json", "eleventy.config.js", "articles.11ty.js", "notes.11ty.js", "index.html",
     "styles.css", "favicon.svg", ".nojekyll", "assets", "_includes", "lib", "scripts",
     "about", "blog", "notes", "links", "projects", "contact", "frontend",
     "vite.config.js", "components.json", "jsconfig.json"]) {

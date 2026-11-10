@@ -139,3 +139,5 @@
 @media (prefers-reduced-motion: reduce) {
   .sticky-note:hover, .home-post-link:hover .post-arrow { transform: none; }
 }
+
+.home-note-links{list-style:none;padding:0;margin:14px 0}.home-note-links li+li{border-top:1px dashed var(--hairline)}.home-note-links a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;font-size:14px;overflow-wrap:anywhere}.home-note-links a:hover{text-decoration:underline}

@@ -8,6 +8,7 @@ const page = document.body.dataset.page || "home";
 const rootPrefix = document.body.dataset.rootPrefix || (page === "home" ? "./" : "../");
 const post = document.querySelector(".post-article");
 const article = post ? {
+  kind: page === "note" ? "note" : "post",
   title: post.querySelector("h1").textContent,
   summary: post.querySelector(".post-summary").textContent,
   date: post.querySelector("time").dateTime,

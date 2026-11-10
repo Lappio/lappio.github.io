@@ -8,17 +8,17 @@ function MoreLink({ section, href }) {
   return <a className="home-more" href={href(`${section}/`)} aria-label={sectionActions[section]}>{sectionActions[section]}<ArrowUpRight size={16} aria-hidden="true"/></a>;
 }
 
-function MarginNote({ section, t, href, Icon, children }) {
+function MarginNote({ section, t, href, Icon, children, notes = [] }) {
   return <section className={`home-section home-section-${section} sticky-note`} aria-labelledby={`home-${section}-title`}>
     <div className="note-heading"><Icon size={23} strokeWidth={1.6} aria-hidden="true"/><h2 id={`home-${section}-title`}>{sectionTitles[section]}</h2></div>
     <p className="note-description">{t[`discover${section[0].toUpperCase()}${section.slice(1)}`]}</p>
-    <p className="home-section-note">{t[`home${section[0].toUpperCase()}${section.slice(1)}`]}</p>
+    {section === "notes" && notes.length ? <ul className="home-note-links">{notes.slice(0, 3).map(note => <li key={note.slug}><a href={href(note.url)} lang={note.language}>{note.title}<ArrowUpRight size={14} aria-hidden="true"/></a></li>)}</ul> : <p className="home-section-note">{t[`home${section[0].toUpperCase()}${section.slice(1)}`]}</p>}
     {children}
     <MoreLink section={section} href={href}/>
   </section>;
 }
 
-export function Home({ t, href, posts, language, status, reload }) {
+export function Home({ t, href, posts, notes, language, status, reload }) {
   return <div className="notebook-home">
     <section className="notebook-hero home-section home-section-about" aria-labelledby="home-about-title">
       <div className="hero-writing">
@@ -48,7 +48,7 @@ export function Home({ t, href, posts, language, status, reload }) {
         <div className="manuscript-bottom"><span className="handwritten-label">one page at a time.</span><MoreLink section="blog" href={href}/></div>
       </section>
       <aside className="notebook-margin" aria-label={t.notebookMargin}>
-        <MarginNote section="notes" t={t} href={href} Icon={NotebookPen}><div className="pencil-lines" aria-hidden="true"><i/><i/><i/></div></MarginNote>
+        <MarginNote section="notes" t={t} href={href} Icon={NotebookPen} notes={notes}><div className="pencil-lines" aria-hidden="true"><i/><i/><i/></div></MarginNote>
         <MarginNote section="projects" t={t} href={href} Icon={FolderOpen}/>
       </aside>
     </div>

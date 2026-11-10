@@ -1,5 +1,6 @@
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import { readPosts } from "./lib/posts.mjs";
+import { readNotes } from "./lib/notes.mjs";
 import yaml from "js-yaml";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -39,6 +40,7 @@ export default function (eleventyConfig) {
   }
   eleventyConfig.on("eleventy.before", () => {
     readPosts("content/posts");
+    readNotes("content/notes");
     if (process.env.LAPPIO_DEV === "1") {
       const vite = fileURLToPath(new URL("./node_modules/vite/bin/vite.js", import.meta.url));
       const result = spawnSync(process.execPath, [vite, "build"], { stdio: "inherit" });
@@ -48,6 +50,12 @@ export default function (eleventyConfig) {
   });
   eleventyConfig.addCollection("publishedPosts", api =>
     api.getFilteredByGlob("./content/posts/*.md")
+      .filter(item => item.data.draft !== true)
+      .sort((a, b) => String(b.data.date).localeCompare(String(a.data.date))
+        || a.data.slug.localeCompare(b.data.slug))
+  );
+  eleventyConfig.addCollection("publishedNotes", api =>
+    api.getFilteredByGlob("./content/notes/*.md")
       .filter(item => item.data.draft !== true)
       .sort((a, b) => String(b.data.date).localeCompare(String(a.data.date))
         || a.data.slug.localeCompare(b.data.slug))

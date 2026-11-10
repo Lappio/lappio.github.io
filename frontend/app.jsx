@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { copy, sectionTitles, sections } from "./copy";
-import { validPostIndex } from "./lib/posts";
+import { validPostIndex, validNoteIndex } from "./lib/posts";
 import { Home } from "./home";
 import { ArticlePage } from "./article-page";
 import { SiteSearch } from "./components/search";
@@ -30,8 +30,8 @@ function EmptyState({ type = "blog", t, status, reload }) {
   </div>;
 }
 
-function PostList({ posts, language, t, href, status, reload }) {
-  if (!posts.length) return <EmptyState t={t} status={status} reload={reload}/>;
+function PostList({ posts, language, t, href, status, reload, type = "blog" }) {
+  if (!posts.length) return <EmptyState type={type} t={t} status={status} reload={reload}/>;
   return <div className="air-post-list">{posts.map(post => <a className="air-post" href={href(post.url)} key={post.slug} lang={post.language}>
     <div className="air-post-meta"><Badge variant="secondary">{post.category || (post.language === "zh" ? "中文" : "EN")}</Badge><time dateTime={post.date}>{new Intl.DateTimeFormat(language === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }).format(new Date(`${post.date}T00:00:00Z`))}</time></div>
     <h3>{post.title}<ArrowUpRight size={18}/></h3><p>{post.summary}</p>
@@ -57,13 +57,13 @@ function Explore({ t, href }) {
   </section>;
 }
 
-function Interior({ page, t, href, posts, language, article, status, reload }) {
-  if (page === "post" && article) return <ArticlePage article={article} language={language} href={href} t={t}/>;
+function Interior({ page, t, href, posts, notes, notesStatus, notesReload, language, article, status, reload }) {
+  if (["post", "note"].includes(page) && article) return <ArticlePage article={article} language={language} href={href} t={t}/>;
   const title = sectionTitles[page] || page;
   return <div className="air-interior">
     <div className="interior-breadcrumb"><a href={href("")}>{sectionTitles.home}</a><span>/</span><span>{title}</span></div>
     <header className="interior-heading"><p className="mini-label">{page.toUpperCase()} / LAPPIO</p><h1>{title}<span>.</span></h1><p>{t[`${page}Lead`]}</p></header>
-    {["blog", "notes", "projects", "links"].includes(page) && <Card className="interior-card"><CardContent>{page === "blog" ? <PostList {...{ posts, language, t, href, status, reload }}/> : <EmptyState type={page} t={t}/>}</CardContent></Card>}
+    {["blog", "notes", "projects", "links"].includes(page) && <Card className="interior-card"><CardContent>{page === "blog" ? <PostList {...{ posts, language, t, href, status, reload }}/> : page === "notes" ? <PostList posts={notes} type="notes" {...{ language, t, href }} status={notesStatus} reload={notesReload}/> : <EmptyState type={page} t={t}/>}</CardContent></Card>}
     {page === "about" && <div className="about-page-grid"><Card className="about-story-card"><CardContent><p className="mini-label">{t.aboutKicker}</p><h2>{t.aboutTitle}</h2><p>{t.aboutBody}</p><div className="about-page-note"><Leaf size={22}/><div><h3>{t.notebook}</h3><p>{t.notebookBody}</p></div></div><Button asChild className="primary-button"><a href={href("blog/")}>{t.read}<ArrowUpRight size={16}/></a></Button></CardContent></Card><AboutCard t={t} href={href}/></div>}
     {page === "contact" && <Card className="contact-page-card"><CardContent><div className="contact-icon"><Mail size={28} strokeWidth={1.2}/></div><h2>{t.sayHello}</h2><p>{t.contactBody}</p><Badge variant="outline">{t.contactEmpty}</Badge></CardContent></Card>}
     <Explore t={t} href={href}/>
@@ -73,6 +73,8 @@ function Interior({ page, t, href, posts, language, article, status, reload }) {
 export function App({ page, rootPrefix, article }) {
   const [language, setLanguage] = useState(readLanguage);
   const [posts, setPosts] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [notesStatus, setNotesStatus] = useState("loading");
   const [status, setStatus] = useState("loading");
   const [loadKey, setLoadKey] = useState(0);
   const t = copy[language];
@@ -97,23 +99,35 @@ export function App({ page, rootPrefix, article }) {
     return () => controller.abort();
   }, [rootPrefix, loadKey]);
   useEffect(() => {
+    const controller = new AbortController();
+    setNotesStatus("loading");
+    fetch(`${rootPrefix}notes.json`, { signal: controller.signal }).then(response => {
+      if (!response.ok) throw new Error("Note index unavailable");
+      return response.json();
+    }).then(data => {
+      if (!validNoteIndex(data)) throw new Error("Invalid note index");
+      setNotes(data); setNotesStatus("ready");
+    }).catch(error => { if (error.name !== "AbortError") setNotesStatus("error"); });
+    return () => controller.abort();
+  }, [rootPrefix, loadKey]);
+  useEffect(() => {
     document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
-    document.title = page === "home" ? "Lappio Blog" : `${page === "post" ? article?.title : sectionTitles[page] || t[page]} · Lappio Blog`;
+    document.title = page === "home" ? "Lappio Blog" : `${["post", "note"].includes(page) ? article?.title : sectionTitles[page] || t[page]} · Lappio Blog`;
     try { localStorage.setItem("lappio-language", language); } catch { /* Preference still works in memory. */ }
   }, [language, page, article, t]);
   useEffect(() => {
     const current = document.querySelector('.air-mobile-nav [aria-current="page"]');
     if (current) current.parentElement.scrollLeft = current.offsetLeft - current.parentElement.offsetLeft - 16;
   }, [language, page]);
-  const currentPage = page === "post" ? "blog" : page;
+  const currentPage = page === "post" ? "blog" : page === "note" ? "notes" : page;
   return <TooltipProvider delayDuration={250}><div className="air-app" id="top" data-page={page} data-language={language}>
     <a className="air-skip" href="#main">{t.skip}</a>
     <header className="air-header"><a className="air-brand" href={href("")} aria-label="Lappio Blog"><NotebookPen size={24} strokeWidth={1.6} aria-hidden="true"/><span>Lappio<span className="brand-period">.</span></span></a>
       <nav className="air-desktop-nav" aria-label={t.nav}>{sections.map(section => <a href={href(section === "home" ? "" : `${section}/`)} aria-current={currentPage === section ? "page" : undefined} key={section}>{t[section]}</a>)}</nav>
-      <div className="air-header-actions"><SiteSearch {...{ t, href, posts, status, reload }}/><span className="header-divider"/><Tooltip><TooltipTrigger asChild><Button variant="ghost" className="language-toggle" onClick={() => setLanguage(value => value === "zh" ? "en" : "zh")} aria-label={t.switchLanguage}><Globe2 size={16}/><span>{language === "zh" ? "EN" : "中"}</span></Button></TooltipTrigger><TooltipContent>{t.switchLanguage}</TooltipContent></Tooltip></div>
+      <div className="air-header-actions"><SiteSearch {...{ t, href, posts, notes, status, reload }}/><span className="header-divider"/><Tooltip><TooltipTrigger asChild><Button variant="ghost" className="language-toggle" onClick={() => setLanguage(value => value === "zh" ? "en" : "zh")} aria-label={t.switchLanguage}><Globe2 size={16}/><span>{language === "zh" ? "EN" : "中"}</span></Button></TooltipTrigger><TooltipContent>{t.switchLanguage}</TooltipContent></Tooltip></div>
     </header>
     <nav className="air-mobile-nav" aria-label={t.mobileNav}>{sections.map(section => <a href={href(section === "home" ? "" : `${section}/`)} aria-current={currentPage === section ? "page" : undefined} key={section}>{t[section]}</a>)}</nav>
-    <main className="air-main" id="main" tabIndex={-1}>{page === "home" ? <Home {...{ t, href, posts, language, status, reload }}/> : <Interior {...{ page, t, href, posts, language, article, status, reload }}/>}</main>
+    <main className="air-main" id="main" tabIndex={-1}>{page === "home" ? <Home {...{ t, href, posts, notes, language, status, reload }}/> : <Interior {...{ page, t, href, posts, notes, notesStatus, language, article, status, reload }} notesReload={reload}/>}</main>
     <footer className="air-footer portal-footer"><span>© {new Date().getFullYear()} Lappio</span><Tooltip><TooltipTrigger asChild><a href="#top" className="back-top" aria-label={t.backTop}><ArrowUp size={16}/></a></TooltipTrigger><TooltipContent>{t.backTop}</TooltipContent></Tooltip></footer>
   </div></TooltipProvider>;
 }

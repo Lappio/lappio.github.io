@@ -5,7 +5,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Button } from "@/components/ui/button";
 import { sections } from "../copy";
 
-export function SiteSearch({ t, href, posts, status, reload }) {
+export function SiteSearch({ t, href, posts, notes = [], status, reload }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     function shortcut(event) {
@@ -29,6 +29,7 @@ export function SiteSearch({ t, href, posts, status, reload }) {
           {status === "loading" && <p role="status" className="search-status">{t.loading}</p>}
           {status === "error" && <div role="status" className="search-status">{t.searchError}<Button variant="link" onClick={reload}>{t.retry}</Button></div>}
           {!!posts.length && <CommandGroup heading={t.articles}>{posts.map(post => <CommandItem key={post.slug} value={post.url} keywords={[post.title, post.summary]} onSelect={() => { window.location.assign(href(post.url)); }}><FileText/><span>{post.title}</span><ArrowRight className="ml-auto"/></CommandItem>)}</CommandGroup>}
+          {!!notes.length && <CommandGroup heading={t.notes}>{notes.map(note => <CommandItem key={note.url} value={note.url} keywords={[note.title, note.summary]} onSelect={() => { window.location.assign(href(note.url)); }}><FileText/><span>{note.title}</span><ArrowRight className="ml-auto"/></CommandItem>)}</CommandGroup>}
           <CommandSeparator/>
           <CommandGroup heading={t.pages}>{sections.map(section => <CommandItem key={section} value={`${t[section]} ${section}`} onSelect={() => { window.location.assign(href(section === "home" ? "" : `${section}/`)); }}><ArrowRight/><span>{t[section]}</span></CommandItem>)}</CommandGroup>
         </CommandList>
