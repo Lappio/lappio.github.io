@@ -18,8 +18,8 @@
 ## Task 2: Deploy and connect daily publication
 - [x] Run the full tests and build; inspect desktop/mobile renders and interactions. Review the complete diff.
 - [x] Document the shared data contract and daily sync operation in README.
-- [ ] Commit only this feature's files and push normally to main; confirm Pages succeeds and the live component matches the snapshot.
-- [ ] Configure the existing dashboard daily task to publish only `frontend/data/usage.json`. Run once and check task status, public-file-only changes and deployment if data changes.
+- [x] Commit only this feature's files and push normally to main; confirm Pages succeeds and the live component matches the snapshot.
+- [x] Configure the existing dashboard daily task to publish only `frontend/data/usage.json`. Run once and check task status, public-file-only changes and deployment if data changes.
 
 ## Review focus
 - Invalid/public data rejected before replacing production build; no `source` or machine paths.
@@ -30,8 +30,12 @@
 
 ## Evidence / progress
 - Baseline: `npm test` → 25 pass, 2 browser suites skipped without CHROME_PATH.
-- Existing LaunchAgent is already loaded, last exit 0, currently local-only (`publish: null`); no scheduler reinstall needed.
+- Existing LaunchAgent is already loaded, last exit 0, initially local-only (`publish: null`); no scheduler reinstall needed.
 - Final local acceptance: Chrome-enabled `npm test` **80/80 passed, 0 skips**; `npm run build` and `git diff --check` passed. Desktop Chinese and 390px English renders inspected; 320px layout covered by browser tests.
 - Independent review: no blocking findings. Fixed its English token-unit finding with a failing regression test, then the full suite passed.
 - Regression fix: keep keyboard-focused date tooltips positioned during focus-triggered scrolling. Resize checks await the asynchronous positioning event.
 - Added a 9.9 KB locally hosted Caveat numeric/symbol subset under the existing OFL license because the site font lacks numeric glyphs.
+- Deployment: feature commit `8b7f594` passed [Pages](https://github.com/Lappio/lappio.github.io/actions/runs/42817485239); verified the card on https://lappio.top/.
+- Daily publication enabled in the existing ignored dashboard config. Initial run succeeded at 20:40 local time, creating `9d227dd` with only `frontend/data/usage.json`; its [Pages run](https://github.com/Lappio/lappio.github.io/actions/runs/42817752343) also succeeded.
+- Live acceptance: $276.51 / 8,800 requests / 885M tokens / 95.3%, matching the exported snapshot. Shared language switching verified on the live site. GitHub Pages static assets can remain browser-cached for up to ten minutes.
+- Scheduler remains loaded: 09:00 calendar trigger, hourly interval, last exit 0; subsequent `--if-due` correctly skipped after success. Previous ignored config retained at `../dashboard/.usage-sync/pre-site-publish.config.json` for recovery.
