@@ -22,6 +22,7 @@ export const sectionActions = {
 
 export const copy = {
   zh: {
+    usageOverview: "用量总览", usageCalendar: "每天一格，积少成多", usageScroll: "左右滑动，查看更早的记录。",
     heroFirst: "把好奇，", heroSecond: "写成日常。", openNotebook: "翻开笔记本", recentWriting: "最近写下的", takeYourTime: "慢慢来，随意翻翻。", notebookMargin: "手帐页边", backHome: "返回首页",
     homeAbout: "这里是 Lappio 的公开笔记本。",
     homeBlog: "还没有发布文章。",
@@ -48,6 +49,7 @@ export const copy = {
     footer: "带着好奇心，一页一页写下去。", thanks: "感谢来访", backTop: "回到顶部", overview: "开放笔记本", articleBack: "返回所有文章", noArticles: "篇文章", avatar: "Lappio 的头像",
   },
   en: {
+    usageOverview: "Usage overview", usageCalendar: "One square, one day", usageScroll: "Swipe to explore earlier days.",
     heroFirst: "Stay curious.", heroSecond: "Keep a notebook.", openNotebook: "Open the notebook", recentWriting: "Recent writing", takeYourTime: "Take your time. Look around.", notebookMargin: "Notebook margin", backHome: "Back to home",
     homeAbout: "Lappio’s open notebook.",
     homeBlog: "No articles published yet.",
@@ -72,5 +74,52 @@ export const copy = {
     blogLead: "Writing down the things I learn and keep coming back to.", notesLead: "Catching the small sparks before they slip away.", projectsLead: "Curiosity, made into things. One small step at a time.", linksLead: "The internet is big. Here are corners worth returning to.", aboutLead: "A little about me, and this open notebook.", contactLead: "An interesting conversation can begin with a simple hello.",
     searchTitle: "Look inside the notebook", searchDescription: "Search published articles or jump to a section.", placeholder: "Search writing, ideas, or jump to a page…", noResults: "No matches. Try another word.", pages: "Go somewhere", articles: "Writing", searchHint: "select", searchMove: "navigate", searchEsc: "close", searchError: "Writing is unavailable. You can still explore the pages.",
     footer: "Made with curiosity, one page at a time.", thanks: "Thanks for stopping by", backTop: "Back to top", overview: "OPEN NOTEBOOK", articleBack: "Back to all writing", noArticles: "articles", avatar: "Lappio’s avatar",
+  },
+};
+
+export const usageCopy = {
+  zh: {
+    totalCost: "总成本",
+    totalRequests: "总请求数",
+    totalTokens: "真实消耗 Tokens",
+    cacheHitRate: "缓存命中率",
+    totalCostHelp: "全部历史：按 cc-switch 记录的模型价格估算的累计成本",
+    totalRequestsHelp: "全部历史记录的请求总数，不限最近 53 周",
+    totalTokensHelp: "全部历史：新增输入 + 输出 + 缓存写入 + 缓存命中",
+    cacheHitRateHelp: "全部历史：缓存命中 ÷（新增输入 + 缓存写入 + 缓存命中）",
+    expand: "展开用量热力图",
+    collapse: "收起用量热力图",
+    less: "少",
+    more: "多",
+    requestsUnit: "次请求",
+    tokenUnit: "Token",
+    empty: "这段时间还没有用量记录",
+    weekdayMarks: ["周一", "", "周三", "", "周五", "", "周日"],
+    months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+    dayDetail: (tokens, requests, cost) => `${tokens} Token · ${requests} 次请求 · $${cost}`,
+    ariaSummary: (start, end, tokens, requests) =>
+      `用量热力图，${start} 至 ${end}，共 ${tokens} Token、${requests} 次请求`,
+  },
+  en: {
+    totalCost: "Total cost",
+    totalRequests: "Requests",
+    totalTokens: "Tokens processed",
+    cacheHitRate: "Cache hit rate",
+    totalCostHelp: "All history: accumulated cost estimated from the model pricing recorded by cc-switch",
+    totalRequestsHelp: "All requests across the full history, not limited to the last 53 weeks",
+    totalTokensHelp: "All history: new input + output + cache write + cache hit",
+    cacheHitRateHelp: "All history: cache hit ÷ (new input + cache write + cache hit)",
+    expand: "Expand the usage heatmap",
+    collapse: "Collapse the usage heatmap",
+    less: "Less",
+    more: "More",
+    requestsUnit: "requests",
+    tokenUnit: "tokens",
+    empty: "No usage recorded in this period",
+    weekdayMarks: ["Mon", "", "Wed", "", "Fri", "", "Sun"],
+    months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    dayDetail: (tokens, requests, cost) => `${tokens} tokens · ${requests} requests · $${cost}`,
+    ariaSummary: (start, end, tokens, requests) =>
+      `Usage heatmap, ${start} to ${end}, ${tokens} tokens across ${requests} requests`,
   },
 };

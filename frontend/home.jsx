@@ -2,6 +2,7 @@ import { ArrowUpRight, BookOpen, FolderOpen, Heart, Mail, NotebookPen, Sparkles 
 import { Button } from "@/components/ui/button";
 import { HandArrow, Marker, WavyRule } from "./components/sketch";
 import { sectionActions, sectionTitles } from "./copy";
+import { HomeUsage } from "./components/home-usage";
 
 function MoreLink({ section, href }) {
   return <a className="home-more" href={href(`${section}/`)} aria-label={sectionActions[section]}>{sectionActions[section]}<ArrowUpRight size={16} aria-hidden="true"/></a>;
@@ -34,6 +35,7 @@ export function Home({ t, href, posts, language, status, reload }) {
       </div>
     </section>
     <WavyRule/>
+    <HomeUsage language={language} t={t}/>
     <div className="notebook-layout">
       <section className="home-section home-section-blog notebook-manuscript" id="writing" aria-labelledby="home-blog-title">
         <div className="manuscript-heading"><div><p className="handwritten-label">fresh from the notebook</p><div className="manuscript-title"><h2 id="home-blog-title">Blog</h2><span className="heading-caption">{t.recentWriting}</span></div></div><BookOpen size={29} strokeWidth={1.4} aria-hidden="true"/></div>

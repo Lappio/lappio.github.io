@@ -1,0 +1,98 @@
+.home-usage { min-width: 0; margin-bottom: 50px; }
+.home-usage-heading { margin-bottom: 22px; }
+.air-app .home-usage-heading h2 { font-size: 30px; line-height: 1.4; }
+.air-app .home-usage-scroll { display: none; margin-top: 14px; color: var(--sub); font-size: 13px; }
+/* Scoped notebook skin. The portable component's light/dark contract is unchanged. */
+.home-usage-heatmap {
+  --uh-bg: var(--paper);
+  --uh-fg: var(--ink);
+  --uh-muted: var(--sub);
+  --uh-subtle: var(--sub);
+  --uh-border: var(--ink);
+  --uh-divider: var(--hairline);
+  --uh-surface: var(--mac-yellow2);
+  --uh-cell-0: #efede5;
+  --uh-cell-1: #edf5d8;
+  --uh-cell-2: var(--mac-mint);
+  --uh-cell-3: #9bdcb8;
+  --uh-cell-4: #72bb96;
+  --uh-cell-5: #498568;
+  --uh-snake: var(--ink);
+  --uh-snake-eye: var(--paper);
+  --uh-tip-bg: var(--mac-yellow2);
+  --uh-tip-fg: var(--ink);
+  --uh-font: var(--font-body);
+  --uh-focus: var(--purple);
+  border: 2px solid var(--uh-border);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  box-shadow: 4px 4px 0 rgba(58, 58, 58, 0.18);
+}
+.home-usage-heatmap .uh-stats { gap: 18px; padding: 25px 26px 29px; }
+.home-usage-heatmap .uh-stat { padding: 17px 18px 19px; border: 1.5px solid var(--uh-border); background: var(--mac-yellow2); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; }
+.home-usage-heatmap .uh-stat:nth-child(2) { background: var(--mac-sky); border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; }
+.home-usage-heatmap .uh-stat:nth-child(3) { background: var(--mac-mint); border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px; }
+.home-usage-heatmap .uh-stat:nth-child(4) { background: var(--mac-lilac); border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px; }
+.home-usage-heatmap .uh-stat-label { width: 100%; justify-content: space-between; gap: 4px; color: var(--uh-fg); font-size: 12px; white-space: normal; min-height: 2.8em; align-items: flex-start; }
+.home-usage-heatmap .uh-help { display: none; }
+.home-usage-heatmap .uh-stat-value { margin-top: 9px; font-family: "Caveat Metrics", var(--font-hand); font-size: clamp(34px, 3.5vw, 46px); font-weight: 600; line-height: 1.25; font-synthesis: none; }
+.home-usage-heatmap .uh-toggle { z-index: 1; width: 44px; height: 44px; border: 1.5px solid var(--uh-border); border-radius: 48% 52% 45% 55%; color: var(--uh-fg); background: var(--mac-yellow2); box-shadow: 2px 2px 0 rgba(58, 58, 58, 0.18); }
+.home-usage-heatmap .uh-toggle:focus-visible { outline: 3px solid var(--uh-focus); outline-offset: 4px; }
+.home-usage-heatmap .uh-body { transition-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1); }
+.home-usage-heatmap .uh-body-content { padding: 30px 30px 25px; }
+.home-usage-heatmap .uh-title { font-family: var(--font-title); font-size: 20px; margin-bottom: 13px; }
+.home-usage-heatmap .uh-range { font-size: 12px; margin-bottom: 20px; gap: 8px 18px; justify-content: space-between; align-items: center; }
+.home-usage-heatmap .uh-range strong { font-size: 13px; font-weight: 500; }
+.home-usage-heatmap .uh-range-stats { color: var(--uh-muted); font-size: 12px; line-height: 1.6; }
+/* Keep weekday labels readable while the calendar scrolls to recent dates. */
+.home-usage-heatmap .uh-plot-row { width: max-content; }
+.home-usage-heatmap .uh-weekday { transform: translateY(calc((var(--home-usage-cell-size, 13px) - 12px) / 2)); }
+.home-usage-heatmap .uh-weekdays { position: sticky; left: 0; z-index: 3; background: var(--uh-bg); }
+.home-usage-heatmap .uh-cell { border: 1px solid rgba(58, 58, 58, 0.08); border-radius: 3px 2px 4px 2px; }
+.home-usage-heatmap .uh-cell:nth-child(4n + 2) { border-radius: 2px 4px 2px 3px; }
+.home-usage-heatmap .uh-cell:nth-child(4n + 3) { border-radius: 4px 2px 3px 2px; }
+.home-usage-heatmap .uh-cell:nth-child(4n) { border-radius: 2px 3px 2px 4px; }
+.home-usage-heatmap .uh-cell.is-future { border-color: transparent; }
+.home-usage-heatmap .uh-snake { filter: none; }
+.home-usage-heatmap .uh-tip { border: 1.5px solid var(--uh-border); border-radius: 8px 5px 7px 4px; box-shadow: 3px 3px 0 rgba(58, 58, 58, 0.18); padding: 10px 13px; }
+.home-usage-heatmap .uh-tip-meta { opacity: 1; }
+.home-usage-heatmap .uh-swatch { border: 1px solid rgba(58, 58, 58, 0.25); }
+.home-usage-heatmap .uh-legend { position: sticky; left: 0; margin-top: 17px; }
+@media (max-width: 900px) {
+  .home-usage-heatmap .uh-stats { gap: 12px; padding: 20px; }
+  .home-usage-heatmap .uh-stat { padding: 13px 12px; }
+  .home-usage-heatmap .uh-stat-value { font-size: 29px; }
+}
+@media (max-width: 760px) {
+  .home-usage-heatmap .uh-stats { gap: 12px; padding: 18px 16px 24px; }
+  .home-usage-heatmap .uh-body-content { padding: 28px 18px 20px; }
+  .home-usage-heatmap .uh-stat-label { font-size: 12px; }
+  .home-usage-heatmap .uh-stat-value { font-size: 30px; }
+  .home-usage-heatmap .uh-range { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 370px) {
+  .home-usage-heatmap .uh-stats { gap: 9px; padding-inline: 12px; }
+  .home-usage-heatmap .uh-stat { padding: 10px 8px; }
+  .home-usage-heatmap .uh-stat-value { font-size: 26px; }
+  .home-usage-heatmap .uh-stat-label { font-size: 12px; }
+}
+
+.home-usage-heatmap .uh-cell:focus-visible { outline: 2px solid var(--purple-hover); outline-offset: 2px; }
+@media (max-width: 900px) {
+  .air-app .home-usage-scroll { display: block; }
+}
+@media (max-width: 600px) {
+  .home-usage { margin-bottom: 34px; }
+  .home-usage-heading { margin-bottom: 18px; }
+  .air-app .home-usage-heading h2 { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-usage-heatmap .uh-snake-layer { display: none; }
+  .home-usage-heatmap .uh-cell { animation: none; }
+}
+@font-face {
+  font-family: "Caveat Metrics";
+  src: url("../../assets/fonts/caveat-metrics.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

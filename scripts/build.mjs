@@ -1,6 +1,10 @@
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import "./clean-site.mjs";
+import { readFileSync } from "node:fs";
+import { validatePublicUsage } from "../lib/public-usage.mjs";
+
+validatePublicUsage(JSON.parse(readFileSync(new URL("../frontend/data/usage.json", import.meta.url), "utf8")));
+await import("./clean-site.mjs");
 
 for (const [entry, args] of [
   ["../node_modules/vite/bin/vite.js", ["build"]],

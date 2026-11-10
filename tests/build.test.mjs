@@ -129,6 +129,22 @@ test("repository no longer ships the local article editor", () => {
   }
 });
 
+test("private usage metadata stops the build before deleting the last site", () => {
+  const project = makeProject();
+  try {
+    const usageFile = join(project, "frontend/data/usage.json");
+    const data = JSON.parse(readFileSync(usageFile, "utf8"));
+    data.source = "/private/cc-switch.db";
+    writeFileSync(usageFile, JSON.stringify(data));
+    mkdirSync(join(project, "_site"));
+    writeFileSync(join(project, "_site/index.html"), "last successful site");
+    assert.throws(() => buildTo(project, join(project, "_site")), /公开数据无效/);
+    assert.equal(readFileSync(join(project, "_site/index.html"), "utf8"), "last successful site");
+  } finally {
+    rmSync(project, { recursive: true, force: true });
+  }
+});
+
 test("unquoted calendar dates remain YYYY-MM-DD in the public article index", () => {
   const project = makeProject();
   const output = mkdtempSync(join(tmpdir(), "lappio-date-build-"));

@@ -56,6 +56,29 @@ The workflow in `.github/workflows/pages.yml` installs dependencies, tests the s
 
 ## Maintenance
 
+### Homepage usage overview
+
+The card between the introduction and Blog imports `frontend/data/usage.json`. Its labels follow the existing homepage language button. The four metrics cover all exported history; each calendar segment covers 53 weeks. `frontend/components/home-usage.jsx` adapts the reusable heatmap to the site's paper/ink tokens and mobile layout. The locally served Caveat metric font is a numeric/symbol subset under `assets/fonts/OFL.txt` (from Google Fonts).
+
+Only public aggregates belong in the snapshot: `generatedAt`, `range`, `totals`, and `days`. `lib/public-usage.mjs` shares the dashboard exporter's allowlist. The production build validates it before clearing the previous output; database paths, request logs, credentials and other metadata are rejected.
+
+Daily publication uses the adjacent `dashboard` project's existing macOS LaunchAgent, not a GitHub runner that would need access to the local database. Set its ignored `sync.config.json` to:
+
+```json
+{
+  "dbPath": "~/.cc-switch/cc-switch.db",
+  "publish": {
+    "repository": "git@github.com:Lappio/lappio.github.io.git",
+    "branch": "main",
+    "file": "frontend/data/usage.json"
+  }
+}
+```
+
+From `../dashboard`, `npm run sync:daily` refreshes the local dashboard and pushes **only this JSON** through a temporary clone. The site's existing Pages workflow tests, builds and deploys it. Timestamp-only changes do not create commits. This does not touch the website's development worktree. Pull `main` before later website edits to pick up daily data commits.
+
+The existing task runs at local time **09:00**, catches up on login/wake and checks hourly after failures. It needs the Mac running and logged in, current data already imported into CC Switch, and working Git/SSH authentication. Check with `npm run schedule:daily -- status`; logs are in `../dashboard/.usage-sync/`. If no task is installed on a new Mac, run `npm run schedule:daily -- install` after one successful manual sync. Stop it with `npm run schedule:daily -- uninstall` (data and configuration are retained).
+
 The `markdown-it` override in `package.json` forces Eleventy 3.1.6's declared `^14` dependency to 15.x for the GHSA-vfgh-jcmw-g37q / GHSA-gfr2-rv44-r23c ReDoS fixes. Re-check it when upgrading Eleventy: if Eleventy natively depends on markdown-it >=15, remove the override; otherwise keep it. Run `npm ls markdown-it`, `npm audit`, `npm test`, and `npm run build`, and diff `_site/` before and after the upgrade.
 
 ## Customize the site
