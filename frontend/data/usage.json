@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-11-10T12:30:24.093Z",
+  "generatedAt": "2026-11-10T12:40:15.920Z",
   "range": {
     "start": "2026-04-21",
     "end": "2026-11-10"
   },
   "totals": {
-    "tokens": 878832194,
-    "requests": 8728,
-    "cost": 275.37,
-    "newInputTokens": 33472171,
-    "outputTokens": 6230811,
-    "cacheReadTokens": 831931821,
+    "tokens": 885353093,
+    "requests": 8800,
+    "cost": 276.51,
+    "newInputTokens": 33700713,
+    "outputTokens": 6255648,
+    "cacheReadTokens": 838199341,
     "cacheCreationTokens": 7197391,
-    "cacheHitRate": 0.9533927371737847
+    "cacheHitRate": 0.9534771665728138
   },
   "days": {
     "2026-04-21": {
@@ -406,10 +406,10 @@
       "newInputTokens": 51030
     },
     "2026-11-10": {
-      "tokens": 101131696,
-      "requests": 1028,
-      "cost": 11.027302,
-      "newInputTokens": 3018599
+      "tokens": 107652595,
+      "requests": 1100,
+      "cost": 12.160997,
+      "newInputTokens": 3247141
     }
   }
 }
