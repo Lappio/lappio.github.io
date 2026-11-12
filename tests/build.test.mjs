@@ -13,7 +13,7 @@ function makeProject() {
   const project = mkdtempSync(join(tmpdir(), "lappio-project-"));
   for (const path of [
     "package.json", "eleventy.config.js", "articles.11ty.js", "notes.11ty.js", "index.html",
-    "components.json", "jsconfig.json", "favicon.svg", ".nojekyll", "README.md",
+    "components.json", "jsconfig.json", "favicon.png", ".nojekyll", "README.md",
     "assets", "_includes", "lib", "scripts", "about", "blog", "notes", "links", "projects", "contact", "frontend", "vite.config.js"
   ]) {
     cpSync(join(root, path), join(project, path), { recursive: true });
@@ -77,8 +77,14 @@ test("new-only pages ship one React mount without legacy markup or assets", () =
       assert.equal(document.querySelector(".page-shell, .post-article, [data-static-fallback], #unexpected"), null, path);
       assert.equal(document.querySelectorAll('link[rel="stylesheet"]').length, 1, path);
       assert.ok(document.querySelector('link[rel="stylesheet"]').getAttribute("href").endsWith("ui/app.css"), path);
+      const icon = document.querySelector('link[rel="icon"]');
+      assert.equal(icon.getAttribute("type"), "image/png", path);
+      for (const base of ["https://example.test/", "https://example.test/repository-name/"]) {
+        assert.equal(new URL(icon.getAttribute("href"), new URL(path, base)).href, `${base}favicon.png`, path);
+      }
       assert.equal(document.querySelectorAll('script:not([type="application/json"])').length, 1, path);
     }
+    assert.deepEqual([...readFileSync(join(output, "favicon.png")).subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10], "the linked favicon must be published as a PNG");
     const data = articleData(readFileSync(join(output, "blog/safe-data/index.html"), "utf8"));
     assert.equal(data.title, title);
     assert.equal(data.kind, "post");

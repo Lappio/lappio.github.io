@@ -171,6 +171,22 @@ test("built React site", browserOptions, async t => {
     }
   });
 
+  await t.test("About omits the homepage introduction while keeping the identity note", async () => {
+    for (const language of ["zh", "en"]) {
+      const aboutContext = await browser.newContext();
+      try {
+        await aboutContext.addInitScript(value => localStorage.setItem("lappio-language", value), language);
+        const aboutPage = await aboutContext.newPage();
+        await visit(aboutPage, url);
+        assert.equal(await aboutPage.locator(".hero-description").innerText(), copy[language].aboutBody);
+        await visit(aboutPage, `${url}/about/`);
+        assert.equal((await aboutPage.locator("main").innerText()).includes(copy[language].aboutBody), false);
+        assert.equal(await aboutPage.locator(".about-page-note p").innerText(), copy[language].notebookBody);
+        assert.equal(await aboutPage.locator(".about-story-card .primary-button").getAttribute("href"), "../blog/");
+      } finally { await aboutContext.close(); }
+    }
+  });
+
   await t.test("notebook composition uses manuscript and margin with working reading shortcut", async () => {
     await visit(page, url);
     assert.equal(await page.locator(".notebook-home").count(), 1);

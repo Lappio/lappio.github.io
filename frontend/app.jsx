@@ -42,7 +42,6 @@ function AboutCard({ t, href }) {
   return <Card className="air-about"><CardContent>
     <div className="about-top"><Avatar className="air-avatar"><AvatarImage src={href("assets/lappio-avatar-240.webp")} alt={t.avatar}/><AvatarFallback>L</AvatarFallback></Avatar><span className="about-small-star" aria-hidden="true">✳</span></div>
     <p className="mini-label">A NOTE FROM ME</p><h3>{t.intro}<span className="hello-wave" aria-hidden="true">✧</span></h3>
-    <p className="about-description">{t.aboutBody}</p>
     <a className="text-link" href={href("about/")}>{t.meet}<ArrowUpRight size={15}/></a>
     <div className="about-signature">Lappio<span aria-hidden="true">↗</span></div>
   </CardContent></Card>;
@@ -65,7 +64,7 @@ function Interior({ page, t, href, posts, notes, notesStatus, notesReload, langu
     <div className="interior-breadcrumb"><a href={href("")}>{sectionTitles.home}</a><span>/</span><span>{title}</span></div>
     <header className="interior-heading"><p className="mini-label">{page.toUpperCase()} / LAPPIO</p><h1>{title}<span>.</span></h1><p>{t[`${page}Lead`]}</p></header>
     {["blog", "notes", "projects", "links"].includes(page) && <Card className="interior-card"><CardContent>{page === "blog" ? <PostList {...{ posts, language, t, href, status, reload }}/> : page === "notes" ? <PostList posts={notes} type="notes" {...{ language, t, href }} status={notesStatus} reload={notesReload}/> : <EmptyState type={page} t={t}/>}</CardContent></Card>}
-    {page === "about" && <div className="about-page-grid"><Card className="about-story-card"><CardContent><p className="mini-label">{t.aboutKicker}</p><h2>{t.aboutTitle}</h2><p>{t.aboutBody}</p><div className="about-page-note"><Leaf size={22}/><div><h3>{t.notebook}</h3><p>{t.notebookBody}</p></div></div><Button asChild className="primary-button"><a href={href("blog/")}>{t.read}<ArrowUpRight size={16}/></a></Button></CardContent></Card><AboutCard t={t} href={href}/></div>}
+    {page === "about" && <div className="about-page-grid"><Card className="about-story-card"><CardContent><p className="mini-label">{t.aboutKicker}</p><h2>{t.aboutTitle}</h2><div className="about-page-note"><Leaf size={22}/><div><h3>{t.notebook}</h3><p>{t.notebookBody}</p></div></div><Button asChild className="primary-button"><a href={href("blog/")}>{t.read}<ArrowUpRight size={16}/></a></Button></CardContent></Card><AboutCard t={t} href={href}/></div>}
     {page === "contact" && <Card className="contact-page-card"><CardContent><div className="contact-icon"><Mail size={28} strokeWidth={1.2}/></div><h2>{t.sayHello}</h2><p>{t.contactBody}</p><Badge variant="outline">{t.contactEmpty}</Badge></CardContent></Card>}
     <Explore page={page} t={t} href={href}/>
   </div>;

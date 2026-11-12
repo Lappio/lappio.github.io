@@ -22,7 +22,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addWatchTarget("vite.config.js");
   // React owns the mounted DOM; preview updates must reload the page.
   eleventyConfig.setServerOptions({ domDiff: false });
-  for (const copied of ["assets", "favicon.svg", ".nojekyll"]) {
+  for (const copied of ["assets", "favicon.png", ".nojekyll"]) {
     eleventyConfig.addPassthroughCopy(copied);
   }
   eleventyConfig.on("eleventy.before", () => {

@@ -15,7 +15,7 @@ export const browserOptions = {
 
 export function copyBrowserProject(project) {
   for (const path of ["package.json", "eleventy.config.js", "articles.11ty.js", "notes.11ty.js", "index.html",
-    "favicon.svg", ".nojekyll", "assets", "_includes", "lib", "scripts",
+    "favicon.png", ".nojekyll", "assets", "_includes", "lib", "scripts",
     "about", "blog", "notes", "links", "projects", "contact", "frontend",
     "vite.config.js", "components.json", "jsconfig.json"]) {
     cpSync(join(root, path), join(project, path), { recursive: true });
@@ -44,7 +44,7 @@ export async function builtSite(t) {
   copyBrowserProject(project);
   execFileSync(process.execPath, [join(project, "scripts/build.mjs")], { cwd: project, stdio: "pipe" });
   const output = join(project, "_site");
-  const types = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".json": "application/json", ".svg": "image/svg+xml", ".webp": "image/webp" };
+  const types = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp" };
   server = createServer((request, response) => {
     let path = resolve(output, `.${new URL(request.url, "http://localhost").pathname}`);
     if (!path.startsWith(output + sep) && path !== output) { response.writeHead(403).end(); return; }
