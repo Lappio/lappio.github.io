@@ -42,6 +42,7 @@ function AboutCard({ t, href }) {
   return <Card className="air-about"><CardContent>
     <div className="about-top"><Avatar className="air-avatar"><AvatarImage src={href("assets/lappio-avatar-240.webp")} alt={t.avatar}/><AvatarFallback>L</AvatarFallback></Avatar><span className="about-small-star" aria-hidden="true">✳</span></div>
     <p className="mini-label">A NOTE FROM ME</p><h3>{t.intro}<span className="hello-wave" aria-hidden="true">✧</span></h3>
+    <p className="about-description">{t.aboutBody}</p>
     <a className="text-link" href={href("about/")}>{t.meet}<ArrowUpRight size={15}/></a>
     <div className="about-signature">Lappio<span aria-hidden="true">↗</span></div>
   </CardContent></Card>;

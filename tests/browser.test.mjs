@@ -174,7 +174,7 @@ test("built React site", browserOptions, async t => {
     }
   });
 
-  await t.test("About omits the homepage introduction while keeping the identity note", async () => {
+  await t.test("About shows the introduction only in the side card and keeps the identity note", async () => {
     for (const language of ["zh", "en"]) {
       const aboutContext = await browser.newContext();
       try {
@@ -183,7 +183,9 @@ test("built React site", browserOptions, async t => {
         await visit(aboutPage, url);
         assert.equal(await aboutPage.locator(".hero-description").innerText(), copy[language].aboutBody);
         await visit(aboutPage, `${url}/about/`);
-        assert.equal((await aboutPage.locator("main").innerText()).includes(copy[language].aboutBody), false);
+        assert.equal((await aboutPage.locator(".about-story-card").innerText()).includes(copy[language].aboutBody), false);
+        assert.equal(await aboutPage.locator(".air-about .about-description").count(), 1);
+        assert.equal(await aboutPage.locator(".air-about .about-description").innerText(), copy[language].aboutBody);
         assert.equal(await aboutPage.locator(".about-page-note p").innerText(), copy[language].notebookBody);
         assert.equal(await aboutPage.locator(".about-story-card .primary-button").getAttribute("href"), "../blog/");
       } finally { await aboutContext.close(); }
