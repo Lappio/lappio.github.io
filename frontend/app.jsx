@@ -48,9 +48,10 @@ function AboutCard({ t, href }) {
   </CardContent></Card>;
 }
 
-function Explore({ t, href }) {
-  return <section className="air-explore" aria-labelledby="explore-title"><div className="explore-heading"><div><p className="mini-label">A LITTLE FURTHER</p><h2 id="explore-title">{t.explore}</h2></div><p>{t.exploreLead}</p></div>
-    <div className="explore-grid">{["notes", "projects", "links", "contact"].map((section, index) => {
+function Explore({ page, t, href }) {
+  const destinations = ["blog", "notes", "projects", "links", "contact"].filter(section => section !== (page === "about" ? "blog" : page));
+  return <section className="air-explore" aria-labelledby="explore-title"><div className="explore-heading"><h2 className="mini-label" id="explore-title">A LITTLE FURTHER</h2></div>
+    <div className="explore-grid">{destinations.map((section, index) => {
       const Icon = icons[section];
       return <a key={section} className={`explore-card explore-${index}`} href={href(`${section}/`)}><div className="explore-icon"><Icon size={20} strokeWidth={1.5}/><ArrowUpRight size={16}/></div><h3>{sectionTitles[section]}</h3><p>{t[`discover${section[0].toUpperCase()}${section.slice(1)}`]}</p></a>;
     })}</div>
@@ -66,7 +67,7 @@ function Interior({ page, t, href, posts, notes, notesStatus, notesReload, langu
     {["blog", "notes", "projects", "links"].includes(page) && <Card className="interior-card"><CardContent>{page === "blog" ? <PostList {...{ posts, language, t, href, status, reload }}/> : page === "notes" ? <PostList posts={notes} type="notes" {...{ language, t, href }} status={notesStatus} reload={notesReload}/> : <EmptyState type={page} t={t}/>}</CardContent></Card>}
     {page === "about" && <div className="about-page-grid"><Card className="about-story-card"><CardContent><p className="mini-label">{t.aboutKicker}</p><h2>{t.aboutTitle}</h2><p>{t.aboutBody}</p><div className="about-page-note"><Leaf size={22}/><div><h3>{t.notebook}</h3><p>{t.notebookBody}</p></div></div><Button asChild className="primary-button"><a href={href("blog/")}>{t.read}<ArrowUpRight size={16}/></a></Button></CardContent></Card><AboutCard t={t} href={href}/></div>}
     {page === "contact" && <Card className="contact-page-card"><CardContent><div className="contact-icon"><Mail size={28} strokeWidth={1.2}/></div><h2>{t.sayHello}</h2><p>{t.contactBody}</p><Badge variant="outline">{t.contactEmpty}</Badge></CardContent></Card>}
-    <Explore t={t} href={href}/>
+    <Explore page={page} t={t} href={href}/>
   </div>;
 }
 

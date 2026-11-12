@@ -105,9 +105,8 @@ body {
 .about-signature { text-align: right; font: 600 36px/1.3 var(--font-hand); margin-top: auto; padding-top: 16px; }
 .about-signature span { margin-left: 8px; }
 .air-explore { margin: 64px 0; }
-.explore-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 24px; }
-.explore-heading h2 { font-size: 28px; }
-.explore-heading > p { color: var(--sub); font-size: 14px; }
+.explore-heading { margin-bottom: 24px; }
+.air-app .explore-heading h2 { font: 600 18px/1.5 var(--font-hand); color: var(--sub); }
 .explore-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 18px; }
 .explore-card { padding: 24px 20px; border: 2px solid var(--ink); border-radius: var(--sk-1); background: var(--mac-mint); box-shadow: var(--hard-shadow); transition: transform .2s var(--ease-sketch); }
 .explore-card:nth-child(2) { background: var(--mac-lilac); border-radius: var(--sk-2); }
@@ -210,7 +209,6 @@ body {
   .air-main, .air-footer { width: calc(100% - 56px); }
   .about-page-grid { grid-template-columns: minmax(0,1fr); }
   .explore-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .explore-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
 }
 @media (max-width: 500px) {
   .air-header, .air-mobile-nav { width: calc(100% - 32px); }

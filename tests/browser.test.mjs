@@ -86,6 +86,54 @@ test("built React site", browserOptions, async t => {
     }
   });
 
+  await t.test("explore keeps only its small labelled heading in both languages", async () => {
+    for (const language of ["zh", "en"]) {
+      const exploreContext = await browser.newContext();
+      try {
+        await exploreContext.addInitScript(value => localStorage.setItem("lappio-language", value), language);
+        const explorePage = await exploreContext.newPage();
+        await visit(explorePage, `${url}/blog/`);
+        const explore = explorePage.getByRole("region", { name: "A LITTLE FURTHER", exact: true });
+        assert.equal(await explore.count(), 1);
+        assert.equal(await explorePage.locator(".explore-heading").innerText(), "A LITTLE FURTHER");
+        assert.equal(await explore.getByRole("heading", { level: 2 }).innerText(), "A LITTLE FURTHER");
+      } finally { await exploreContext.close(); }
+    }
+  });
+
+  await t.test("explore excludes the current section without reordering other destinations", async t => {
+    const destinations = {
+      blog: ["Notes", "Projects", "Links", "Contact"],
+      notes: ["Blog", "Projects", "Links", "Contact"],
+      projects: ["Blog", "Notes", "Links", "Contact"],
+      links: ["Blog", "Notes", "Projects", "Contact"],
+      contact: ["Blog", "Notes", "Projects", "Links"],
+      about: ["Notes", "Projects", "Links", "Contact"],
+    };
+    for (const language of ["zh", "en"]) {
+      const exploreContext = await browser.newContext();
+      try {
+        await exploreContext.addInitScript(value => localStorage.setItem("lappio-language", value), language);
+        const explorePage = await exploreContext.newPage();
+        for (const [section, titles] of Object.entries(destinations)) {
+          await t.test(`${language} /${section}/`, async () => {
+            await visit(explorePage, `${url}/${section}/`);
+            const cards = explorePage.locator(".explore-card");
+            assert.deepEqual(await cards.locator("h3").allTextContents(), titles);
+            assert.deepEqual(await cards.evaluateAll(links => links.map(link => link.getAttribute("href"))), titles.map(title => `../${title.toLowerCase()}/`));
+            assert.deepEqual(await cards.locator("p").allTextContents(), titles.map(title => title === "Blog"
+              ? language === "zh" ? "个人经验分享" : "Personal experiences and reflections"
+              : copy[language][`discover${title}`]));
+          });
+        }
+        for (const path of ["", "blog/test-post-1/"]) {
+          await visit(explorePage, `${url}/${path}`);
+          assert.equal(await explorePage.locator(".air-explore").count(), 0);
+        }
+      } finally { await exploreContext.close(); }
+    }
+  });
+
   await t.test("search dialog finds and opens a published article", async () => {
     await visit(page, url);
     await page.locator(".home-post-link").first().waitFor();
@@ -111,6 +159,16 @@ test("built React site", browserOptions, async t => {
     await page.waitForFunction(() => document.querySelector(".air-app")?.dataset.language === "en" && document.documentElement.lang === "en");
     await visit(page, `${url}/about/`);
     assert.equal(await page.locator(".air-app").getAttribute("data-language"), "en");
+  });
+
+  await t.test("language switching keeps the editor-hidden hero title hidden", async () => {
+    await visit(page, url);
+    for (const language of ["zh", "en"]) {
+      if (await page.locator(".air-app").getAttribute("data-language") !== language) await page.locator(".language-toggle").click();
+      await page.waitForFunction(lang => document.documentElement.lang === lang, language === "zh" ? "zh-CN" : "en");
+      assert.equal(await page.locator(".notebook-hero h1:not(.sr-only)").count(), 0);
+      assert.equal(await page.locator(".notebook-hero h1").innerText(), copy[language].intro);
+    }
   });
 
   await t.test("notebook composition uses manuscript and margin with working reading shortcut", async () => {
