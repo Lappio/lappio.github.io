@@ -45,7 +45,7 @@ export const copy = {
     notebook: "我是谁？", notebookBody: "计算机科学在读学生\nAI-native 的学习者\n希望成为一名工程师！", explore: "沿着好奇心，继续走走", exploreLead: "换一条小路，也许会有新的发现。",
     discoverNotes: "学习笔记", discoverProjects: "让想法落地的小实验", discoverLinks: "朋友与喜欢的互联网角落", discoverContact: "从一句你好开始", sayHello: "很高兴，在这里遇见你。",
     contactBody: "有想法、问题，或者想分享有趣的东西？欢迎来聊聊。", contactEmpty: "联系方式正在整理，稍后见。",
-    blogLead: "把学到的、想到的，认真写下来。", notesLead: "分享学习中的收获与个人理解。", projectsLead: "好奇心驱动，一点一点把想法变成现实。", linksLead: "互联网很大，也有一些值得常去的小地方。", aboutLead: "一份关于我的介绍。", contactLead: "有趣的对话，往往从一个简单的招呼开始。",
+    blogLead: "个人经验分享。", notesLead: "分享学习中的收获与个人理解。", projectsLead: "好奇心驱动，一点一点把想法变成现实。", linksLead: "互联网很大，也有一些值得常去的小地方。", aboutLead: "一份关于我的介绍。", contactLead: "有趣的对话，往往从一个简单的招呼开始。",
     searchTitle: "在笔记本里找一找", searchDescription: "搜索已发布文章，或跳转到一个栏目。", placeholder: "搜索文章、想法，或前往一个栏目…", noResults: "没有找到结果，换个关键词试试。", pages: "去一个地方", articles: "文章", searchHint: "选择", searchMove: "移动", searchEsc: "关闭", searchError: "文章加载失败，栏目仍可访问。",
     footer: "仍许飞鸿荡云间.", thanks: "感谢来访", backTop: "回到顶部", overview: "开放笔记本", articleBack: "返回所有文章", noArticles: "篇文章", avatar: "Lappio 的头像",
   },
