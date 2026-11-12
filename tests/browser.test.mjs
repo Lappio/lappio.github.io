@@ -1,5 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { copy } from "../frontend/copy.js";
 import { browserOptions, builtSite, visit } from "./helpers/site.mjs";
 
@@ -16,7 +19,7 @@ test("built React site", browserOptions, async t => {
         const delayedPage = await delayedContext.newPage();
         let release;
         let requested;
-        await delayedPage.route("**/ui/app.js", async route => {
+        await delayedPage.route("**/ui/app.js*", async route => {
           requested();
           await new Promise(resolve => { release = resolve; });
           await route.continue();
@@ -50,7 +53,7 @@ test("built React site", browserOptions, async t => {
       const fallbackContext = await browser.newContext({ javaScriptEnabled });
       try {
         const fallbackPage = await fallbackContext.newPage();
-        if (javaScriptEnabled) await fallbackPage.route("**/ui/app.js", route => route.abort());
+        if (javaScriptEnabled) await fallbackPage.route("**/ui/app.js*", route => route.abort());
         await fallbackPage.goto(`${url}/blog/test-post-1/`);
         const notice = fallbackPage.locator(javaScriptEnabled ? "#ui-load-error" : "#ui-noscript");
         await notice.waitFor();
@@ -254,4 +257,21 @@ test("built React site", browserOptions, async t => {
     await page.setViewportSize({ width: 1280, height: 800 });
   });
 
+});
+
+test("new deployments bypass the previous deployment's cached UI", browserOptions, async t => {
+  const { browser, url, project } = await builtSite(t, { cacheAssets: true });
+  const context = await browser.newContext();
+  t.after(() => context.close());
+  const page = await context.newPage();
+  await visit(page, `${url}/about/`);
+  assert.equal(await page.locator(".about-story-card h2").innerText(), "持续输出，无限进步。");
+
+  const copyPath = join(project, "frontend/copy.js");
+  writeFileSync(copyPath, readFileSync(copyPath, "utf8").replace("持续输出，无限进步。", "新版介绍已加载"));
+  execFileSync(process.execPath, [join(project, "scripts/build.mjs")], { cwd: project, stdio: "pipe" });
+
+  // A new HTML URL loads the new document, while the browser retains its cached assets.
+  await visit(page, `${url}/about/?deployment=2`);
+  assert.equal(await page.locator(".about-story-card h2").innerText(), "新版介绍已加载");
 });

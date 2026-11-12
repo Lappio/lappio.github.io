@@ -6,9 +6,9 @@
     <meta name="theme-color" content="#fffdf8" />
     <meta name="description" content="{{ summary or description }}" />
     <title>{% if title %}{{ title }} · {% endif %}Lappio Blog</title>
-    <link rel="icon" href="{{ rootPrefix }}favicon.png" type="image/png" sizes="64x64" />
-    <link rel="stylesheet" href="{{ rootPrefix }}ui/app.css" />
-    <script type="module" src="{{ rootPrefix }}ui/app.js" onerror="document.getElementById('ui-load-error').hidden = false"></script>
+    <link rel="icon" href="{{ rootPrefix }}favicon.png?v={{ assetVersion }}" type="image/png" sizes="64x64" />
+    <link rel="stylesheet" href="{{ rootPrefix }}ui/app.css?v={{ assetVersion }}" />
+    <script type="module" src="{{ rootPrefix }}ui/app.js?v={{ assetVersion }}" onerror="document.getElementById('ui-load-error').hidden = false"></script>
   </head>
   <body data-page="{{ pageKind | default('post') }}" data-root-prefix="{{ rootPrefix }}">
     <div id="react-root"></div>

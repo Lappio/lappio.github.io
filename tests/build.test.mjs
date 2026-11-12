@@ -76,12 +76,17 @@ test("new-only pages ship one React mount without legacy markup or assets", () =
       assert.equal(document.querySelector("#react-root").childElementCount, 0, path);
       assert.equal(document.querySelector(".page-shell, .post-article, [data-static-fallback], #unexpected"), null, path);
       assert.equal(document.querySelectorAll('link[rel="stylesheet"]').length, 1, path);
-      assert.ok(document.querySelector('link[rel="stylesheet"]').getAttribute("href").endsWith("ui/app.css"), path);
+      assert.ok(document.querySelector('link[rel="stylesheet"]').getAttribute("href").split("?")[0].endsWith("ui/app.css"), path);
       const icon = document.querySelector('link[rel="icon"]');
       assert.equal(icon.getAttribute("type"), "image/png", path);
       for (const base of ["https://example.test/", "https://example.test/repository-name/"]) {
-        assert.equal(new URL(icon.getAttribute("href"), new URL(path, base)).href, `${base}favicon.png`, path);
+        const iconUrl = new URL(icon.getAttribute("href"), new URL(path, base));
+        assert.equal(`${iconUrl.origin}${iconUrl.pathname}`, `${base}favicon.png`, path);
       }
+      const versions = [icon.getAttribute("href"), document.querySelector('link[rel="stylesheet"]').getAttribute("href"), document.querySelector('script[type="module"]').getAttribute("src")]
+        .map(asset => new URL(asset, "https://example.test/").searchParams.get("v"));
+      assert.ok(versions[0], `${path} must version its published assets`);
+      assert.deepEqual(versions, [versions[0], versions[0], versions[0]], path);
       assert.equal(document.querySelectorAll('script:not([type="application/json"])').length, 1, path);
     }
     assert.deepEqual([...readFileSync(join(output, "favicon.png")).subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10], "the linked favicon must be published as a PNG");
@@ -134,11 +139,11 @@ test("Eleventy publishes ordered articles and excludes drafts and project files"
     assert.equal(existsSync(join(output, "blog/hidden/index.html")), false);
     const home = new JSDOM(readFileSync(join(output, "index.html"), "utf8")).window.document;
     assert.equal(home.querySelector('meta[name="theme-color"]').content, "#fffdf8");
-    assert.equal(home.querySelector('script[type="module"]').getAttribute("src"), "./ui/app.js");
+    assert.equal(home.querySelector('script[type="module"]').getAttribute("src").split("?")[0], "./ui/app.js");
     assert.equal(home.querySelector("#react-root").childElementCount, 0, "only React owns the visible interface");
     assert.equal(home.querySelector('script[src="./script.js"]'), null, "legacy DOM code does not race React");
     const article = new JSDOM(html).window.document;
-    assert.equal(article.querySelector('script[type="module"]').getAttribute("src"), "../../ui/app.js");
+    assert.equal(article.querySelector('script[type="module"]').getAttribute("src").split("?")[0], "../../ui/app.js");
     for (const asset of ["ui/app.js", "ui/app.css"]) assert.equal(existsSync(join(output, asset)), true);
     for (const file of ["index.html", "blog/index.html", "notes/index.html", "assets/lappio-avatar-240.webp"]) {
       assert.equal(existsSync(join(output, file)), true, `${file} was not built`);

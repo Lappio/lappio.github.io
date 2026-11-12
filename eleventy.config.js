@@ -8,6 +8,8 @@ import { copy } from "./frontend/copy.js";
 
 export default function (eleventyConfig) {
   eleventyConfig.addGlobalData("copy", copy);
+  // Keep each deployment's HTML from reusing a previous deployment's cached UI.
+  eleventyConfig.addGlobalData("assetVersion", Date.now().toString(36));
   // Keep article HTML inert inside JSON, even when it contains </script>.
   eleventyConfig.addFilter("scriptJson", value => JSON.stringify(value).replaceAll("<", "\\u003c"));
   eleventyConfig.addPlugin(syntaxHighlight, { preAttributes: { tabindex: 0 } });

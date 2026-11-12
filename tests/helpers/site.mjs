@@ -30,7 +30,7 @@ export function copyBrowserProject(project) {
 }
 
 // Each browser suite gets one fresh, isolated build, reused by all its cases.
-export async function builtSite(t) {
+export async function builtSite(t, { cacheAssets = false } = {}) {
   const project = mkdtempSync(join(tmpdir(), "lappio-browser-"));
   let server;
   let browser;
@@ -52,6 +52,7 @@ export async function builtSite(t) {
       if (statSync(path).isDirectory()) path = join(path, "index.html");
       if (!statSync(path).isFile()) throw new Error("Not a file");
       response.setHeader("Content-Type", types[extname(path)] || "application/octet-stream");
+      if (cacheAssets && [".js", ".css", ".png"].includes(extname(path))) response.setHeader("Cache-Control", "public, max-age=600");
       createReadStream(path).pipe(response);
     } catch { response.writeHead(404).end(); }
   });
@@ -60,7 +61,7 @@ export async function builtSite(t) {
     server.listen(0, "127.0.0.1", resolve);
   });
   browser = await chromium.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
-  return { browser, url: `http://127.0.0.1:${server.address().port}` };
+  return { browser, url: `http://127.0.0.1:${server.address().port}`, project };
 }
 
 export async function visit(page, url) {
